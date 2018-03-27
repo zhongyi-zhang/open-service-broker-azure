@@ -19,7 +19,7 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 					SupportURL:       "https://azure.microsoft.com/en-us/support/",
 				},
 				Bindable: true,
-				Tags:     []string{"Azure", "Key", "Vault"},
+				Tags:     []string{"AzurePublicCloud", "AzureUSGovernmentCloud", "AzureChinaCloud", "AzureGermanCloud", "Key", "Vault"},
 			},
 			m.serviceManager,
 			service.NewPlan(service.PlanProperties{

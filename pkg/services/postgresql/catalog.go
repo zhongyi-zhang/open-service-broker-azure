@@ -151,7 +151,7 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 					SupportURL:       "https://azure.microsoft.com/en-us/support/",
 				},
 				Bindable: true,
-				Tags:     []string{"Azure", "PostgreSQL", "DBMS", "Server", "Database"},
+				Tags:     []string{"AzurePublicCloud", "PostgreSQL", "DBMS", "Server", "Database"},
 				Extended: map[string]interface{}{
 					"version": "9.6",
 				},
@@ -176,7 +176,7 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 					SupportURL:       "https://azure.microsoft.com/en-us/support/",
 				},
 				Bindable: false,
-				Tags:     []string{"Azure", "PostgreSQL", "DBMS", "Server", "Database"},
+				Tags:     []string{"AzurePublicCloud", "PostgreSQL", "DBMS", "Server", "Database"},
 				Extended: map[string]interface{}{
 					"version": "9.6",
 				},
@@ -201,7 +201,7 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 					SupportURL:       "https://azure.microsoft.com/en-us/support/",
 				},
 				Bindable: true,
-				Tags:     []string{"Azure", "PostgreSQL", "Database"},
+				Tags:     []string{"AzurePublicCloud", "PostgreSQL", "Database"},
 				Extended: map[string]interface{}{
 					"version": "9.6",
 				},
