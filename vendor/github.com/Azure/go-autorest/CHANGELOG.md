@@ -1,5 +1,32 @@
 # CHANGELOG
 
+## v10.3.0
+
+### New Features
+- Added EnvironmentFromURL method to load an Environment from a given URL. This function is particularly useful in the private and hybrid Cloud model, where one may define their own endpoints
+- Added TokenAudience endpoint to Environment structure. This is useful in private and hybrid cloud models where TokenAudience endpoint can be different from ResourceManagerEndpoint
+
+## v10.2.0
+
+### New Features
+
+- Added endpoints for batch management.
+
+## v10.1.3
+
+### Bug Fixes
+
+- In Client.Do() invoke WithInspection() last so that it will inspect WithAuthorization().
+- Fixed authorization methods to invoke p.Prepare() first, aligning them with the other preparers.
+
+## v10.1.2
+
+- Corrected comment for auth.NewAuthorizerFromFile() function.
+
+## v10.1.1
+
+- Updated version number to match current release.
+
 ## v10.1.0
 
 ### New Features
