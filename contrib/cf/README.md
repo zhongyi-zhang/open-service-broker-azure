@@ -99,6 +99,44 @@ Open contrib/cf/manifest.yml and enter the values obtained in the earlier steps:
 
 **IMPORTANT**: The default values for `CRYPTO_AES256_KEY`, `BASIC\_AUTH\_USERNAME`, and `BASIC\_AUTH\_PASSWORD` should never be used in production environments.
 
+## (Optional) Additional Steps for Azure Stack Cloud
+
+1. Get the management endpoint from your Azure Stack admin. E.g. https://management.shanghai.azurestack.corp.microsoft.com
+
+1. Add two more environment variables for Azure Stack in your `manifest.yml`.
+
+    ```
+    AZURE_ENVIRONMENT: AzureStackCloud
+    AZURE_RESOURCE_MANAGER_ENDPOINT: <YOUR RESOURCE MANAGER ENDPOINT>
+    ```
+
+1. If you are using Azure Stack selfhost environment, the IP address of the management endpoint is private. By default, the access to private networks is blocked by default application security groups (ASGs). You need to create ASG for the selfhost management endpoint IP.
+
+    1. Get the IP address of the management endpoint. E.g.
+
+        ```
+        dig management.shanghai.azurestack.corp.microsoft.com
+        ```
+
+    1. Create ASG.
+
+
+        ``` 
+        cat >> ~/my-asg.json << EOF
+        [
+          {
+            "protocol": "tcp",
+            "destination": "<IP-ADDRESS>",
+            "ports": "443",
+            "log": true,
+            "description": "Allow https traffic to Shanghai selfhost"
+          }
+        ]
+        EOF
+        cf create-security-group my-asg ~/my-asg.json
+        cf bind-running-security-group my-asg
+        ``` 
+
 ## Push the broker to Cloud Foundry
 
 Once you have added the necessary environment variables to the CF manifest, you can simply push the broker:
