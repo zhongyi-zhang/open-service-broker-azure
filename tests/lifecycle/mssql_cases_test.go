@@ -12,6 +12,7 @@ import (
 )
 
 var mssqlDBMSAlias = uuid.NewV4().String()
+var mssqlDBMSFeAlias = mssqlDBMSAlias + "-fe"
 
 var mssqlTestCases = []serviceLifecycleTestCase{
 	{ // all-in-one scenario (dtu-based)
@@ -96,6 +97,66 @@ var mssqlTestCases = []serviceLifecycleTestCase{
 			},
 		},
 	},
+	{ // dbms only from existing scenario
+		group:     "mssql",
+		name:      "dbms-only",
+		serviceID: "a7454e0e-be2c-46ac-b55f-8c4278117525",
+		planID:    "24f0f42e-1ab3-474e-a5ca-b943b2c48eee",
+		provisioningParameters: map[string]interface{}{
+			"location":  "southcentralus",
+			"alias": mssqlDBMSAlias,
+			"firewallRules": []interface{}{
+				map[string]interface{}{
+					"name":           "AllowAll",
+					"startIPAddress": "0.0.0.0",
+					"endIPAddress":   "255.255.255.255",
+				},
+			},
+		},
+		deliverProvisioningParametersToChild: deliverServerNameAndLogin,
+		childTestCases: []*serviceLifecycleTestCase{
+			{
+				group:     "mssql",
+				name:      "dbms-fe-only",
+				serviceID: "c9bd94e7-5b7d-4b20-96e6-c5678f99d997",
+				planID:    "4e95e962-0142-4117-b212-bcc7aec7f6c2",
+				provisioningParameters: map[string]interface{}{
+					"location":  "southcentralus",
+					"alias": mssqlDBMSFeAlias,
+				},
+				childTestCases: []*serviceLifecycleTestCase{
+					{ // dtu db only scenario
+						group:           "mssql",
+						name:            "database-only (DTU)",
+						serviceID:       "2bbc160c-e279-4757-a6b6-4c0a4822d0aa",
+						planID:          "8fa8d759-c142-45dd-ae38-b93482ddc04a",
+						testCredentials: testMsSQLCreds,
+						provisioningParameters: map[string]interface{}{
+							"parentAlias": mssqlDBMSFeAlias,
+						},
+					},
+					{ // vcore db only scenario
+						group:           "mssql",
+						name:            "database-only (vCore)",
+						serviceID:       "2bbc160c-e279-4757-a6b6-4c0a4822d0aa",
+						planID:          "da591616-77a1-4df8-a493-6c119649bc6b",
+						testCredentials: testMsSQLCreds,
+						provisioningParameters: map[string]interface{}{
+							"parentAlias": mssqlDBMSFeAlias,
+							"cores":       int64(2),
+							"storage":     int64(10),
+						},
+					},
+				},
+			},
+		},
+	},
+}
+
+func deliverServerNameAndLogin(childPp *map[string]interface{}, dt map[string]interface{}, sdt map[string]interface{}) {
+	(*childPp)["server"] = dt["server"]
+	(*childPp)["administratorLogin"] = dt["administratorLogin"]
+	(*childPp)["administratorLoginPassword"] = sdt["administratorLoginPassword"]
 }
 
 func testMsSQLCreds(credentials map[string]interface{}) error {
