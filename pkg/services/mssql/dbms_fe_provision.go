@@ -23,21 +23,14 @@ func (d *dbmsFeManager) preProvision(
 	_ context.Context,
 	instance service.Instance,
 ) (service.InstanceDetails, service.SecureInstanceDetails, error) {
-	pp := dbmsFeProvisioningParams{}
-	if err := service.GetStructFromMap(instance.ProvisioningParameters, &pp); err != nil {
-		return nil, nil, err
-	}
-	spp := secureDBMSFeProvisioningParams{}
-	if err := service.GetStructFromMap(instance.SecureProvisioningParameters, &spp); err != nil {
-		return nil, nil, err
-	}
+	pp := instance.ProvisioningParameters
 	dt := dbmsInstanceDetails{
 		ARMDeploymentName:  uuid.NewV4().String(),
-		ServerName:         pp.ServerName,
-		AdministratorLogin: pp.AdministratorLogin,
+		ServerName:         pp.GetString("server"),
+		AdministratorLogin: pp.GetString("administratorLogin"),
 	}
 	sdt := secureDBMSInstanceDetails{
-		AdministratorLoginPassword: spp.AdministratorLoginPassword,
+		AdministratorLoginPassword: pp.GetString("administratorLoginPassword"),
 	}
 	dtMap, err := service.GetMapFromStruct(dt)
 	if err != nil {
@@ -53,13 +46,15 @@ func (d *dbmsFeManager) getServer(
 ) (service.InstanceDetails, service.SecureInstanceDetails, error) {
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
+	pp := instance.ProvisioningParameters
 	dt := dbmsInstanceDetails{}
 	if err := service.GetStructFromMap(instance.Details, &dt); err != nil {
 		return nil, nil, err
 	}
+	resourceGroup := pp.GetString("resourceGroup")
 	result, err := d.serversClient.Get(
 		ctx,
-		instance.ResourceGroup,
+		resourceGroup,
 		dt.ServerName,
 	)
 	if err != nil {
@@ -69,11 +64,11 @@ func (d *dbmsFeManager) getServer(
 		err = fmt.Errorf(
 			"can't find sql server %s in the resource group %s",
 			dt.ServerName,
-			instance.ResourceGroup,
+			resourceGroup,
 		)
 		return nil, nil, err
 	}
-	expectedVersion := instance.Service.GetProperties().Extended["version"]
+	expectedVersion := instance.Service.GetProperties().Extended["version"].(string)
 	if *result.Version != expectedVersion {
 		return nil, nil, fmt.Errorf(
 			"sql server version validation failed, "+
@@ -89,20 +84,12 @@ func (d *dbmsFeManager) testConnection(
 	_ context.Context,
 	instance service.Instance,
 ) (service.InstanceDetails, service.SecureInstanceDetails, error) {
-	pp := dbmsFeProvisioningParams{}
-	if err := service.GetStructFromMap(instance.ProvisioningParameters, &pp); err != nil {
-		return nil, nil, err
-	}
-	spp := secureDBMSFeProvisioningParams{}
-	if err := service.GetStructFromMap(instance.SecureProvisioningParameters, &spp); err != nil {
-		return nil, nil, err
-	}
-
+	pp := instance.ProvisioningParameters
 	// connect to master database to create login
 	masterDb, err := getDBConnection(
-		pp.AdministratorLogin,
-		spp.AdministratorLoginPassword,
-		fmt.Sprintf("%s.%s", pp.ServerName, d.sqlDatabaseDNSSuffix),
+		pp.GetString("administratorLogin"),
+		pp.GetString("administratorLoginPassword"),
+		fmt.Sprintf("%s.%s", pp.GetString("server"), d.sqlDatabaseDNSSuffix),
 		"master",
 	)
 	if err != nil {
@@ -141,18 +128,35 @@ func (d *dbmsFeManager) deployARMTemplate(
 	if err := service.GetStructFromMap(instance.Details, &dt); err != nil {
 		return nil, nil, err
 	}
-	goTemplateParams, err := buildDBMSGoTemplateParameters(instance)
+	sdt := secureDBMSInstanceDetails{}
+	if err := service.GetStructFromMap(instance.SecureDetails, &sdt); err != nil {
+		return nil, nil, err
+	}
+	version := instance.Service.GetProperties().Extended["version"].(string)
+	goTemplateParams, err := buildDBMSGoTemplateParameters(
+		dt,
+		sdt,
+		*instance.ProvisioningParameters,
+		version,
+	)
 	if err != nil {
 		return nil, nil, err
 	}
+	goTemplateParams["location"] =
+		instance.ProvisioningParameters.GetString("location")
+	tagsObj := instance.ProvisioningParameters.GetObject("tags")
+	tags := make(map[string]string, len(tagsObj.Data))
+	for k := range tagsObj.Data {
+		tags[k] = tagsObj.GetString(k)
+	}
 	outputs, err := d.armDeployer.Deploy(
 		dt.ARMDeploymentName,
-		instance.ResourceGroup,
-		instance.Location,
+		instance.ProvisioningParameters.GetString("resourceGroup"),
+		instance.ProvisioningParameters.GetString("location"),
 		dbmsARMTemplateBytes,
 		goTemplateParams,
 		map[string]interface{}{},
-		instance.Tags,
+		tags,
 	)
 	if err != nil {
 		return nil, nil, fmt.Errorf("error deploying ARM template: %s", err)

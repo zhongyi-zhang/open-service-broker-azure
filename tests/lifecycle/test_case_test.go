@@ -29,6 +29,7 @@ type serviceLifecycleTestCase struct {
 	bindingParameters      map[string]interface{}
 	testCredentials        func(credentials map[string]interface{}) error
 	childTestCases         []*serviceLifecycleTestCase
+	deliverProvisioningParametersToChild func(pp *map[string]interface{}, parentDt map[string]interface{}, parentSdt map[string]interface{})
 }
 
 func (s serviceLifecycleTestCase) getName() string {
@@ -191,6 +192,13 @@ func (s serviceLifecycleTestCase) execute(
 	// test case as the parent.
 	for _, childTestCase := range s.childTestCases {
 		childTestCase.parentServiceInstance = &instance
+		if s.deliverProvisioningParametersToChild != nil {
+			s.deliverProvisioningParametersToChild(
+				&childTestCase.provisioningParameters,
+				instance.Details,
+				instance.SecureDetails,
+			)
+		}
 		t.Run(childTestCase.getName(), func(t *testing.T) {
 			tErr := childTestCase.execute(t, catalog, resourceGroup)
 			// This will fail this subtest and also the parent lifecycle test

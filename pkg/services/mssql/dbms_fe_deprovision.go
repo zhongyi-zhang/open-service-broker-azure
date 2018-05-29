@@ -25,7 +25,7 @@ func (d *dbmsFeManager) deleteARMDeployment(
 	}
 	err := d.armDeployer.Delete(
 		dt.ARMDeploymentName,
-		instance.ResourceGroup,
+		instance.ProvisioningParameters.GetString("resourceGroup"),
 	)
 	if err != nil {
 		return nil, nil, fmt.Errorf("error deleting ARM deployment: %s", err)
