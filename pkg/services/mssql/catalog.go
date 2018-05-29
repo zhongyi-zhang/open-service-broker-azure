@@ -320,7 +320,7 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 				Name:            "azure-sql-12-0-database",
 				Description:     "Azure SQL 12.0-- database only (preview)",
 				Bindable:        true,
-				ParentServiceID: "a7454e0e-be2c-46ac-b55f-8c4278117525",
+				ParentServiceID: "a7454e0e-be2c-46ac-b55f-8c4278117525", // We don't add dbmsFe service id for now, as the ID os useless
 				Metadata: &service.ServiceMetadata{
 					DisplayName:      "Azure SQL 12.0-- Database Only (preview)",
 					ImageURL:         "https://azure.microsoft.com/svghandler/sql-database/?width=200",
@@ -364,6 +364,43 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 					false,
 				),
 			),
+		),
+		// dbms only from existing service
+		service.NewService(
+			&service.ServiceProperties{
+				ID:             "c9bd94e7-5b7d-4b20-96e6-c5678f99d997",
+				Name:           "azure-sql-12-0-dbms-from-existing",
+				Description:    "Azure SQL 12.0-- DBMS only from existing (preview)",
+				ChildServiceID: "2bbc160c-e279-4757-a6b6-4c0a4822d0aa",
+				Metadata: &service.ServiceMetadata{
+					DisplayName:      "Azure SQL 12.0-- DBMS Only from existing (preview)",
+					ImageURL:         "https://azure.microsoft.com/svghandler/sql-database/?width=200",
+					LongDescription:  "Azure SQL 12.0-- DBMS only from existing (preview)",
+					DocumentationURL: "https://docs.microsoft.com/en-us/azure/sql-database/",
+					SupportURL:       "https://azure.microsoft.com/en-us/support/",
+				},
+				Bindable: false,
+				Tags:     []string{"Azure", "SQL", "DBMS", "Server", "Database"},
+				Extended: map[string]interface{}{
+					"version": "12.0",
+				},
+			},
+			m.dbmsFeManager,
+			service.NewPlan(&service.PlanProperties{
+				ID:          "4e95e962-0142-4117-b212-bcc7aec7f6c2",
+				Name:        "dbms",
+				Description: "Azure SQL Server-- DBMS only",
+				Free:        false,
+				Metadata: &service.ServicePlanMetadata{
+					DisplayName: "Azure SQL Server-- DBMS Only",
+				},
+				Schemas: service.PlanSchemas{
+					ServiceInstances: service.InstanceSchemas{
+						ProvisioningParametersSchema: m.dbmsFeManager.getProvisionParametersSchema(),
+						UpdatingParametersSchema:     m.dbmsFeManager.getUpdatingParametersSchema(),
+					},
+				},
+			}),
 		),
 	}), nil
 }

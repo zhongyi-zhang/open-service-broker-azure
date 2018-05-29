@@ -11,6 +11,7 @@ type module struct {
 	allInOneServiceManager *allInOneManager
 	dbmsManager            *dbmsManager
 	databaseManager        *databaseManager
+	dbmsFeManager          *dbmsFeManager
 }
 
 type allInOneManager struct {
@@ -29,6 +30,12 @@ type dbmsManager struct {
 type databaseManager struct {
 	armDeployer     arm.Deployer
 	databasesClient sqlSDK.DatabasesClient
+}
+
+type dbmsFeManager struct {
+	sqlDatabaseDNSSuffix string
+	armDeployer          arm.Deployer
+	serversClient        sqlSDK.ServersClient
 }
 
 // New returns a new instance of a type that fulfills the service.Module
@@ -55,6 +62,11 @@ func New(
 		databaseManager: &databaseManager{
 			armDeployer:     armDeployer,
 			databasesClient: databasesClient,
+		},
+		dbmsFeManager: &dbmsFeManager{
+			sqlDatabaseDNSSuffix: azureEnvironment.SQLDatabaseDNSSuffix,
+			armDeployer:          armDeployer,
+			serversClient:        serversClient,
 		},
 	}
 }
