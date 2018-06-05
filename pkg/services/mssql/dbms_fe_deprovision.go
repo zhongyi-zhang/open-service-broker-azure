@@ -12,10 +12,6 @@ func (d *dbmsFeManager) GetDeprovisioner(
 ) (service.Deprovisioner, error) {
 	return service.NewDeprovisioner(
 		service.NewDeprovisioningStep("deleteARMDeployment", d.deleteARMDeployment),
-		service.NewDeprovisioningStep(
-			"deleteMsSQLServer",
-			d.deleteMsSQLServer,
-		),
 	)
 }
 
@@ -33,30 +29,6 @@ func (d *dbmsFeManager) deleteARMDeployment(
 	)
 	if err != nil {
 		return nil, nil, fmt.Errorf("error deleting ARM deployment: %s", err)
-	}
-	return instance.Details, instance.SecureDetails, nil
-}
-
-func (d *dbmsFeManager) deleteMsSQLServer(
-	ctx context.Context,
-	instance service.Instance,
-) (service.InstanceDetails, service.SecureInstanceDetails, error) {
-	ctx, cancel := context.WithCancel(ctx)
-	defer cancel()
-	dt := dbmsInstanceDetails{}
-	if err := service.GetStructFromMap(instance.Details, &dt); err != nil {
-		return nil, nil, err
-	}
-	result, err := d.serversClient.Delete(
-		ctx,
-		instance.ResourceGroup,
-		dt.ServerName,
-	)
-	if err != nil {
-		return nil, nil, fmt.Errorf("error deleting sql server: %s", err)
-	}
-	if err := result.WaitForCompletion(ctx, d.serversClient.Client); err != nil {
-		return nil, nil, fmt.Errorf("error deleting sql server: %s", err)
 	}
 	return instance.Details, instance.SecureDetails, nil
 }
