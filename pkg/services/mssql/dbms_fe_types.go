@@ -10,7 +10,7 @@ func (
 			"resourceGroup",
 			"location",
 			"server",
-		  "administratorLogin",
+			"administratorLogin",
 			"administratorLoginPassword",
 		},
 		SecureProperties: []string{
@@ -49,13 +49,10 @@ func (
 	return getDBMSCommonProvisionParamSchema()
 }
 
-type dbmsFeInstanceDetails struct {
-	ARMDeploymentName        string `json:"armDeployment"`
-	FullyQualifiedDomainName string `json:"fullyQualifiedDomainName"`
-	ServerName               string `json:"server"`
-	AdministratorLogin       string `json:"administratorLogin"`
+func (d *dbmsFeManager) GetEmptyInstanceDetails() service.InstanceDetails {
+	return &dbmsInstanceDetails{}
 }
 
-type secureDBMSFeInstanceDetails struct {
-	AdministratorLoginPassword string `json:"administratorLoginPassword"`
+func (d *dbmsFeManager) GetEmptyBindingDetails() service.BindingDetails {
+	return nil
 }

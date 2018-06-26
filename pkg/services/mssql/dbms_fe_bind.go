@@ -10,8 +10,8 @@ import (
 func (d *dbmsFeManager) Bind(
 	service.Instance,
 	service.BindingParameters,
-) (service.BindingDetails, service.SecureBindingDetails, error) {
-	return nil, nil, fmt.Errorf("service is not bindable")
+) (service.BindingDetails, error) {
+	return nil, fmt.Errorf("service is not bindable")
 }
 
 func (d *dbmsFeManager) GetCredentials(

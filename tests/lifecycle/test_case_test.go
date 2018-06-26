@@ -29,7 +29,7 @@ type serviceLifecycleTestCase struct {
 	bindingParameters      map[string]interface{}
 	testCredentials        func(credentials map[string]interface{}) error
 	childTestCases         []*serviceLifecycleTestCase
-	deliverProvisioningParametersToChild func(pp *map[string]interface{}, parentDt map[string]interface{}, parentSdt map[string]interface{})
+	deliverProvisioningParametersToChild func(childPp *map[string]interface{}, dt service.InstanceDetails, svc service.Service)
 }
 
 func (s serviceLifecycleTestCase) getName() string {
@@ -194,7 +194,7 @@ func (s serviceLifecycleTestCase) execute(
 			s.deliverProvisioningParametersToChild(
 				&childTestCase.provisioningParameters,
 				instance.Details,
-				instance.SecureDetails,
+				svc,
 			)
 		}
 		t.Run(childTestCase.getName(), func(t *testing.T) {

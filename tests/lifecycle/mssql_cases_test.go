@@ -5,8 +5,12 @@ package lifecycle
 import (
 	"database/sql"
 	"fmt"
+	"encoding/json"
 	"net/url"
 
+	"github.com/Azure/open-service-broker-azure/pkg/crypto/noop"
+	"github.com/Azure/open-service-broker-azure/pkg/crypto"
+	"github.com/Azure/open-service-broker-azure/pkg/service"
 	_ "github.com/denisenkom/go-mssqldb" // MS SQL Driver
 	uuid "github.com/satori/go.uuid"
 )
@@ -103,8 +107,8 @@ var mssqlTestCases = []serviceLifecycleTestCase{
 		serviceID: "a7454e0e-be2c-46ac-b55f-8c4278117525",
 		planID:    "24f0f42e-1ab3-474e-a5ca-b943b2c48eee",
 		provisioningParameters: map[string]interface{}{
-			"location":  "southcentralus",
-			"alias": mssqlDBMSAlias,
+			"location": "southcentralus",
+			"alias":    mssqlDBMSAlias,
 			"firewallRules": []interface{}{
 				map[string]interface{}{
 					"name":           "AllowAll",
@@ -121,8 +125,8 @@ var mssqlTestCases = []serviceLifecycleTestCase{
 				serviceID: "c9bd94e7-5b7d-4b20-96e6-c5678f99d997",
 				planID:    "4e95e962-0142-4117-b212-bcc7aec7f6c2",
 				provisioningParameters: map[string]interface{}{
-					"location":  "southcentralus",
-					"alias": mssqlDBMSFeAlias,
+					"location": "southcentralus",
+					"alias":    mssqlDBMSFeAlias,
 				},
 				childTestCases: []*serviceLifecycleTestCase{
 					{ // dtu db only scenario
@@ -153,10 +157,27 @@ var mssqlTestCases = []serviceLifecycleTestCase{
 	},
 }
 
-func deliverServerNameAndLogin(childPp *map[string]interface{}, dt map[string]interface{}, sdt map[string]interface{}) {
-	(*childPp)["server"] = dt["server"]
-	(*childPp)["administratorLogin"] = dt["administratorLogin"]
-	(*childPp)["administratorLoginPassword"] = sdt["administratorLoginPassword"]
+func deliverServerNameAndLogin(childPp *map[string]interface{}, dt service.InstanceDetails, svc service.Service) {
+	if err := crypto.InitializeGlobalCodec(noop.NewCodec()); err != nil {
+					panic(err)
+	}
+	dtMap, err := service.GetMapFromStruct(dt)
+	if err != nil {
+					panic(err)
+	}
+	(*childPp)["server"] = dtMap["server"]
+	(*childPp)["administratorLogin"] = dtMap["administratorLogin"]
+	// https://play.golang.org/p/fWTCTXCw81P
+	x, err := json.Marshal(dtMap["administratorLoginPassword"])
+	if err != nil {
+					panic(err)
+	}
+	var y service.SecureString
+	err = json.Unmarshal(x, &y)
+	if err != nil {
+					panic(err)
+	}
+	(*childPp)["administratorLoginPassword"] = string(y)
 }
 
 func testMsSQLCreds(credentials map[string]interface{}) error {
