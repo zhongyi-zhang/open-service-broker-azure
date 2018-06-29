@@ -28,7 +28,7 @@ func (d *dbmsFeManager) preProvision(
 		ARMDeploymentName:          uuid.NewV4().String(),
 		ServerName:                 pp.GetString("server"),
 		AdministratorLogin:         pp.GetString("administratorLogin"),
-		AdministratorLoginPassword: service.SecureString(pp.GetString("administratorLoginPassword")),
+		AdministratorLoginPassword: service.SecureString(pp.GetString("administratorLoginPassword")), // nolint: lll
 	}, nil
 }
 
@@ -57,7 +57,8 @@ func (d *dbmsFeManager) getServer(
 		)
 		return nil, err
 	}
-	expectedVersion := instance.Service.GetProperties().Extended["version"].(string)
+	expectedVersion :=
+		instance.Service.GetProperties().Extended["version"].(string)
 	if *result.Version != expectedVersion {
 		return nil, fmt.Errorf(
 			"sql server version validation failed, "+

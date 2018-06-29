@@ -20,16 +20,16 @@ import (
 // in the same resource group with the service instance.
 type serviceLifecycleTestCase struct {
 	// To clarify-- this is a test grouping-- it is NOT a resource group
-	group                  string
-	name                   string
-	serviceID              string
-	planID                 string
-	provisioningParameters map[string]interface{}
-	parentServiceInstance  *service.Instance
-	bindingParameters      map[string]interface{}
-	testCredentials        func(credentials map[string]interface{}) error
-	childTestCases         []*serviceLifecycleTestCase
-	deliverProvisioningParametersToChild func(childPp *map[string]interface{}, dt service.InstanceDetails, svc service.Service)
+	group                                string
+	name                                 string
+	serviceID                            string
+	planID                               string
+	provisioningParameters               map[string]interface{}
+	parentServiceInstance                *service.Instance
+	bindingParameters                    map[string]interface{}
+	testCredentials                      func(credentials map[string]interface{}) error
+	childTestCases                       []*serviceLifecycleTestCase
+	deliverProvisioningParametersToChild func(childPp *map[string]interface{}, dt service.InstanceDetails, svc service.Service) // nolint: lll
 }
 
 func (s serviceLifecycleTestCase) getName() string {
