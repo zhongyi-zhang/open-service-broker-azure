@@ -25,9 +25,9 @@ func (d *dbmsFeManager) preProvision(
 ) (service.InstanceDetails, error) {
 	pp := instance.ProvisioningParameters
 	return &dbmsInstanceDetails{
-		ARMDeploymentName:  uuid.NewV4().String(),
-		ServerName:         pp.GetString("server"),
-		AdministratorLogin: pp.GetString("administratorLogin"),
+		ARMDeploymentName:          uuid.NewV4().String(),
+		ServerName:                 pp.GetString("server"),
+		AdministratorLogin:         pp.GetString("administratorLogin"),
 		AdministratorLoginPassword: service.SecureString(pp.GetString("administratorLoginPassword")),
 	}, nil
 }

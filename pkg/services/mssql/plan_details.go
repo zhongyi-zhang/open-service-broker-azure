@@ -12,6 +12,7 @@ import (
 
 type planDetails interface {
 	getProvisionSchema() service.InputParametersSchema
+	getFeProvisionSchema() service.InputParametersSchema
 	getTierProvisionParameters(
 		pp service.ProvisioningParameters,
 	) (map[string]interface{}, error)
@@ -62,6 +63,29 @@ func (d dtuPlanDetails) getProvisionSchema() service.InputParametersSchema {
 	// Basic tier is constrained to just 5 DTUs, so don't present this as an
 	// option
 	if len(d.allowedDTUs) > 0 {
+		ips.PropertySchemas["dtus"] = &service.IntPropertySchema{
+			AllowedValues: d.allowedDTUs,
+			DefaultValue:  ptr.ToInt64(d.defaultDTUs),
+			Description: "DTUs are a bundled measure of compute, " +
+				"storage, and IO resources.",
+		}
+	}
+	return ips
+}
+
+func (d dtuPlanDetails) getFeProvisionSchema() service.InputParametersSchema {
+	ips := service.InputParametersSchema{
+		PropertySchemas: map[string]service.PropertySchema{},
+	}
+	if d.includeDBMS {
+		ips = getDBMSCommonProvisionParamSchema()
+	}
+	// Basic tier is constrained to just 5 DTUs, so don't present this as an
+	// option
+	if len(d.allowedDTUs) > 0 {
+		ips.PropertySchemas["database"] = &service.StringPropertySchema{
+			Description: "The name of the existing database",
+		}
 		ips.PropertySchemas["dtus"] = &service.IntPropertySchema{
 			AllowedValues: d.allowedDTUs,
 			DefaultValue:  ptr.ToInt64(d.defaultDTUs),
@@ -135,6 +159,30 @@ func (v vCorePlanDetails) getProvisionSchema() service.InputParametersSchema {
 	}
 	if v.includeDBMS {
 		ips = getDBMSCommonProvisionParamSchema()
+	}
+	ips.PropertySchemas["cores"] = &service.IntPropertySchema{
+		AllowedValues: []int64{2, 4, 8, 16, 24, 32, 48, 80},
+		DefaultValue:  ptr.ToInt64(2),
+		Description:   "A virtual core represents the logical CPU",
+	}
+	ips.PropertySchemas["storage"] = &service.IntPropertySchema{
+		MinValue:     ptr.ToInt64(5),
+		MaxValue:     ptr.ToInt64(1024),
+		DefaultValue: ptr.ToInt64(10),
+		Description:  "The maximum data storage capacity (in GB)",
+	}
+	return ips
+}
+
+func (v vCorePlanDetails) getFeProvisionSchema() service.InputParametersSchema {
+	ips := service.InputParametersSchema{
+		PropertySchemas: map[string]service.PropertySchema{},
+	}
+	if v.includeDBMS {
+		ips = getDBMSCommonProvisionParamSchema()
+	}
+	ips.PropertySchemas["database"] = &service.StringPropertySchema{
+		Description: "The name of the existing database",
 	}
 	ips.PropertySchemas["cores"] = &service.IntPropertySchema{
 		AllowedValues: []int64{2, 4, 8, 16, 24, 32, 48, 80},

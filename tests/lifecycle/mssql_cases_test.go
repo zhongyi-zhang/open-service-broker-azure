@@ -4,12 +4,12 @@ package lifecycle
 
 import (
 	"database/sql"
-	"fmt"
 	"encoding/json"
+	"fmt"
 	"net/url"
 
-	"github.com/Azure/open-service-broker-azure/pkg/crypto/noop"
 	"github.com/Azure/open-service-broker-azure/pkg/crypto"
+	"github.com/Azure/open-service-broker-azure/pkg/crypto/noop"
 	"github.com/Azure/open-service-broker-azure/pkg/service"
 	_ "github.com/denisenkom/go-mssqldb" // MS SQL Driver
 	uuid "github.com/satori/go.uuid"
@@ -155,29 +155,103 @@ var mssqlTestCases = []serviceLifecycleTestCase{
 			},
 		},
 	},
+	{ // database only from existing scenario
+		group:     "mssql",
+		name:      "dbms-only",
+		serviceID: "a7454e0e-be2c-46ac-b55f-8c4278117525",
+		planID:    "24f0f42e-1ab3-474e-a5ca-b943b2c48eee",
+		provisioningParameters: map[string]interface{}{
+			"location": "southcentralus",
+			"alias":    mssqlDBMSAlias,
+			"firewallRules": []interface{}{
+				map[string]interface{}{
+					"name":           "AllowAll",
+					"startIPAddress": "0.0.0.0",
+					"endIPAddress":   "255.255.255.255",
+				},
+			},
+		},
+		childTestCases: []*serviceLifecycleTestCase{
+			{ // db only scenario (dtu-based)
+				group:           "mssql",
+				name:            "database-only (DTU)",
+				serviceID:       "2bbc160c-e279-4757-a6b6-4c0a4822d0aa",
+				planID:          "8fa8d759-c142-45dd-ae38-b93482ddc04a",
+				testCredentials: testMsSQLCreds,
+				provisioningParameters: map[string]interface{}{
+					"parentAlias": mssqlDBMSAlias,
+				},
+				deliverProvisioningParametersToChild: deliverDatabaseName,
+				childTestCases: []*serviceLifecycleTestCase{
+					{
+						// db only from existing scenario (dtu-based)
+						group:           "mssql",
+						name:            "database-only-fe (DTU)",
+						serviceID:       "b0b2a2f7-9b5e-4692-8b94-24fe2f6a9a8e",
+						planID:          "e5804586-625a-4f67-996f-ca19a14711cc",
+						testCredentials: testMsSQLCreds,
+						provisioningParameters: map[string]interface{}{
+							"parentAlias": mssqlDBMSAlias,
+						},
+					},
+				},
+			},
+			{ // db only scenario (vcore-based)
+				group:           "mssql",
+				name:            "database-only (vCore)",
+				serviceID:       "2bbc160c-e279-4757-a6b6-4c0a4822d0aa",
+				planID:          "da591616-77a1-4df8-a493-6c119649bc6b",
+				testCredentials: testMsSQLCreds,
+				provisioningParameters: map[string]interface{}{
+					"parentAlias": mssqlDBMSAlias,
+					"cores":       2,
+					"storage":     10,
+				},
+			},
+		},
+	},
 }
 
-func deliverServerNameAndLogin(childPp *map[string]interface{}, dt service.InstanceDetails, svc service.Service) {
+func deliverServerNameAndLogin(
+	childPp *map[string]interface{},
+	dt service.InstanceDetails,
+	svc service.Service,
+) {
 	if err := crypto.InitializeGlobalCodec(noop.NewCodec()); err != nil {
-					panic(err)
+		panic(err)
 	}
 	dtMap, err := service.GetMapFromStruct(dt)
 	if err != nil {
-					panic(err)
+		panic(err)
 	}
 	(*childPp)["server"] = dtMap["server"]
 	(*childPp)["administratorLogin"] = dtMap["administratorLogin"]
 	// https://play.golang.org/p/fWTCTXCw81P
 	x, err := json.Marshal(dtMap["administratorLoginPassword"])
 	if err != nil {
-					panic(err)
+		panic(err)
 	}
 	var y service.SecureString
 	err = json.Unmarshal(x, &y)
 	if err != nil {
-					panic(err)
+		panic(err)
 	}
 	(*childPp)["administratorLoginPassword"] = string(y)
+}
+
+func deliverDatabaseName(
+	childPp *map[string]interface{},
+	dt service.InstanceDetails,
+	svc service.Service,
+) {
+	if err := crypto.InitializeGlobalCodec(noop.NewCodec()); err != nil {
+		panic(err)
+	}
+	dtMap, err := service.GetMapFromStruct(dt)
+	if err != nil {
+		panic(err)
+	}
+	(*childPp)["database"] = dtMap["database"]
 }
 
 func testMsSQLCreds(credentials map[string]interface{}) error {
