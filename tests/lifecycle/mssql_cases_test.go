@@ -8,8 +8,6 @@ import (
 	"fmt"
 	"net/url"
 
-	"github.com/Azure/open-service-broker-azure/pkg/crypto"
-	"github.com/Azure/open-service-broker-azure/pkg/crypto/noop"
 	"github.com/Azure/open-service-broker-azure/pkg/service"
 	_ "github.com/denisenkom/go-mssqldb" // MS SQL Driver
 	uuid "github.com/satori/go.uuid"
@@ -217,9 +215,6 @@ func deliverServerNameAndLogin(
 	dt service.InstanceDetails,
 	svc service.Service,
 ) {
-	if err := crypto.InitializeGlobalCodec(noop.NewCodec()); err != nil {
-		panic(err)
-	}
 	dtMap, err := service.GetMapFromStruct(dt)
 	if err != nil {
 		panic(err)
@@ -244,9 +239,6 @@ func deliverDatabaseName(
 	dt service.InstanceDetails,
 	svc service.Service,
 ) {
-	if err := crypto.InitializeGlobalCodec(noop.NewCodec()); err != nil {
-		panic(err)
-	}
 	dtMap, err := service.GetMapFromStruct(dt)
 	if err != nil {
 		panic(err)
