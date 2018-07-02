@@ -415,12 +415,12 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 			service.ServiceProperties{
 				ID:             "97c5a775-333f-42a1-bfca-16819ddf7e2e",
 				Name:           "azure-sql-12-0-dbms-from-existing",
-				Description:    "Azure SQL 12.0-- DBMS only from existing (preview)",
+				Description:    "Azure SQL 12.0-- DBMS only from existing",
 				ChildServiceID: "94e4429c-1dd9-4e50-855f-6af2a0f8756e",
 				Metadata: service.ServiceMetadata{
-					DisplayName:      "Azure SQL 12.0-- DBMS Only from existing (preview)",
+					DisplayName:      "Azure SQL 12.0-- DBMS Only from existing",
 					ImageURL:         "https://azure.microsoft.com/svghandler/sql-database/?width=200",
-					LongDescription:  "Azure SQL 12.0-- DBMS only from existing (preview)",
+					LongDescription:  "Azure SQL 12.0-- DBMS only from existing",
 					DocumentationURL: "https://docs.microsoft.com/en-us/azure/sql-database/",
 					SupportURL:       "https://azure.microsoft.com/en-us/support/",
 				},
