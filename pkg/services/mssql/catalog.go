@@ -6,7 +6,7 @@ func buildBasicPlan(
 	id string,
 	includesDBMS bool,
 	fe bool,
-) *service.PlanProperties {
+) service.PlanProperties {
 
 	planDetails := dtuPlanDetails{
 		storageInGB: 2,
@@ -27,7 +27,7 @@ func buildBasicPlan(
 		Extended: map[string]interface{}{
 			"tierDetails": planDetails,
 		},
-		Metadata: &service.ServicePlanMetadata{
+		Metadata: service.ServicePlanMetadata{
 			DisplayName: "Basic Tier",
 			Bullets: []string{
 				"5 DTUs",
@@ -47,14 +47,14 @@ func buildBasicPlan(
 			planDetails.getFeProvisionSchema()
 	}
 
-	return &planProperties
+	return planProperties
 }
 
 func buildStandardPlan(
 	id string,
 	includesDBMS bool,
 	fe bool,
-) *service.PlanProperties {
+) service.PlanProperties {
 	planDetails := dtuPlanDetails{
 		storageInGB: 250,
 		allowedDTUs: []int64{
@@ -86,7 +86,7 @@ func buildStandardPlan(
 		Extended: map[string]interface{}{
 			"tierDetails": planDetails,
 		},
-		Metadata: &service.ServicePlanMetadata{
+		Metadata: service.ServicePlanMetadata{
 			DisplayName: "Standard Tier",
 			Bullets: []string{
 				"10-3000 DTUs",
@@ -106,14 +106,14 @@ func buildStandardPlan(
 			planDetails.getFeProvisionSchema()
 	}
 
-	return &planProperties
+	return planProperties
 }
 
 func buildPremiumPlan(
 	id string,
 	includesDBMS bool,
 	fe bool,
-) *service.PlanProperties {
+) service.PlanProperties {
 	planDetails := dtuPlanDetails{
 		storageInGB: 500,
 		allowedDTUs: []int64{
@@ -142,7 +142,7 @@ func buildPremiumPlan(
 		Extended: map[string]interface{}{
 			"tierDetails": planDetails,
 		},
-		Metadata: &service.ServicePlanMetadata{
+		Metadata: service.ServicePlanMetadata{
 			DisplayName: "Premium Tier",
 			Bullets: []string{
 				"Up to 4000 DTUs",
@@ -162,14 +162,14 @@ func buildPremiumPlan(
 			planDetails.getFeProvisionSchema()
 	}
 
-	return &planProperties
+	return planProperties
 }
 
 func buildGeneralPurposePlan(
 	id string,
 	includesDBMS bool,
 	fe bool,
-) *service.PlanProperties {
+) service.PlanProperties {
 	planDetails := vCorePlanDetails{
 		tierName:      "GeneralPurpose",
 		tierShortName: "GP",
@@ -184,7 +184,7 @@ func buildGeneralPurposePlan(
 		Extended: map[string]interface{}{
 			"tierDetails": planDetails,
 		},
-		Metadata: &service.ServicePlanMetadata{
+		Metadata: service.ServicePlanMetadata{
 			DisplayName: "General Purpose (preview)",
 			Bullets: []string{
 				"Scalable compute and storage options for budget-oriented applications",
@@ -207,14 +207,14 @@ func buildGeneralPurposePlan(
 			planDetails.getFeProvisionSchema()
 	}
 
-	return &planProperties
+	return planProperties
 }
 
 func buildBusinessCriticalPlan(
 	id string,
 	includesDBMS bool,
 	fe bool,
-) *service.PlanProperties {
+) service.PlanProperties {
 	planDetails := vCorePlanDetails{
 		tierName:      "BusinessCritical",
 		tierShortName: "BC",
@@ -230,7 +230,7 @@ func buildBusinessCriticalPlan(
 		Extended: map[string]interface{}{
 			"tierDetails": planDetails,
 		},
-		Metadata: &service.ServicePlanMetadata{
+		Metadata: service.ServicePlanMetadata{
 			DisplayName: "Business Critical (preview)",
 			Bullets: []string{
 				"Up to 80 vCores",
@@ -252,7 +252,7 @@ func buildBusinessCriticalPlan(
 			planDetails.getFeProvisionSchema()
 	}
 
-	return &planProperties
+	return planProperties
 }
 
 // nolint: lll
@@ -261,11 +261,11 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 	return service.NewCatalog([]service.Service{
 		// all-in-one (dbms and database) service
 		service.NewService(
-			&service.ServiceProperties{
+			service.ServiceProperties{
 				ID:          "fb9bc99e-0aa9-11e6-8a8a-000d3a002ed5",
 				Name:        "azure-sql-12-0",
 				Description: "Azure SQL Database 12.0-- DBMS and single database",
-				Metadata: &service.ServiceMetadata{
+				Metadata: service.ServiceMetadata{
 					DisplayName:      "Azure SQL Database 12.0",
 					ImageURL:         "https://azure.microsoft.com/svghandler/sql-database/?width=200",
 					LongDescription:  "Azure SQL Database 12.0-- DBMS and single database",
@@ -317,12 +317,12 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 		),
 		// dbms only service
 		service.NewService(
-			&service.ServiceProperties{
+			service.ServiceProperties{
 				ID:             "a7454e0e-be2c-46ac-b55f-8c4278117525",
 				Name:           "azure-sql-12-0-dbms",
 				Description:    "Azure SQL 12.0-- DBMS only",
 				ChildServiceID: "2bbc160c-e279-4757-a6b6-4c0a4822d0aa",
-				Metadata: &service.ServiceMetadata{
+				Metadata: service.ServiceMetadata{
 					DisplayName:      "Azure SQL 12.0-- DBMS Only",
 					ImageURL:         "https://azure.microsoft.com/svghandler/sql-database/?width=200",
 					LongDescription:  "Azure SQL 12.0-- DBMS only",
@@ -336,13 +336,13 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 				},
 			},
 			m.dbmsManager,
-			service.NewPlan(&service.PlanProperties{
+			service.NewPlan(service.PlanProperties{
 				ID:          "24f0f42e-1ab3-474e-a5ca-b943b2c48eee",
 				Name:        "dbms",
 				Description: "Azure SQL Server-- DBMS only",
 				Free:        false,
 				Stability:   service.StabilityPreview,
-				Metadata: &service.ServicePlanMetadata{
+				Metadata: service.ServicePlanMetadata{
 					DisplayName: "Azure SQL Server-- DBMS Only",
 				},
 				Schemas: service.PlanSchemas{
@@ -355,13 +355,13 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 		),
 		// database only service
 		service.NewService(
-			&service.ServiceProperties{
+			service.ServiceProperties{
 				ID:              "2bbc160c-e279-4757-a6b6-4c0a4822d0aa",
 				Name:            "azure-sql-12-0-database",
 				Description:     "Azure SQL 12.0-- database only",
 				Bindable:        true,
 				ParentServiceID: "a7454e0e-be2c-46ac-b55f-8c4278117525", // We don't add dbmsFe service id for now, as the ID os useless
-				Metadata: &service.ServiceMetadata{
+				Metadata: service.ServiceMetadata{
 					DisplayName:      "Azure SQL 12.0-- Database Only",
 					ImageURL:         "https://azure.microsoft.com/svghandler/sql-database/?width=200",
 					LongDescription:  "Azure SQL 12.0-- database only",
@@ -412,12 +412,12 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 		),
 		// dbms only from existing service
 		service.NewService(
-			&service.ServiceProperties{
+			service.ServiceProperties{
 				ID:             "c9bd94e7-5b7d-4b20-96e6-c5678f99d997",
 				Name:           "azure-sql-12-0-dbms-from-existing",
 				Description:    "Azure SQL 12.0-- DBMS only from existing (preview)",
 				ChildServiceID: "2bbc160c-e279-4757-a6b6-4c0a4822d0aa",
-				Metadata: &service.ServiceMetadata{
+				Metadata: service.ServiceMetadata{
 					DisplayName:      "Azure SQL 12.0-- DBMS Only from existing (preview)",
 					ImageURL:         "https://azure.microsoft.com/svghandler/sql-database/?width=200",
 					LongDescription:  "Azure SQL 12.0-- DBMS only from existing (preview)",
@@ -431,12 +431,12 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 				},
 			},
 			m.dbmsFeManager,
-			service.NewPlan(&service.PlanProperties{
+			service.NewPlan(service.PlanProperties{
 				ID:          "4e95e962-0142-4117-b212-bcc7aec7f6c2",
 				Name:        "dbms",
 				Description: "Azure SQL Server-- DBMS only",
 				Free:        false,
-				Metadata: &service.ServicePlanMetadata{
+				Metadata: service.ServicePlanMetadata{
 					DisplayName: "Azure SQL Server-- DBMS Only",
 				},
 				Schemas: service.PlanSchemas{
@@ -449,13 +449,13 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 		),
 		// database only from existing service
 		service.NewService(
-			&service.ServiceProperties{
+			service.ServiceProperties{
 				ID:              "b0b2a2f7-9b5e-4692-8b94-24fe2f6a9a8e",
 				Name:            "azure-sql-12-0-database-from-existing",
 				Description:     "Azure SQL 12.0-- database only from existing",
 				Bindable:        true,
 				ParentServiceID: "a7454e0e-be2c-46ac-b55f-8c4278117525", // We don't add dbmsFe service id for now, as the ID os useless
-				Metadata: &service.ServiceMetadata{
+				Metadata: service.ServiceMetadata{
 					DisplayName:      "Azure SQL 12.0-- Database Only from existing",
 					ImageURL:         "https://azure.microsoft.com/svghandler/sql-database/?width=200",
 					LongDescription:  "Azure SQL 12.0-- database only from existing",
