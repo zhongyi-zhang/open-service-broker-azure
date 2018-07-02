@@ -10,8 +10,8 @@ func getPostgreSQLTestCases() []e2eTestCase {
 		{
 			group:     "postgresql",
 			name:      "all-in-one",
-			serviceID: "b43b4bba-5741-4d98-a10b-17dc5cee0175",
-			planID:    "90f27532-0286-42e5-8e23-c3bb37191368",
+			serviceID: "4d4e2afa-4eb6-4cbd-a321-35f115281ab2",
+			planID:    "c79ad81b-3000-4abf-a27f-c8a397d34b41",
 			provisioningParameters: map[string]interface{}{
 				"location":      "southcentralus",
 				"resourceGroup": "placeholder",
@@ -38,8 +38,8 @@ func getPostgreSQLTestCases() []e2eTestCase {
 		{
 			group:     "postgresql",
 			name:      "dbms-only",
-			serviceID: "d3f74b44-79bc-4d1e-bf7d-c247c2b851f9",
-			planID:    "73191861-04b3-4d0b-a29b-429eb15a83d4",
+			serviceID: "278c0ee4-7aa6-4f79-953e-3d60034f93b5",
+			planID:    "1d6067ba-ec51-4078-bdfe-969c622178de",
 			provisioningParameters: map[string]interface{}{
 				"alias":         alias,
 				"location":      "eastus",
@@ -56,8 +56,8 @@ func getPostgreSQLTestCases() []e2eTestCase {
 				{ // database only scenario
 					group:     "postgresql",
 					name:      "database-only",
-					serviceID: "25434f16-d762-41c7-bbdd-8045d7f74ca6",
-					planID:    "df6f5ef1-e602-406b-ba73-09c107d1e31b",
+					serviceID: "20defa86-7dfc-4c3a-aafc-9f106ac56fcb",
+					planID:    "ee762481-19e8-49e6-91dc-38f17336789a",
 					provisioningParameters: map[string]interface{}{
 						"parentAlias": alias,
 						"extensions": []string{

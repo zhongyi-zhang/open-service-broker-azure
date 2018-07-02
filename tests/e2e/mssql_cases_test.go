@@ -10,8 +10,8 @@ func getMSSQLTestCases() []e2eTestCase {
 		{ // all-in-one scenario (dtu-based)
 			group:     "mssql",
 			name:      "all-in-one",
-			serviceID: "fb9bc99e-0aa9-11e6-8a8a-000d3a002ed5",
-			planID:    "3819fdfa-0aaa-11e6-86f4-000d3a002ed5",
+			serviceID: "aa62bb24-1d49-4f2d-905a-d387ae339f3a",
+			planID:    "63d62185-d277-4735-96d6-b7cf6a6d128a",
 			provisioningParameters: map[string]interface{}{
 				"location":      "southcentralus",
 				"resourceGroup": "placeholder",
@@ -33,8 +33,8 @@ func getMSSQLTestCases() []e2eTestCase {
 		{ // dbms only scenario
 			group:     "mssql",
 			name:      "dbms-only",
-			serviceID: "a7454e0e-be2c-46ac-b55f-8c4278117525",
-			planID:    "24f0f42e-1ab3-474e-a5ca-b943b2c48eee",
+			serviceID: "3d07f78a-e15c-4f26-ae82-62a963a7162d",
+			planID:    "d98d557a-983e-4c96-a928-926288583975",
 			provisioningParameters: map[string]interface{}{
 				"alias":         alias,
 				"location":      "southcentralus",
@@ -51,8 +51,8 @@ func getMSSQLTestCases() []e2eTestCase {
 				{ // db only scenario (dtu-based)
 					group:     "mssql",
 					name:      "database-only (DTU)",
-					serviceID: "2bbc160c-e279-4757-a6b6-4c0a4822d0aa",
-					planID:    "8fa8d759-c142-45dd-ae38-b93482ddc04a",
+					serviceID: "94e4429c-1dd9-4e50-855f-6af2a0f8756e",
+					planID:    "756ccc03-e701-4336-a5cd-ea0cf22e597c",
 					provisioningParameters: map[string]interface{}{
 						"parentAlias": alias,
 					},
@@ -61,8 +61,8 @@ func getMSSQLTestCases() []e2eTestCase {
 				{ // db only scenario (vcore-based)
 					group:     "mssql",
 					name:      "database-only (vCore)",
-					serviceID: "2bbc160c-e279-4757-a6b6-4c0a4822d0aa",
-					planID:    "da591616-77a1-4df8-a493-6c119649bc6b",
+					serviceID: "94e4429c-1dd9-4e50-855f-6af2a0f8756e",
+					planID:    "8bcd1643-b02c-4d71-8860-c31adae10a6b",
 					provisioningParameters: map[string]interface{}{
 						"parentAlias": alias,
 						"cores":       2,
@@ -74,8 +74,8 @@ func getMSSQLTestCases() []e2eTestCase {
 		{ // all-in-one scenario (vcore-based)
 			group:     "mssql",
 			name:      "all-in-one (vCore)",
-			serviceID: "fb9bc99e-0aa9-11e6-8a8a-000d3a002ed5",
-			planID:    "c77e86af-f050-4457-a2ff-2b48451888f3",
+			serviceID: "aa62bb24-1d49-4f2d-905a-d387ae339f3a",
+			planID:    "fcdce498-a183-4031-96e6-229815a4d75c",
 			provisioningParameters: map[string]interface{}{
 				"location":      "southcentralus",
 				"resourceGroup": "placeholder",

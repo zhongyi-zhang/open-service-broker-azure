@@ -10,8 +10,8 @@ func getMySQLTestCases() []e2eTestCase {
 		{
 			group:     "mysql",
 			name:      "all-in-one",
-			serviceID: "997b8372-8dac-40ac-ae65-758b4a5075a5",
-			planID:    "eae202c3-521c-46d1-a047-872dacf781fd",
+			serviceID: "3c715189-9843-4d8b-bb21-6ae653ad95c5",
+			planID:    "643038f4-0343-4d94-8daf-738334ede7b6",
 			provisioningParameters: map[string]interface{}{
 				"location":       "southcentralus",
 				"resourceGroup":  "placeholder",
@@ -34,8 +34,8 @@ func getMySQLTestCases() []e2eTestCase {
 		{
 			group:     "mysql",
 			name:      "dbms-only",
-			serviceID: "30e7b836-199d-4335-b83d-adc7d23a95c2",
-			planID:    "b242a78f-9946-406a-af67-813c56341960",
+			serviceID: "ef21a7aa-fb6b-457c-b43d-bb0081334332",
+			planID:    "de271154-2f6c-4004-94f8-81e37a26178b",
 			provisioningParameters: map[string]interface{}{
 				"alias":         alias,
 				"location":      "eastus",
@@ -52,8 +52,8 @@ func getMySQLTestCases() []e2eTestCase {
 				{
 					group:     "mysql",
 					name:      "database-only",
-					serviceID: "6704ae59-3eae-49e9-82b4-4cbcc00edf08",
-					planID:    "ec77bd04-2107-408e-8fde-8100c1ce1f46",
+					serviceID: "5f91e726-abb2-43db-a96d-4abf2e06ae28",
+					planID:    "98e18e2e-6b03-4935-9146-0f71106610a0",
 					provisioningParameters: map[string]interface{}{
 						"parentAlias": alias,
 					},
