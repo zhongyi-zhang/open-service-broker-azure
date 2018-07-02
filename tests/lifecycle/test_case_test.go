@@ -189,13 +189,15 @@ func (s serviceLifecycleTestCase) execute(
 	// Iterate through any child test cases, setting the instnace from this
 	// test case as the parent.
 	for _, childTestCase := range s.childTestCases {
-		childTestCase.parentServiceInstance = &instance
 		if s.deliverProvisioningParametersToChild != nil {
 			s.deliverProvisioningParametersToChild(
 				&childTestCase.provisioningParameters,
 				instance.Details,
 				svc,
 			)
+			childTestCase.parentServiceInstance = instance.Parent
+		} else {
+			childTestCase.parentServiceInstance = &instance
 		}
 		t.Run(childTestCase.getName(), func(t *testing.T) {
 			tErr := childTestCase.execute(t, catalog, resourceGroup)

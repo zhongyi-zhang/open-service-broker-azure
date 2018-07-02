@@ -80,12 +80,12 @@ func (d dtuPlanDetails) getFeProvisionSchema() service.InputParametersSchema {
 	if d.includeDBMS {
 		ips = getDBMSCommonProvisionParamSchema()
 	}
+	ips.PropertySchemas["database"] = &service.StringPropertySchema{
+		Description: "The name of the existing database",
+	}
 	// Basic tier is constrained to just 5 DTUs, so don't present this as an
 	// option
 	if len(d.allowedDTUs) > 0 {
-		ips.PropertySchemas["database"] = &service.StringPropertySchema{
-			Description: "The name of the existing database",
-		}
 		ips.PropertySchemas["dtus"] = &service.IntPropertySchema{
 			AllowedValues: d.allowedDTUs,
 			DefaultValue:  ptr.ToInt64(d.defaultDTUs),
