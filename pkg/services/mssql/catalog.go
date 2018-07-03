@@ -436,6 +436,7 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 				Name:        "dbms",
 				Description: "Azure SQL Server-- DBMS only",
 				Free:        false,
+				Stability:   service.StabilityPreview,
 				Metadata: service.ServicePlanMetadata{
 					DisplayName: "Azure SQL Server-- DBMS Only",
 				},
