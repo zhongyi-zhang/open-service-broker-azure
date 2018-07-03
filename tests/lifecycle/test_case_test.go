@@ -27,7 +27,7 @@ type serviceLifecycleTestCase struct {
 	provisioningParameters               map[string]interface{}
 	parentServiceInstance                *service.Instance
 	bindingParameters                    map[string]interface{}
-	testCredentials                      func(credentials map[string]interface{}) error
+	testCredentials                      func(credentials map[string]interface{}) error // nolint: lll
 	childTestCases                       []*serviceLifecycleTestCase
 	deliverProvisioningParametersToChild func(childPp *map[string]interface{}, dt service.InstanceDetails, svc service.Service) // nolint: lll
 }

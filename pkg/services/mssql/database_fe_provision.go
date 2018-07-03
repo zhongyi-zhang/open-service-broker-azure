@@ -108,29 +108,22 @@ func (d *databaseFeManager) deployARMTemplate(
 ) (service.InstanceDetails, error) {
 	dt := instance.Details.(*databaseInstanceDetails)
 	pdt := instance.Parent.Details.(*dbmsInstanceDetails)
-	pd := instance.Plan.GetProperties().Extended["tierDetails"].(planDetails)
-	goTemplateParams, err := buildDatabaseGoTemplateParameters(
-		dt.DatabaseName,
-		*instance.ProvisioningParameters,
-		pd,
-	)
-	if err != nil {
-		return nil, err
-	}
+	goTemplateParams := map[string]interface{}{}
+	goTemplateParams["serverName"] = pdt.ServerName
 	goTemplateParams["location"] =
 		instance.Parent.ProvisioningParameters.GetString("location")
-	goTemplateParams["serverName"] = pdt.ServerName
+	goTemplateParams["databaseName"] = dt.DatabaseName
 	tagsObj := instance.ProvisioningParameters.GetObject("tags")
 	tags := make(map[string]string, len(tagsObj.Data))
 	for k := range tagsObj.Data {
 		tags[k] = tagsObj.GetString(k)
 	}
 	// No output, so ignore the output
-	_, err = d.armDeployer.Deploy(
+	_, err := d.armDeployer.Deploy(
 		dt.ARMDeploymentName,
 		instance.Parent.ProvisioningParameters.GetString("resourceGroup"),
 		instance.Parent.ProvisioningParameters.GetString("location"),
-		databaseARMTemplateBytes,
+		databaseFeARMTemplateBytes,
 		goTemplateParams,
 		map[string]interface{}{}, // empty arm params
 		tags,

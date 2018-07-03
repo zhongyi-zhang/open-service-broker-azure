@@ -115,15 +115,8 @@ func (d *dbmsFeManager) deployARMTemplate(
 	instance service.Instance,
 ) (service.InstanceDetails, error) {
 	dt := instance.Details.(*dbmsInstanceDetails)
-	version := instance.Service.GetProperties().Extended["version"].(string)
-	goTemplateParams, err := buildDBMSGoTemplateParameters(
-		dt,
-		*instance.ProvisioningParameters,
-		version,
-	)
-	if err != nil {
-		return nil, err
-	}
+	goTemplateParams := map[string]interface{}{}
+	goTemplateParams["serverName"] = dt.ServerName
 	goTemplateParams["location"] =
 		instance.ProvisioningParameters.GetString("location")
 	tagsObj := instance.ProvisioningParameters.GetObject("tags")
@@ -135,7 +128,7 @@ func (d *dbmsFeManager) deployARMTemplate(
 		dt.ARMDeploymentName,
 		instance.ProvisioningParameters.GetString("resourceGroup"),
 		instance.ProvisioningParameters.GetString("location"),
-		dbmsARMTemplateBytes,
+		dbmsFeARMTemplateBytes,
 		goTemplateParams,
 		map[string]interface{}{},
 		tags,
