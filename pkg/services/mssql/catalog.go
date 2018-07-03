@@ -468,7 +468,7 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 					"version": "12.0",
 				},
 			},
-			m.databaseManager,
+			m.databaseFeManager,
 			service.NewPlan(
 				buildBasicPlan(
 					"fc2f3117-2539-414d-b5ab-f047fc4c93d4",
