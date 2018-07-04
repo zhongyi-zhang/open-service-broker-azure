@@ -14,7 +14,6 @@ func (d *databaseFeManager) GetProvisioner(
 	return service.NewProvisioner(
 		service.NewProvisioningStep("preProvision", d.preProvision),
 		service.NewProvisioningStep("getDatabase", d.getDatabase),
-		service.NewProvisioningStep("testConnection", d.testConnection),
 		service.NewProvisioningStep("deployARMTemplate", d.deployARMTemplate),
 	)
 }
@@ -58,47 +57,6 @@ func (d *databaseFeManager) getDatabase(
 		)
 		return nil, err
 	}
-	return instance.Details, nil
-}
-
-func (d *databaseFeManager) testConnection(
-	_ context.Context,
-	instance service.Instance,
-) (service.InstanceDetails, error) {
-	dt := instance.Details.(*databaseInstanceDetails)
-	pdt := instance.Parent.Details.(*dbmsInstanceDetails)
-	// connect to master database to create login
-	db, err := getDBConnection(
-		pdt.AdministratorLogin,
-		string(pdt.AdministratorLoginPassword),
-		pdt.FullyQualifiedDomainName,
-		dt.DatabaseName,
-	)
-	if err != nil {
-		return nil, err
-	}
-	defer db.Close() // nolint: errcheck
-
-	// Is there a better approach to verify if it is a sys admin?
-	rows, err := db.Query("SELECT 1 FROM fn_my_permissions (NULL, 'DATABASE') WHERE permission_name='ALTER'") // nolint: lll
-	if err != nil {
-		return nil, fmt.Errorf(
-			`error querying SELECT from table fn_my_permissions: %s`,
-			err,
-		)
-	}
-	defer rows.Close() // nolint: errcheck
-	if !rows.Next() {
-		return nil, fmt.Errorf(
-			`error parent server user doesn't have permission 'ALTER'`,
-		)
-	}
-	if err := rows.Err(); err != nil {
-		return nil, fmt.Errorf(
-			`error iterating rows`,
-		)
-	}
-
 	return instance.Details, nil
 }
 
