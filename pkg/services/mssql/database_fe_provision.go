@@ -24,7 +24,6 @@ func (d *databaseFeManager) preProvision(
 ) (service.InstanceDetails, error) {
 	return &databaseInstanceDetails{
 		ARMDeploymentName: uuid.NewV4().String(),
-		DatabaseName:      instance.ProvisioningParameters.GetString("database"),
 	}, nil
 }
 
@@ -34,15 +33,16 @@ func (d *databaseFeManager) getDatabase(
 ) (service.InstanceDetails, error) {
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
-	dt := instance.Details.(*databaseInstanceDetails)
 	pdt := instance.Parent.Details.(*dbmsInstanceDetails)
 	resourceGroup :=
 		instance.Parent.ProvisioningParameters.GetString("resourceGroup")
+	databaseName :=
+		instance.ProvisioningParameters.GetString("database")
 	result, err := d.databasesClient.Get(
 		ctx,
 		resourceGroup,
 		pdt.ServerName,
-		dt.DatabaseName,
+		databaseName,
 		"",
 	)
 	if err != nil {
@@ -51,7 +51,7 @@ func (d *databaseFeManager) getDatabase(
 	if result.Name == nil {
 		err = fmt.Errorf(
 			"can't find sql database %s in server %s in the resource group %s",
-			dt.DatabaseName,
+			databaseName,
 			pdt.ServerName,
 			resourceGroup,
 		)
@@ -67,10 +67,12 @@ func (d *databaseFeManager) deployARMTemplate(
 	dt := instance.Details.(*databaseInstanceDetails)
 	pdt := instance.Parent.Details.(*dbmsInstanceDetails)
 	goTemplateParams := map[string]interface{}{}
+	location := instance.Parent.ProvisioningParameters.GetString("location")
+	databaseName := instance.ProvisioningParameters.GetString("database")
 	goTemplateParams["serverName"] = pdt.ServerName
-	goTemplateParams["location"] =
-		instance.Parent.ProvisioningParameters.GetString("location")
-	goTemplateParams["databaseName"] = dt.DatabaseName
+	goTemplateParams["location"] = location
+	goTemplateParams["databaseName"] = databaseName
+		instance.ProvisioningParameters.GetString("database")
 	tagsObj := instance.ProvisioningParameters.GetObject("tags")
 	tags := make(map[string]string, len(tagsObj.Data))
 	for k := range tagsObj.Data {
@@ -80,7 +82,7 @@ func (d *databaseFeManager) deployARMTemplate(
 	_, err := d.armDeployer.Deploy(
 		dt.ARMDeploymentName,
 		instance.Parent.ProvisioningParameters.GetString("resourceGroup"),
-		instance.Parent.ProvisioningParameters.GetString("location"),
+		location,
 		databaseFeARMTemplateBytes,
 		goTemplateParams,
 		map[string]interface{}{}, // empty arm params
@@ -89,5 +91,7 @@ func (d *databaseFeManager) deployARMTemplate(
 	if err != nil {
 		return nil, fmt.Errorf("error deploying ARM template: %s", err)
 	}
+
+	dt.DatabaseName = databaseName
 	return instance.Details, nil
 }
