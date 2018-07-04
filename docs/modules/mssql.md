@@ -481,10 +481,10 @@ curl -X PUT \
 '
 ```
 
-### Service: azure-sql-dbms-fe
+### Service: azure-sql-dbms-from-existing
 
-It is the service to create [azure-sql-dbms service](#service-azure-sql-dbms) instance from existing Azure SQL Server **for registering the server**. With extra required provisioning parameters: `server`, `administratorLogin`, and `administratorLoginPassword`, the service validates the SQL Server in provisioning and doesn't delete the server in deprovisioning. Except this, all the behaviors can be referred to azure-sql-dbms service.
+It is the service to create [azure-sql-dbms service](#service-azure-sql-dbms) instance from existing Azure SQL Server **for registering the server**. With extra required provisioning parameters: `server`, `administratorLogin`, and `administratorLoginPassword`, the service validates the SQL Server in provisioning and doesn't delete the server in deprovisioning. Except this, all the behaviors can be referred to azure-sql-dbms service. Both **azure-sql-database** service and **azure-sql-database-from-existing** service can be its child service.
 
-### Service: azure-sql-database-fe
+### Service: azure-sql-database-from-existing
 
-It is the service to create [azure-sql-database service](#service-azure-sql-database) instance from existing Azure SQL Database **for taking over the database**. With extra required provisioning parameters: `database`, the service validates the SQL datbase in provisioning and also delete the database in deprovisioning. Except this, all the behaviors can be referred to azure-sql-database service.
+It is the service to create [azure-sql-database service](#service-azure-sql-database) instance from existing Azure SQL Database **for taking over the database**. With extra required provisioning parameters: `database`, the service validates the SQL datbase in provisioning and also delete the database in deprovisioning. Except this, all the behaviors can be referred to azure-sql-database service. Both **azure-sql-dbms** service and **azure-sql-dbms-from-existing** service can be its parent service.
