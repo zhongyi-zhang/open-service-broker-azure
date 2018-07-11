@@ -360,7 +360,7 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 				Name:            "azure-sql-12-0-database",
 				Description:     "Azure SQL 12.0-- database only",
 				Bindable:        true,
-				ParentServiceID: "3d07f78a-e15c-4f26-ae82-62a963a7162d", // We don't add dbmsFe service id for now, as the ID os useless
+				ParentServiceID: "3d07f78a-e15c-4f26-ae82-62a963a7162d", // more parents in fact
 				Metadata: service.ServiceMetadata{
 					DisplayName:      "Azure SQL 12.0-- Database Only",
 					ImageURL:         "https://azure.microsoft.com/svghandler/sql-database/?width=200",
@@ -410,17 +410,17 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 				),
 			),
 		),
-		// dbms only from existing service
+		// dbms only registered service
 		service.NewService(
 			service.ServiceProperties{
 				ID:             "97c5a775-333f-42a1-bfca-16819ddf7e2e",
-				Name:           "azure-sql-12-0-dbms-from-existing",
-				Description:    "Azure SQL 12.0-- DBMS only from existing",
+				Name:           "azure-sql-12-0-dbms-registered",
+				Description:    "Azure SQL 12.0-- DBMS only registered",
 				ChildServiceID: "94e4429c-1dd9-4e50-855f-6af2a0f8756e",
 				Metadata: service.ServiceMetadata{
-					DisplayName:      "Azure SQL 12.0-- DBMS Only from existing",
+					DisplayName:      "Azure SQL 12.0-- DBMS Only registered",
 					ImageURL:         "https://azure.microsoft.com/svghandler/sql-database/?width=200",
-					LongDescription:  "Azure SQL 12.0-- DBMS only from existing",
+					LongDescription:  "Azure SQL 12.0-- DBMS only registered",
 					DocumentationURL: "https://docs.microsoft.com/en-us/azure/sql-database/",
 					SupportURL:       "https://azure.microsoft.com/en-us/support/",
 				},
@@ -430,7 +430,7 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 					"version": "12.0",
 				},
 			},
-			m.dbmsFeManager,
+			m.dbmsRegisteredManager,
 			service.NewPlan(service.PlanProperties{
 				ID:          "840399dd-5593-493e-80c1-3b21f687997d",
 				Name:        "dbms",
@@ -442,8 +442,8 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 				},
 				Schemas: service.PlanSchemas{
 					ServiceInstances: service.InstanceSchemas{
-						ProvisioningParametersSchema: m.dbmsFeManager.getProvisionParametersSchema(),
-						UpdatingParametersSchema:     m.dbmsFeManager.getUpdatingParametersSchema(),
+						ProvisioningParametersSchema: m.dbmsRegisteredManager.getProvisionParametersSchema(),
+						UpdatingParametersSchema:     m.dbmsRegisteredManager.getUpdatingParametersSchema(),
 					},
 				},
 			}),
@@ -455,7 +455,7 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 				Name:            "azure-sql-12-0-database-from-existing",
 				Description:     "Azure SQL 12.0-- database only from existing",
 				Bindable:        true,
-				ParentServiceID: "3d07f78a-e15c-4f26-ae82-62a963a7162d", // We don't add dbmsFe service id for now, as the ID os useless
+				ParentServiceID: "3d07f78a-e15c-4f26-ae82-62a963a7162d", // more parents in fact
 				Metadata: service.ServiceMetadata{
 					DisplayName:      "Azure SQL 12.0-- Database Only from existing",
 					ImageURL:         "https://azure.microsoft.com/svghandler/sql-database/?width=200",

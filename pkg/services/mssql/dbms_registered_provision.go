@@ -8,7 +8,7 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
-func (d *dbmsFeManager) GetProvisioner(
+func (d *dbmsRegisteredManager) GetProvisioner(
 	service.Plan,
 ) (service.Provisioner, error) {
 	return service.NewProvisioner(
@@ -19,7 +19,7 @@ func (d *dbmsFeManager) GetProvisioner(
 	)
 }
 
-func (d *dbmsFeManager) preProvision(
+func (d *dbmsRegisteredManager) preProvision(
 	_ context.Context,
 	instance service.Instance,
 ) (service.InstanceDetails, error) {
@@ -32,7 +32,7 @@ func (d *dbmsFeManager) preProvision(
 	}, nil
 }
 
-func (d *dbmsFeManager) getServer(
+func (d *dbmsRegisteredManager) getServer(
 	ctx context.Context,
 	instance service.Instance,
 ) (service.InstanceDetails, error) {
@@ -70,7 +70,7 @@ func (d *dbmsFeManager) getServer(
 	return instance.Details, nil
 }
 
-func (d *dbmsFeManager) testConnection(
+func (d *dbmsRegisteredManager) testConnection(
 	_ context.Context,
 	instance service.Instance,
 ) (service.InstanceDetails, error) {
@@ -110,7 +110,7 @@ func (d *dbmsFeManager) testConnection(
 	return instance.Details, nil
 }
 
-func (d *dbmsFeManager) deployARMTemplate(
+func (d *dbmsRegisteredManager) deployARMTemplate(
 	_ context.Context,
 	instance service.Instance,
 ) (service.InstanceDetails, error) {

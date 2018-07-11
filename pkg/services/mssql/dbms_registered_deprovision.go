@@ -7,7 +7,7 @@ import (
 	"github.com/Azure/open-service-broker-azure/pkg/service"
 )
 
-func (d *dbmsFeManager) GetDeprovisioner(
+func (d *dbmsRegisteredManager) GetDeprovisioner(
 	service.Plan,
 ) (service.Deprovisioner, error) {
 	return service.NewDeprovisioner(
@@ -15,7 +15,7 @@ func (d *dbmsFeManager) GetDeprovisioner(
 	)
 }
 
-func (d *dbmsFeManager) deleteARMDeployment(
+func (d *dbmsRegisteredManager) deleteARMDeployment(
 	_ context.Context,
 	instance service.Instance,
 ) (service.InstanceDetails, error) {

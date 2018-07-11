@@ -99,7 +99,7 @@ var mssqlTestCases = []serviceLifecycleTestCase{
 			},
 		},
 	},
-	{ // dbms only from existing scenario
+	{ // dbms only registered scenario
 		group:     "mssql",
 		name:      "dbms-only",
 		serviceID: "3d07f78a-e15c-4f26-ae82-62a963a7162d",
@@ -119,7 +119,7 @@ var mssqlTestCases = []serviceLifecycleTestCase{
 		childTestCases: []*serviceLifecycleTestCase{
 			{
 				group:     "mssql",
-				name:      "dbms-fe-only",
+				name:      "dbms-only-registered",
 				serviceID: "97c5a775-333f-42a1-bfca-16819ddf7e2e",
 				planID:    "840399dd-5593-493e-80c1-3b21f687997d",
 				provisioningParameters: map[string]interface{}{

@@ -20,7 +20,7 @@ func (d *databaseFeManager) GetProvisioner(
 
 func (d *databaseFeManager) preProvision(
 	_ context.Context,
-	instance service.Instance,
+	_ service.Instance,
 ) (service.InstanceDetails, error) {
 	return &databaseInstanceDetails{
 		ARMDeploymentName: uuid.NewV4().String(),
@@ -72,7 +72,7 @@ func (d *databaseFeManager) deployARMTemplate(
 	goTemplateParams["serverName"] = pdt.ServerName
 	goTemplateParams["location"] = location
 	goTemplateParams["databaseName"] = databaseName
-		instance.ProvisioningParameters.GetString("database")
+	instance.ProvisioningParameters.GetString("database")
 	tagsObj := instance.ProvisioningParameters.GetObject("tags")
 	tags := make(map[string]string, len(tagsObj.Data))
 	for k := range tagsObj.Data {

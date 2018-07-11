@@ -11,7 +11,7 @@ type module struct {
 	allInOneServiceManager *allInOneManager
 	dbmsManager            *dbmsManager
 	databaseManager        *databaseManager
-	dbmsFeManager          *dbmsFeManager
+	dbmsRegisteredManager  *dbmsRegisteredManager
 	databaseFeManager      *databaseFeManager
 }
 
@@ -33,7 +33,7 @@ type databaseManager struct {
 	databasesClient sqlSDK.DatabasesClient
 }
 
-type dbmsFeManager struct {
+type dbmsRegisteredManager struct {
 	sqlDatabaseDNSSuffix string
 	armDeployer          arm.Deployer
 	serversClient        sqlSDK.ServersClient
@@ -69,7 +69,7 @@ func New(
 			armDeployer:     armDeployer,
 			databasesClient: databasesClient,
 		},
-		dbmsFeManager: &dbmsFeManager{
+		dbmsRegisteredManager: &dbmsRegisteredManager{
 			sqlDatabaseDNSSuffix: azureEnvironment.SQLDatabaseDNSSuffix,
 			armDeployer:          armDeployer,
 			serversClient:        serversClient,

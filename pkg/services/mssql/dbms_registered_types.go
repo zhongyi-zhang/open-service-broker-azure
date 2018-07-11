@@ -3,7 +3,7 @@ package mssql
 import "github.com/Azure/open-service-broker-azure/pkg/service"
 
 func (
-	d *dbmsFeManager,
+	d *dbmsRegisteredManager,
 ) getProvisionParametersSchema() service.InputParametersSchema {
 	return service.InputParametersSchema{
 		RequiredProperties: []string{
@@ -44,15 +44,15 @@ func (
 }
 
 func (
-	d *dbmsFeManager,
+	d *dbmsRegisteredManager,
 ) getUpdatingParametersSchema() service.InputParametersSchema {
 	return getDBMSCommonProvisionParamSchema()
 }
 
-func (d *dbmsFeManager) GetEmptyInstanceDetails() service.InstanceDetails {
+func (d *dbmsRegisteredManager) GetEmptyInstanceDetails() service.InstanceDetails { // nolint: lll
 	return &dbmsInstanceDetails{}
 }
 
-func (d *dbmsFeManager) GetEmptyBindingDetails() service.BindingDetails {
+func (d *dbmsRegisteredManager) GetEmptyBindingDetails() service.BindingDetails { // nolint: lll
 	return nil
 }

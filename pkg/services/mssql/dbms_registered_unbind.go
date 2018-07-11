@@ -5,6 +5,9 @@ import (
 )
 
 // TODO: Unbind is not valid for DBMS only; determine correct behavior
-func (d *dbmsFeManager) Unbind(service.Instance, service.Binding) error {
+func (d *dbmsRegisteredManager) Unbind(
+	service.Instance,
+	service.Binding,
+) error {
 	return nil
 }
