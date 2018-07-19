@@ -46,7 +46,21 @@ func (
 func (
 	d *dbmsRegisteredManager,
 ) getUpdatingParametersSchema() service.InputParametersSchema {
-	return getDBMSCommonProvisionParamSchema()
+	return service.InputParametersSchema{
+		SecureProperties: []string{
+			"administratorLoginPassword",
+		},
+		PropertySchemas: map[string]service.PropertySchema{
+			"administratorLogin": &service.StringPropertySchema{
+				Description: "Specifies the administrator login name" +
+					" of the existing server",
+			},
+			"administratorLoginPassword": &service.StringPropertySchema{
+				Description: "Specifies the administrator login password" +
+					" of the existing server",
+			},
+		},
+	}
 }
 
 func (d *dbmsRegisteredManager) GetEmptyInstanceDetails() service.InstanceDetails { // nolint: lll

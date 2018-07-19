@@ -50,12 +50,11 @@ func (d *dbmsRegisteredManager) getServer(
 		return nil, fmt.Errorf("error getting sql server: %s", err)
 	}
 	if result.Name == nil {
-		err = fmt.Errorf(
+		return nil, fmt.Errorf(
 			"can't find sql server %s in the resource group %s",
 			dt.ServerName,
 			resourceGroup,
 		)
-		return nil, err
 	}
 	expectedVersion :=
 		instance.Service.GetProperties().Extended["version"].(string)
@@ -75,7 +74,7 @@ func (d *dbmsRegisteredManager) testConnection(
 	instance service.Instance,
 ) (service.InstanceDetails, error) {
 	dt := instance.Details.(*dbmsInstanceDetails)
-	// connect to master database to create login
+	// connect to master database
 	masterDb, err := getDBConnection(
 		dt.AdministratorLogin,
 		string(dt.AdministratorLoginPassword),
