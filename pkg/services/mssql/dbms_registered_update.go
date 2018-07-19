@@ -1,6 +1,8 @@
 package mssql
 
 import (
+	"context"
+
 	"github.com/Azure/open-service-broker-azure/pkg/service"
 )
 
@@ -19,7 +21,7 @@ func (d *dbmsRegisteredManager) GetUpdater(
 	)
 }
 
-func (d *dbmsManager) updateAdministrator(
+func (d *dbmsRegisteredManager) updateAdministrator(
 	_ context.Context,
 	instance service.Instance,
 ) (service.InstanceDetails, error) {
@@ -29,5 +31,5 @@ func (d *dbmsManager) updateAdministrator(
 	dt.AdministratorLoginPassword = service.SecureString(
 		instance.ProvisioningParameters.GetString("administratorLoginPassword"),
 	)
-	return instance.Details, err
+	return instance.Details, nil
 }
