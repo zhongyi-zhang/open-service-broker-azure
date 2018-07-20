@@ -31,5 +31,5 @@ func (d *dbmsRegisteredManager) updateAdministrator(
 	dt.AdministratorLoginPassword = service.SecureString(
 		instance.ProvisioningParameters.GetString("administratorLoginPassword"),
 	)
-	return instance.Details, nil
+	return dt, nil
 }

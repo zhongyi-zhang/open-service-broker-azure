@@ -14,7 +14,7 @@ import (
 )
 
 var mssqlDBMSAlias = uuid.NewV4().String()
-var mssqlDBMSFeAlias = mssqlDBMSAlias + "-fe"
+var mssqlDBMSRegisteredAlias = mssqlDBMSAlias + "-registered"
 
 var mssqlTestCases = []serviceLifecycleTestCase{
 	{ // all-in-one scenario (dtu-based)
@@ -124,7 +124,7 @@ var mssqlTestCases = []serviceLifecycleTestCase{
 				planID:    "840399dd-5593-493e-80c1-3b21f687997d",
 				provisioningParameters: map[string]interface{}{
 					"location": "southcentralus",
-					"alias":    mssqlDBMSFeAlias,
+					"alias":    mssqlDBMSRegisteredAlias,
 				},
 				childTestCases: []*serviceLifecycleTestCase{
 					{ // dtu db only scenario
@@ -134,7 +134,7 @@ var mssqlTestCases = []serviceLifecycleTestCase{
 						planID:          "756ccc03-e701-4336-a5cd-ea0cf22e597c",
 						testCredentials: testMsSQLCreds,
 						provisioningParameters: map[string]interface{}{
-							"parentAlias": mssqlDBMSFeAlias,
+							"parentAlias": mssqlDBMSRegisteredAlias,
 						},
 					},
 					{ // vcore db only scenario
@@ -144,7 +144,7 @@ var mssqlTestCases = []serviceLifecycleTestCase{
 						planID:          "8bcd1643-b02c-4d71-8860-c31adae10a6b",
 						testCredentials: testMsSQLCreds,
 						provisioningParameters: map[string]interface{}{
-							"parentAlias": mssqlDBMSFeAlias,
+							"parentAlias": mssqlDBMSRegisteredAlias,
 							"cores":       int64(2),
 							"storage":     int64(10),
 						},
