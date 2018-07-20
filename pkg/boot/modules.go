@@ -23,6 +23,7 @@ import (
 	"github.com/Azure/open-service-broker-azure/pkg/services/eventhubs"
 	"github.com/Azure/open-service-broker-azure/pkg/services/keyvault"
 	"github.com/Azure/open-service-broker-azure/pkg/services/mssql"
+	"github.com/Azure/open-service-broker-azure/pkg/services/mssqlfg"
 	"github.com/Azure/open-service-broker-azure/pkg/services/mysql"
 	"github.com/Azure/open-service-broker-azure/pkg/services/postgresql"
 	"github.com/Azure/open-service-broker-azure/pkg/services/rediscache"
@@ -142,6 +143,13 @@ func getModules(
 	)
 	sqlDatabasesClient.Authorizer = authorizer
 	sqlDatabasesClient.UserAgent = getUserAgent(sqlDatabasesClient.Client)
+	sqlFailoverGroupsClient := sqlSDK.NewFailoverGroupsClientWithBaseURI(
+		azureConfig.Environment.ResourceManagerEndpoint,
+		azureSubscriptionID,
+	)
+	sqlFailoverGroupsClient.Authorizer = authorizer
+	sqlFailoverGroupsClient.UserAgent =
+		getUserAgent(sqlFailoverGroupsClient.Client)
 
 	redisClient := redisSDK.NewClientWithBaseURI(
 		azureConfig.Environment.ResourceManagerEndpoint,
@@ -188,6 +196,13 @@ func getModules(
 			armDeployer,
 			sqlServersClient,
 			sqlDatabasesClient,
+		),
+		mssqlfg.New(
+			azureConfig.Environment,
+			armDeployer,
+			sqlServersClient,
+			sqlDatabasesClient,
+			sqlFailoverGroupsClient,
 		),
 		cosmosdb.New(armDeployer, cosmosdbAccountsClient),
 		storage.New(armDeployer, storageAccountsClient),
