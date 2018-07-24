@@ -20,16 +20,16 @@ import (
 // in the same resource group with the service instance.
 type serviceLifecycleTestCase struct {
 	// To clarify-- this is a test grouping-- it is NOT a resource group
-	group                                string
-	name                                 string
-	serviceID                            string
-	planID                               string
-	provisioningParameters               map[string]interface{}
-	parentServiceInstance                *service.Instance
-	bindingParameters                    map[string]interface{}
-	testCredentials                      func(credentials map[string]interface{}) error // nolint: lll
-	childTestCases                       []*serviceLifecycleTestCase
-	deliverProvisioningParametersToChild func(childPp *map[string]interface{}, dt service.InstanceDetails, svc service.Service) // nolint: lll
+	group                  string
+	name                   string
+	serviceID              string
+	planID                 string
+	preProvision           func(ctx context.Context, resourceGroup string, parent *service.Instance, pp *map[string]interface{}) error // nolint: lll
+	provisioningParameters map[string]interface{}
+	parentServiceInstance  *service.Instance
+	bindingParameters      map[string]interface{}
+	testCredentials        func(credentials map[string]interface{}) error // nolint: lll
+	childTestCases         []*serviceLifecycleTestCase
 }
 
 func (s serviceLifecycleTestCase) getName() string {
@@ -75,6 +75,18 @@ func (s serviceLifecycleTestCase) execute(
 		"resourceGroup",
 	) {
 		s.provisioningParameters["resourceGroup"] = resourceGroup
+	}
+
+	// do  preProvision scoped in the specified resourceGroup
+	if s.preProvision != nil {
+		if err := s.preProvision(
+			ctx,
+			resourceGroup,
+			s.parentServiceInstance,
+			&s.provisioningParameters,
+		); err != nil {
+			return err
+		}
 	}
 
 	if err :=
@@ -189,16 +201,7 @@ func (s serviceLifecycleTestCase) execute(
 	// Iterate through any child test cases, setting the instnace from this
 	// test case as the parent.
 	for _, childTestCase := range s.childTestCases {
-		if s.deliverProvisioningParametersToChild != nil {
-			s.deliverProvisioningParametersToChild(
-				&childTestCase.provisioningParameters,
-				instance.Details,
-				svc,
-			)
-			childTestCase.parentServiceInstance = instance.Parent
-		} else {
-			childTestCase.parentServiceInstance = &instance
-		}
+		childTestCase.parentServiceInstance = &instance
 		t.Run(childTestCase.getName(), func(t *testing.T) {
 			tErr := childTestCase.execute(t, catalog, resourceGroup)
 			// This will fail this subtest and also the parent lifecycle test
