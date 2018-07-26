@@ -5,7 +5,6 @@ import (
 	"fmt"
 
 	"github.com/Azure/open-service-broker-azure/pkg/service"
-	uuid "github.com/satori/go.uuid"
 )
 
 func (d *dbmsRegisteredManager) GetProvisioner(
@@ -15,7 +14,6 @@ func (d *dbmsRegisteredManager) GetProvisioner(
 		service.NewProvisioningStep("preProvision", d.preProvision),
 		service.NewProvisioningStep("getServer", d.getServer),
 		service.NewProvisioningStep("testConnection", d.testConnection),
-		service.NewProvisioningStep("deployARMTemplate", d.deployARMTemplate),
 	)
 }
 
@@ -25,7 +23,7 @@ func (d *dbmsRegisteredManager) preProvision(
 ) (service.InstanceDetails, error) {
 	pp := instance.ProvisioningParameters
 	return &dbmsInstanceDetails{
-		ARMDeploymentName:          uuid.NewV4().String(),
+		ARMDeploymentName:          "",
 		ServerName:                 pp.GetString("server"),
 		AdministratorLogin:         pp.GetString("administratorLogin"),
 		AdministratorLoginPassword: service.SecureString(pp.GetString("administratorLoginPassword")), // nolint: lll
@@ -66,6 +64,7 @@ func (d *dbmsRegisteredManager) getServer(
 			result.Version,
 		)
 	}
+	dt.FullyQualifiedDomainName = *result.FullyQualifiedDomainName
 	return instance.Details, nil
 }
 
@@ -107,41 +106,4 @@ func (d *dbmsRegisteredManager) testConnection(
 	}
 
 	return instance.Details, nil
-}
-
-func (d *dbmsRegisteredManager) deployARMTemplate(
-	_ context.Context,
-	instance service.Instance,
-) (service.InstanceDetails, error) {
-	dt := instance.Details.(*dbmsInstanceDetails)
-	goTemplateParams := map[string]interface{}{}
-	goTemplateParams["serverName"] = dt.ServerName
-	goTemplateParams["location"] =
-		instance.ProvisioningParameters.GetString("location")
-	tagsObj := instance.ProvisioningParameters.GetObject("tags")
-	tags := make(map[string]string, len(tagsObj.Data))
-	for k := range tagsObj.Data {
-		tags[k] = tagsObj.GetString(k)
-	}
-	outputs, err := d.armDeployer.Deploy(
-		dt.ARMDeploymentName,
-		instance.ProvisioningParameters.GetString("resourceGroup"),
-		instance.ProvisioningParameters.GetString("location"),
-		dbmsFeARMTemplateBytes,
-		goTemplateParams,
-		map[string]interface{}{},
-		tags,
-	)
-	if err != nil {
-		return nil, fmt.Errorf("error deploying ARM template: %s", err)
-	}
-	var ok bool
-	dt.FullyQualifiedDomainName, ok = outputs["fullyQualifiedDomainName"].(string)
-	if !ok {
-		return nil, fmt.Errorf(
-			"error retrieving fully qualified domain name from deployment: %s",
-			err,
-		)
-	}
-	return dt, err
 }
