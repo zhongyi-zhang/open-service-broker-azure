@@ -22,8 +22,8 @@ var mssqlTestCases = []serviceLifecycleTestCase{
 	{ // all-in-one scenario (dtu-based)
 		group:     "mssql",
 		name:      "all-in-one (DTU)",
-		serviceID: "aa62bb24-1d49-4f2d-905a-d387ae339f3a",
-		planID:    "e5c5d63d-e32f-47ff-9e57-be72872405be",
+		serviceID: "fb9bc99e-0aa9-11e6-8a8a-000d3a002ed5",
+		planID:    "2497b7f3-341b-4ac6-82fb-d4a48c005e19",
 		provisioningParameters: map[string]interface{}{
 			"location": "southcentralus",
 			"dtus":     200,
@@ -45,8 +45,8 @@ var mssqlTestCases = []serviceLifecycleTestCase{
 	{ // dbms only scenario
 		group:     "mssql",
 		name:      "dbms-only",
-		serviceID: "3d07f78a-e15c-4f26-ae82-62a963a7162d",
-		planID:    "d98d557a-983e-4c96-a928-926288583975",
+		serviceID: "a7454e0e-be2c-46ac-b55f-8c4278117525",
+		planID:    "24f0f42e-1ab3-474e-a5ca-b943b2c48eee",
 		provisioningParameters: map[string]interface{}{
 			"location": "southcentralus",
 			"alias":    mssqlDBMSAlias,
@@ -62,8 +62,8 @@ var mssqlTestCases = []serviceLifecycleTestCase{
 			{ // db only scenario (dtu-based)
 				group:           "mssql",
 				name:            "database-only (DTU)",
-				serviceID:       "94e4429c-1dd9-4e50-855f-6af2a0f8756e",
-				planID:          "756ccc03-e701-4336-a5cd-ea0cf22e597c",
+				serviceID:       "2bbc160c-e279-4757-a6b6-4c0a4822d0aa",
+				planID:          "8fa8d759-c142-45dd-ae38-b93482ddc04a",
 				testCredentials: testMsSQLCreds,
 				provisioningParameters: map[string]interface{}{
 					"parentAlias": mssqlDBMSAlias,
@@ -72,8 +72,8 @@ var mssqlTestCases = []serviceLifecycleTestCase{
 			{ // db only scenario (vcore-based)
 				group:           "mssql",
 				name:            "database-only (vCore)",
-				serviceID:       "94e4429c-1dd9-4e50-855f-6af2a0f8756e",
-				planID:          "8bcd1643-b02c-4d71-8860-c31adae10a6b",
+				serviceID:       "2bbc160c-e279-4757-a6b6-4c0a4822d0aa",
+				planID:          "da591616-77a1-4df8-a493-6c119649bc6b",
 				testCredentials: testMsSQLCreds,
 				provisioningParameters: map[string]interface{}{
 					"parentAlias": mssqlDBMSAlias,
@@ -86,8 +86,8 @@ var mssqlTestCases = []serviceLifecycleTestCase{
 	{ // all-in-one scenario (vcore-based)
 		group:     "mssql",
 		name:      "all-in-one (vCore)",
-		serviceID: "aa62bb24-1d49-4f2d-905a-d387ae339f3a",
-		planID:    "fcdce498-a183-4031-96e6-229815a4d75c",
+		serviceID: "fb9bc99e-0aa9-11e6-8a8a-000d3a002ed5",
+		planID:    "c77e86af-f050-4457-a2ff-2b48451888f3",
 		provisioningParameters: map[string]interface{}{
 			"location": "southcentralus",
 			"cores":    4,
@@ -104,8 +104,8 @@ var mssqlTestCases = []serviceLifecycleTestCase{
 	{ // dbms only registered scenario
 		group:        "mssql",
 		name:         "dbms-only-registered",
-		serviceID:    "97c5a775-333f-42a1-bfca-16819ddf7e2e",
-		planID:       "840399dd-5593-493e-80c1-3b21f687997d",
+		serviceID:    "c9bd94e7-5b7d-4b20-96e6-c5678f99d997",
+		planID:       "4e95e962-0142-4117-b212-bcc7aec7f6c2",
 		preProvision: createSQLServer,
 		provisioningParameters: map[string]interface{}{
 			"location": "southcentralus",
@@ -115,8 +115,8 @@ var mssqlTestCases = []serviceLifecycleTestCase{
 			{ // dtu db only scenario
 				group:           "mssql",
 				name:            "database-only (DTU)",
-				serviceID:       "94e4429c-1dd9-4e50-855f-6af2a0f8756e",
-				planID:          "756ccc03-e701-4336-a5cd-ea0cf22e597c",
+				serviceID:       "2bbc160c-e279-4757-a6b6-4c0a4822d0aa",
+				planID:          "8fa8d759-c142-45dd-ae38-b93482ddc04a",
 				testCredentials: testMsSQLCreds,
 				provisioningParameters: map[string]interface{}{
 					"parentAlias": mssqlDBMSRegisteredAlias,
@@ -125,8 +125,8 @@ var mssqlTestCases = []serviceLifecycleTestCase{
 			{ // vcore db only scenario
 				group:           "mssql",
 				name:            "database-only (vCore)",
-				serviceID:       "94e4429c-1dd9-4e50-855f-6af2a0f8756e",
-				planID:          "8bcd1643-b02c-4d71-8860-c31adae10a6b",
+				serviceID:       "2bbc160c-e279-4757-a6b6-4c0a4822d0aa",
+				planID:          "da591616-77a1-4df8-a493-6c119649bc6b",
 				testCredentials: testMsSQLCreds,
 				provisioningParameters: map[string]interface{}{
 					"parentAlias": mssqlDBMSRegisteredAlias,
@@ -139,8 +139,8 @@ var mssqlTestCases = []serviceLifecycleTestCase{
 	{ // database only from existing scenario
 		group:     "mssql",
 		name:      "dbms-only",
-		serviceID: "3d07f78a-e15c-4f26-ae82-62a963a7162d",
-		planID:    "d98d557a-983e-4c96-a928-926288583975",
+		serviceID: "a7454e0e-be2c-46ac-b55f-8c4278117525",
+		planID:    "24f0f42e-1ab3-474e-a5ca-b943b2c48eee",
 		provisioningParameters: map[string]interface{}{
 			"location": "southcentralus",
 			"alias":    mssqlDBMSAlias,
@@ -157,8 +157,8 @@ var mssqlTestCases = []serviceLifecycleTestCase{
 				// db only from existing scenario (dtu-based)
 				group:           "mssql",
 				name:            "database-only-fe (DTU)",
-				serviceID:       "0938a2d1-3490-41fc-a095-d235debff907",
-				planID:          "fc2f3117-2539-414d-b5ab-f047fc4c93d4",
+				serviceID:       "b0b2a2f7-9b5e-4692-8b94-24fe2f6a9a8e",
+				planID:          "e5804586-625a-4f67-996f-ca19a14711cc",
 				testCredentials: testMsSQLCreds,
 				preProvision:    createSQLDatabase,
 				provisioningParameters: map[string]interface{}{

@@ -3,6 +3,7 @@ package redis
 import (
 	"crypto/tls"
 	"fmt"
+	"strconv"
 
 	"github.com/Azure/open-service-broker-azure/pkg/service"
 	"github.com/Azure/open-service-broker-azure/pkg/storage"
@@ -10,8 +11,9 @@ import (
 )
 
 const (
-	instances = "instanceList"
-	bindings  = "bindingList"
+	instances     = "instanceList"
+	bindings      = "bindingList"
+	useV2GuidFlag = "useV2GuidFlag"
 )
 
 type store struct {
@@ -276,4 +278,49 @@ func getBindingKey(bindingID string) string {
 
 func (s *store) TestConnection() error {
 	return s.redisClient.Ping().Err()
+}
+
+// GetSetV2GuidFlag can be called to check the store record if it uses V2 GUID
+// set. Even though the flag in environment variables is set to false, the
+// broker uses V2 GUID set if the flag is true in the store.
+func GetSetV2GuidFlag(envFlag bool) (bool, error) {
+	config, err := GetConfigFromEnvironment()
+	if err != nil {
+		return false, err
+	}
+	redisOpts := &redis.Options{
+		Addr:       fmt.Sprintf("%s:%d", config.RedisHost, config.RedisPort),
+		Password:   config.RedisPassword,
+		DB:         config.RedisDB,
+		MaxRetries: 5,
+	}
+	if config.RedisEnableTLS {
+		redisOpts.TLSConfig = &tls.Config{
+			ServerName: config.RedisHost,
+		}
+	}
+	client := redis.NewClient(redisOpts)
+	if err := client.Ping().Err(); err != nil {
+		return false, err
+	}
+
+	storageFlagStr, err := client.Get(useV2GuidFlag).Result()
+	if err == redis.Nil {
+		if gettingErr := client.Set(
+			useV2GuidFlag,
+			strconv.FormatBool(envFlag),
+			0,
+		).Err(); gettingErr != nil {
+			return false, gettingErr
+		}
+		return envFlag, nil
+	} else if err != nil {
+		return false, err
+	} else {
+		storageFlag, parsingErr := strconv.ParseBool(storageFlagStr)
+		if parsingErr != nil {
+			return false, parsingErr
+		}
+		return storageFlag || envFlag, nil
+	}
 }

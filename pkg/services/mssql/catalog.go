@@ -262,7 +262,7 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 		// all-in-one (dbms and database) service
 		service.NewService(
 			service.ServiceProperties{
-				ID:          "aa62bb24-1d49-4f2d-905a-d387ae339f3a",
+				ID:          "fb9bc99e-0aa9-11e6-8a8a-000d3a002ed5",
 				Name:        "azure-sql-12-0",
 				Description: "Azure SQL Database 12.0-- DBMS and single database",
 				Metadata: service.ServiceMetadata{
@@ -281,35 +281,35 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 			m.allInOneServiceManager,
 			service.NewPlan(
 				buildBasicPlan(
-					"63d62185-d277-4735-96d6-b7cf6a6d128a",
+					"3819fdfa-0aaa-11e6-86f4-000d3a002ed5",
 					true,
 					false,
 				),
 			),
 			service.NewPlan(
 				buildStandardPlan(
-					"e5c5d63d-e32f-47ff-9e57-be72872405be",
+					"2497b7f3-341b-4ac6-82fb-d4a48c005e19",
 					true,
 					false,
 				),
 			),
 			service.NewPlan(
 				buildPremiumPlan(
-					"ebc10094-7d57-4e59-86f6-e1204632f0e5",
+					"f9a3cc8e-a6e2-474d-b032-9837ea3dfcaa",
 					true,
 					false,
 				),
 			),
 			service.NewPlan(
 				buildGeneralPurposePlan(
-					"fcdce498-a183-4031-96e6-229815a4d75c",
+					"c77e86af-f050-4457-a2ff-2b48451888f3",
 					true,
 					false,
 				),
 			),
 			service.NewPlan(
 				buildBusinessCriticalPlan(
-					"81300e34-43d8-456c-bd25-7b760592f138",
+					"ebc3ae35-91bc-480c-807b-e798c1ca8c4e",
 					true,
 					false,
 				),
@@ -318,10 +318,10 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 		// dbms only service
 		service.NewService(
 			service.ServiceProperties{
-				ID:             "3d07f78a-e15c-4f26-ae82-62a963a7162d",
+				ID:             "a7454e0e-be2c-46ac-b55f-8c4278117525",
 				Name:           "azure-sql-12-0-dbms",
 				Description:    "Azure SQL 12.0-- DBMS only",
-				ChildServiceID: "94e4429c-1dd9-4e50-855f-6af2a0f8756e",
+				ChildServiceID: "2bbc160c-e279-4757-a6b6-4c0a4822d0aa",
 				Metadata: service.ServiceMetadata{
 					DisplayName:      "Azure SQL 12.0-- DBMS Only",
 					ImageURL:         "https://azure.microsoft.com/svghandler/sql-database/?width=200",
@@ -337,7 +337,7 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 			},
 			m.dbmsManager,
 			service.NewPlan(service.PlanProperties{
-				ID:          "d98d557a-983e-4c96-a928-926288583975",
+				ID:          "24f0f42e-1ab3-474e-a5ca-b943b2c48eee",
 				Name:        "dbms",
 				Description: "Azure SQL Server-- DBMS only",
 				Free:        false,
@@ -356,11 +356,11 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 		// database only service
 		service.NewService(
 			service.ServiceProperties{
-				ID:              "94e4429c-1dd9-4e50-855f-6af2a0f8756e",
+				ID:              "2bbc160c-e279-4757-a6b6-4c0a4822d0aa",
 				Name:            "azure-sql-12-0-database",
 				Description:     "Azure SQL 12.0-- database only",
 				Bindable:        true,
-				ParentServiceID: "3d07f78a-e15c-4f26-ae82-62a963a7162d", // more parents in fact
+				ParentServiceID: "a7454e0e-be2c-46ac-b55f-8c4278117525", // more parents in fact
 				Metadata: service.ServiceMetadata{
 					DisplayName:      "Azure SQL 12.0-- Database Only",
 					ImageURL:         "https://azure.microsoft.com/svghandler/sql-database/?width=200",
@@ -376,35 +376,35 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 			m.databaseManager,
 			service.NewPlan(
 				buildBasicPlan(
-					"756ccc03-e701-4336-a5cd-ea0cf22e597c",
+					"8fa8d759-c142-45dd-ae38-b93482ddc04a",
 					false,
 					false,
 				),
 			),
 			service.NewPlan(
 				buildStandardPlan(
-					"f9613acc-6ffd-4c9e-acdf-7631d971e7dc",
+					"9d36b6b3-b5f3-4907-a713-5cc13b785409",
 					false,
 					false,
 				),
 			),
 			service.NewPlan(
 				buildPremiumPlan(
-					"df706b83-cf8e-4e88-bd67-ce7feecef7c8",
+					"220e922a-a5b2-43e4-9388-fe45a32bbf31",
 					false,
 					false,
 				),
 			),
 			service.NewPlan(
 				buildGeneralPurposePlan(
-					"8bcd1643-b02c-4d71-8860-c31adae10a6b",
+					"da591616-77a1-4df8-a493-6c119649bc6b",
 					false,
 					false,
 				),
 			),
 			service.NewPlan(
 				buildBusinessCriticalPlan(
-					"9f506da2-4f31-4e1b-85b8-9a5dbf380a0f",
+					"b05c25d2-1d63-4d09-a50a-e68c2710a069",
 					false,
 					false,
 				),
@@ -413,10 +413,10 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 		// dbms only registered service
 		service.NewService(
 			service.ServiceProperties{
-				ID:             "97c5a775-333f-42a1-bfca-16819ddf7e2e",
+				ID:             "c9bd94e7-5b7d-4b20-96e6-c5678f99d997",
 				Name:           "azure-sql-12-0-dbms-registered",
 				Description:    "Azure SQL 12.0-- DBMS only registered",
-				ChildServiceID: "94e4429c-1dd9-4e50-855f-6af2a0f8756e",
+				ChildServiceID: "2bbc160c-e279-4757-a6b6-4c0a4822d0aa",
 				Metadata: service.ServiceMetadata{
 					DisplayName:      "Azure SQL 12.0-- DBMS Only registered",
 					ImageURL:         "https://azure.microsoft.com/svghandler/sql-database/?width=200",
@@ -432,7 +432,7 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 			},
 			m.dbmsRegisteredManager,
 			service.NewPlan(service.PlanProperties{
-				ID:          "840399dd-5593-493e-80c1-3b21f687997d",
+				ID:          "4e95e962-0142-4117-b212-bcc7aec7f6c2",
 				Name:        "dbms",
 				Description: "Azure SQL Server-- DBMS only",
 				Free:        false,
@@ -451,11 +451,11 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 		// database only from existing service
 		service.NewService(
 			service.ServiceProperties{
-				ID:              "0938a2d1-3490-41fc-a095-d235debff907",
+				ID:              "b0b2a2f7-9b5e-4692-8b94-24fe2f6a9a8e",
 				Name:            "azure-sql-12-0-database-from-existing",
 				Description:     "Azure SQL 12.0-- database only from existing",
 				Bindable:        true,
-				ParentServiceID: "3d07f78a-e15c-4f26-ae82-62a963a7162d", // more parents in fact
+				ParentServiceID: "a7454e0e-be2c-46ac-b55f-8c4278117525", // more parents in fact
 				Metadata: service.ServiceMetadata{
 					DisplayName:      "Azure SQL 12.0-- Database Only from existing",
 					ImageURL:         "https://azure.microsoft.com/svghandler/sql-database/?width=200",
@@ -471,35 +471,35 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 			m.databaseFeManager,
 			service.NewPlan(
 				buildBasicPlan(
-					"fc2f3117-2539-414d-b5ab-f047fc4c93d4",
+					"e5804586-625a-4f67-996f-ca19a14711cc",
 					false,
 					true,
 				),
 			),
 			service.NewPlan(
 				buildStandardPlan(
-					"fb475332-23ee-4aca-953e-55fc97577d01",
+					"ee01d17b-37ee-46b7-bfc7-39faf3230d02",
 					false,
 					true,
 				),
 			),
 			service.NewPlan(
 				buildPremiumPlan(
-					"6323a513-98ca-42ca-9ad5-6e78eff8a8fe",
+					"19f31593-6727-451e-95cf-3e64a90bd968",
 					false,
 					true,
 				),
 			),
 			service.NewPlan(
 				buildGeneralPurposePlan(
-					"f64950ae-9ed3-4639-afa4-c85b1a2dc759",
+					"e8a788a0-2968-43ec-b8bb-5ecf2ce90ade",
 					false,
 					true,
 				),
 			),
 			service.NewPlan(
 				buildBusinessCriticalPlan(
-					"666d2a9e-a566-4710-a07f-cf712c43701c",
+					"9a26cd40-af08-4e05-bb8e-a521c3d3b60e",
 					false,
 					true,
 				),

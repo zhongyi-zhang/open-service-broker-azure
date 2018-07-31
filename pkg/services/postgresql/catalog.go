@@ -140,7 +140,7 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 		// all-in-one
 		service.NewService(
 			service.ServiceProperties{
-				ID:          "4d4e2afa-4eb6-4cbd-a321-35f115281ab2",
+				ID:          "b43b4bba-5741-4d98-a10b-17dc5cee0175",
 				Name:        "azure-postgresql-9-6",
 				Description: "Azure Database for PostgreSQL 9.6-- DBMS and single database",
 				Metadata: service.ServiceMetadata{
@@ -157,17 +157,17 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 				},
 			},
 			m.allInOneManager,
-			service.NewPlan(createBasicPlan("74cb4795-7c06-4ddb-8064-d2cdd3818256", true)),
-			service.NewPlan(createGPPlan("e2286a43-0de5-4415-9782-9ed2070cb116", true)),
-			service.NewPlan(createMemoryOptimizedPlan("c79ad81b-3000-4abf-a27f-c8a397d34b41", true)),
+			service.NewPlan(createBasicPlan("09b398f8-f3c1-49ae-b726-459444e22460", true)),
+			service.NewPlan(createGPPlan("5807fb83-8065-4d91-a1f7-b4437657cd77", true)),
+			service.NewPlan(createMemoryOptimizedPlan("90f27532-0286-42e5-8e23-c3bb37191368", true)),
 		),
 		// dbms only
 		service.NewService(
 			service.ServiceProperties{
-				ID:             "278c0ee4-7aa6-4f79-953e-3d60034f93b5",
+				ID:             "d3f74b44-79bc-4d1e-bf7d-c247c2b851f9",
 				Name:           "azure-postgresql-9-6-dbms",
 				Description:    "Azure Database for PostgreSQL 9.6-- DBMS only",
-				ChildServiceID: "20defa86-7dfc-4c3a-aafc-9f106ac56fcb",
+				ChildServiceID: "25434f16-d762-41c7-bbdd-8045d7f74ca6",
 				Metadata: service.ServiceMetadata{
 					DisplayName:      "Azure Database for PostgreSQL 9.6-- DBMS Only",
 					ImageURL:         "https://azure.microsoft.com/svghandler/postgresql/?width=200",
@@ -182,17 +182,17 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 				},
 			},
 			m.dbmsManager,
-			service.NewPlan(createBasicPlan("1d6067ba-ec51-4078-bdfe-969c622178de", false)),
-			service.NewPlan(createGPPlan("d75039e2-f333-472a-b5ed-b43dfbef1771", false)),
-			service.NewPlan(createMemoryOptimizedPlan("14986696-b6ac-47ff-8000-203ae3e4ae3b", false)),
+			service.NewPlan(createBasicPlan("73191861-04b3-4d0b-a29b-429eb15a83d4", false)),
+			service.NewPlan(createGPPlan("4c6932e8-30ec-4af9-83d2-6e27286dbab3", false)),
+			service.NewPlan(createMemoryOptimizedPlan("057e64ea-41b5-4ed7-bf99-4867a332cfb7", false)),
 		),
 		// database only
 		service.NewService(
 			service.ServiceProperties{
-				ID:              "20defa86-7dfc-4c3a-aafc-9f106ac56fcb",
+				ID:              "25434f16-d762-41c7-bbdd-8045d7f74ca6",
 				Name:            "azure-postgresql-9-6-database",
 				Description:     "Azure Database for PostgreSQL 9.6-- database only",
-				ParentServiceID: "278c0ee4-7aa6-4f79-953e-3d60034f93b5",
+				ParentServiceID: "d3f74b44-79bc-4d1e-bf7d-c247c2b851f9",
 				Metadata: service.ServiceMetadata{
 					DisplayName:      "Azure Database for PostgreSQL 9.6-- Database Only",
 					ImageURL:         "https://azure.microsoft.com/svghandler/postgresql/?width=200",
@@ -208,7 +208,7 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 			},
 			m.databaseManager,
 			service.NewPlan(service.PlanProperties{
-				ID:          "ee762481-19e8-49e6-91dc-38f17336789a",
+				ID:          "df6f5ef1-e602-406b-ba73-09c107d1e31b",
 				Name:        "database",
 				Description: "A new database added to an existing DBMS",
 				Free:        false,
