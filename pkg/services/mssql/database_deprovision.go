@@ -12,10 +12,7 @@ func (d *databaseManager) GetDeprovisioner(
 ) (service.Deprovisioner, error) {
 	return service.NewDeprovisioner(
 		service.NewDeprovisioningStep("deleteARMDeployment", d.deleteARMDeployment),
-		service.NewDeprovisioningStep(
-			"deleteMsSQLDatabase",
-			d.deleteMsSQLDatabase,
-		),
+		service.NewDeprovisioningStep("deleteMsSQLDatabase", d.deleteMsSQLDatabase),
 	)
 }
 
