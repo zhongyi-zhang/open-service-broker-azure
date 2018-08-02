@@ -3,6 +3,7 @@ package mssql
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/Azure/open-service-broker-azure/pkg/service"
 )
@@ -59,9 +60,29 @@ func (d *dbmsRegisteredManager) getServer(
 	if *result.Version != expectedVersion {
 		return nil, fmt.Errorf(
 			"sql server version validation failed, "+
-				"expected version: %s, current version: %s",
+				"expected version: %s, actual version: %s",
 			expectedVersion,
 			result.Version,
+		)
+	}
+	expectedLocation := strings.Replace(
+		strings.ToLower(pp.GetString("location")),
+		" ",
+		"",
+		-1,
+	)
+	actualLocation := strings.Replace(
+		strings.ToLower(*result.Location),
+		" ",
+		"",
+		-1,
+	)
+	if expectedLocation != actualLocation {
+		return nil, fmt.Errorf(
+			"sql server location validation failed, "+
+				"expected location: %s, actual location: %s",
+			expectedLocation,
+			actualLocation,
 		)
 	}
 	dt.FullyQualifiedDomainName = *result.FullyQualifiedDomainName
