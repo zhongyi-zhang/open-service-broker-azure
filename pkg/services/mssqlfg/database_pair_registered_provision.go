@@ -2,10 +2,8 @@ package mssqlfg
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/Azure/open-service-broker-azure/pkg/service"
-	uuid "github.com/satori/go.uuid"
 )
 
 func (d *databasePairRegisteredManager) GetProvisioner(
@@ -16,20 +14,17 @@ func (d *databasePairRegisteredManager) GetProvisioner(
 		service.NewProvisioningStep("getPriDatabase", d.getPriDatabase),
 		service.NewProvisioningStep("getSecDatabase", d.getSecDatabase),
 		service.NewProvisioningStep("getFailoverGroup", d.getFailoverGroup),
-		service.NewProvisioningStep("deployPriARMTemplate", d.deployPriARMTemplate),
-		service.NewProvisioningStep("deploySecARMTemplate", d.deploySecARMTemplate),
-		service.NewProvisioningStep("deployFgARMTemplate", d.deployFgARMTemplate),
 	)
 }
 
 func (d *databasePairRegisteredManager) preProvision(
 	_ context.Context,
-	_ service.Instance,
+	instance service.Instance,
 ) (service.InstanceDetails, error) {
+	pp := instance.ProvisioningParameters
 	return &databasePairInstanceDetails{
-		PriARMDeploymentName: uuid.NewV4().String(),
-		SecARMDeploymentName: uuid.NewV4().String(),
-		FgARMDeploymentName:  uuid.NewV4().String(),
+		DatabaseName:      pp.GetString("database"),
+		FailoverGroupName: pp.GetString("failoverGroup"),
 	}, nil
 }
 
@@ -88,75 +83,4 @@ func (d *databasePairRegisteredManager) getFailoverGroup(
 		return nil, err
 	}
 	return instance.Details, nil
-}
-
-func (d *databasePairRegisteredManager) deployPriARMTemplate(
-	_ context.Context,
-	instance service.Instance,
-) (service.InstanceDetails, error) {
-	dt := instance.Details.(*databasePairInstanceDetails)
-	pdt := instance.Parent.Details.(*dbmsPairInstanceDetails)
-	tagsObj := instance.ProvisioningParameters.GetObject("tags")
-	tags := make(map[string]string, len(tagsObj.Data))
-	for k := range tagsObj.Data {
-		tags[k] = tagsObj.GetString(k)
-	}
-	err := deployDatabaseFeARMTemplate(
-		&d.armDeployer,
-		dt.PriARMDeploymentName,
-		instance.Parent.ProvisioningParameters.GetString("primaryResourceGroup"),
-		instance.Parent.ProvisioningParameters.GetString("primaryLocation"),
-		pdt.PriServerName,
-		instance.ProvisioningParameters.GetString("database"),
-		tags,
-	)
-	if err != nil {
-		return nil, fmt.Errorf("error deploying ARM template: %s", err)
-	}
-	return instance.Details, nil
-}
-
-func (d *databasePairRegisteredManager) deploySecARMTemplate(
-	_ context.Context,
-	instance service.Instance,
-) (service.InstanceDetails, error) {
-	dt := instance.Details.(*databasePairInstanceDetails)
-	pdt := instance.Parent.Details.(*dbmsPairInstanceDetails)
-	tagsObj := instance.ProvisioningParameters.GetObject("tags")
-	tags := make(map[string]string, len(tagsObj.Data))
-	for k := range tagsObj.Data {
-		tags[k] = tagsObj.GetString(k)
-	}
-	err := deployDatabaseFeARMTemplate(
-		&d.armDeployer,
-		dt.SecARMDeploymentName,
-		instance.Parent.ProvisioningParameters.GetString("secondaryResourceGroup"),
-		instance.Parent.ProvisioningParameters.GetString("secondaryLocation"),
-		pdt.SecServerName,
-		instance.ProvisioningParameters.GetString("database"),
-		tags,
-	)
-	if err != nil {
-		return nil, fmt.Errorf("error deploying ARM template: %s", err)
-	}
-	return dt, nil
-}
-
-func (d *databasePairRegisteredManager) deployFgARMTemplate(
-	_ context.Context,
-	instance service.Instance,
-) (service.InstanceDetails, error) {
-	err := deployFailoverGroupARMTemplate(
-		&d.armDeployer,
-		instance,
-	)
-	if err != nil {
-		return nil, fmt.Errorf("error deploying ARM template: %s", err)
-	}
-	dt := instance.Details.(*databasePairInstanceDetails)
-	dt.DatabaseName =
-		instance.ProvisioningParameters.GetString("database")
-	dt.FailoverGroupName =
-		instance.Parent.ProvisioningParameters.GetString("failoverGroup")
-	return dt, nil
 }

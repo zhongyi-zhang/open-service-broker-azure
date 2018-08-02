@@ -43,11 +43,11 @@ func (d *databasePairManager) deletePriARMDeployment(
 	instance service.Instance,
 ) (service.InstanceDetails, error) {
 	dt := instance.Details.(*databasePairInstanceDetails)
-	err := d.armDeployer.Delete(
+	ppp := instance.Parent.ProvisioningParameters
+	if err := d.armDeployer.Delete(
 		dt.PriARMDeploymentName,
-		instance.Parent.ProvisioningParameters.GetString("primaryResourceGroup"),
-	)
-	if err != nil {
+		ppp.GetString("primaryResourceGroup"),
+	); err != nil {
 		return nil, fmt.Errorf("error deleting ARM deployment: %s", err)
 	}
 	return instance.Details, nil
@@ -58,11 +58,11 @@ func (d *databasePairManager) deleteSecARMDeployment(
 	instance service.Instance,
 ) (service.InstanceDetails, error) {
 	dt := instance.Details.(*databasePairInstanceDetails)
-	err := d.armDeployer.Delete(
+	ppp := instance.Parent.ProvisioningParameters
+	if err := d.armDeployer.Delete(
 		dt.SecARMDeploymentName,
-		instance.Parent.ProvisioningParameters.GetString("secResourceGroup"),
-	)
-	if err != nil {
+		ppp.GetString("secondaryResourceGroup"),
+	); err != nil {
 		return nil, fmt.Errorf("error deleting ARM deployment: %s", err)
 	}
 	return instance.Details, nil
@@ -73,11 +73,11 @@ func (d *databasePairManager) deleteFgARMDeployment(
 	instance service.Instance,
 ) (service.InstanceDetails, error) {
 	dt := instance.Details.(*databasePairInstanceDetails)
-	err := d.armDeployer.Delete(
+	ppp := instance.Parent.ProvisioningParameters
+	if err := d.armDeployer.Delete(
 		dt.FgARMDeploymentName,
-		instance.Parent.ProvisioningParameters.GetString("primaryResourceGroup"),
-	)
-	if err != nil {
+		ppp.GetString("primaryResourceGroup"),
+	); err != nil {
 		return nil, fmt.Errorf("error deleting ARM deployment: %s", err)
 	}
 	return instance.Details, nil
@@ -91,13 +91,16 @@ func (d *databasePairManager) deletePriDatabase(
 	defer cancel()
 	dt := instance.Details.(*databasePairInstanceDetails)
 	pdt := instance.Parent.Details.(*dbmsPairInstanceDetails)
-	if _, err := d.databasesClient.Delete(
-		ctx,
-		instance.Parent.ProvisioningParameters.GetString("primaryResourceGroup"),
-		pdt.PriServerName,
-		dt.DatabaseName,
-	); err != nil {
-		return nil, fmt.Errorf("error deleting sql database: %s", err)
+	ppp := instance.Parent.ProvisioningParameters
+	if dt.DatabaseName != "" {
+		if _, err := d.databasesClient.Delete(
+			ctx,
+			ppp.GetString("primaryResourceGroup"),
+			pdt.PriServerName,
+			dt.DatabaseName,
+		); err != nil {
+			return nil, fmt.Errorf("error deleting sql database: %s", err)
+		}
 	}
 	return instance.Details, nil
 }
@@ -110,13 +113,16 @@ func (d *databasePairManager) deleteSecDatabase(
 	defer cancel()
 	dt := instance.Details.(*databasePairInstanceDetails)
 	pdt := instance.Parent.Details.(*dbmsPairInstanceDetails)
-	if _, err := d.databasesClient.Delete(
-		ctx,
-		instance.Parent.ProvisioningParameters.GetString("secResourceGroup"),
-		pdt.SecServerName,
-		dt.DatabaseName,
-	); err != nil {
-		return nil, fmt.Errorf("error deleting sql database: %s", err)
+	ppp := instance.Parent.ProvisioningParameters
+	if dt.DatabaseName != "" {
+		if _, err := d.databasesClient.Delete(
+			ctx,
+			ppp.GetString("secondaryResourceGroup"),
+			pdt.SecServerName,
+			dt.DatabaseName,
+		); err != nil {
+			return nil, fmt.Errorf("error deleting sql database: %s", err)
+		}
 	}
 	return instance.Details, nil
 }
@@ -129,13 +135,16 @@ func (d *databasePairManager) deleteFailoverGroup(
 	defer cancel()
 	dt := instance.Details.(*databasePairInstanceDetails)
 	pdt := instance.Parent.Details.(*dbmsPairInstanceDetails)
-	if _, err := d.databasesClient.Delete(
-		ctx,
-		instance.Parent.ProvisioningParameters.GetString("primaryResourceGroup"),
-		pdt.PriServerName,
-		dt.FailoverGroupName,
-	); err != nil {
-		return nil, fmt.Errorf("error deleting failover group: %s", err)
+	ppp := instance.Parent.ProvisioningParameters
+	if dt.FailoverGroupName != "" {
+		if _, err := d.failoverGroupsClient.Delete(
+			ctx,
+			ppp.GetString("primaryResourceGroup"),
+			pdt.PriServerName,
+			dt.FailoverGroupName,
+		); err != nil {
+			return nil, fmt.Errorf("error deleting failover group: %s", err)
+		}
 	}
 	return instance.Details, nil
 }

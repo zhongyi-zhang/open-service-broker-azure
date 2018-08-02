@@ -84,10 +84,11 @@ func createCredential(
 	username string,
 	password string,
 ) credentials {
-	reStr := regexp.MustCompile("^[A-Za-z0-9.-]{0,63}$")
+	reStr := regexp.MustCompile("^[a-zA-Z0-9][-a-zA-Z0-9]+[a-zA-Z0-9](.*?)$")
+	repStr := failoverGroupName + "$1"
 	fqdn := reStr.ReplaceAllString(
 		priFqdn,
-		failoverGroupName,
+		repStr,
 	)
 
 	port := 1433

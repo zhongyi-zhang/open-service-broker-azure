@@ -13,16 +13,27 @@ func (d *databasePairFePrimaryManager) GetProvisioner(
 	service.Plan,
 ) (service.Provisioner, error) {
 	return service.NewProvisioner(
+		service.NewProvisioningStep("preProvision", d.preProvision),
 		service.NewProvisioningStep(
 			"checkNameAvailability",
 			d.checkNameAvailability,
 		),
-		service.NewProvisioningStep("preProvision", d.preProvision),
 		service.NewProvisioningStep("getPriDatabase", d.getPriDatabase),
 		service.NewProvisioningStep("deployPriARMTemplate", d.deployPriARMTemplate),
-		service.NewProvisioningStep("deploySecARMTemplate", d.deploySecARMTemplate),
 		service.NewProvisioningStep("deployFgARMTemplate", d.deployFgARMTemplate),
+		service.NewProvisioningStep("deploySecARMTemplate", d.deploySecARMTemplate),
 	)
+}
+
+func (d *databasePairFePrimaryManager) preProvision(
+	_ context.Context,
+	_ service.Instance,
+) (service.InstanceDetails, error) {
+	return &databasePairInstanceDetails{
+		PriARMDeploymentName: uuid.NewV4().String(),
+		SecARMDeploymentName: uuid.NewV4().String(),
+		FgARMDeploymentName:  uuid.NewV4().String(),
+	}, nil
 }
 
 func (d *databasePairFePrimaryManager) checkNameAvailability(
@@ -38,32 +49,28 @@ func (d *databasePairFePrimaryManager) checkNameAvailability(
 		ppp.GetString("secondaryResourceGroup"),
 		pdt.SecServerName,
 		pp.GetString("database"),
-	); !strings.HasPrefix(err.Error(), "can't find") {
-		return nil, fmt.Errorf("Secondary database with the name " +
-			"is already existed",
-		)
+	); err != nil {
+		if !strings.Contains(err.Error(), "ResourceNotFound") {
+			return nil, err
+		}
+	} else {
+		return nil, fmt.Errorf("Secondary database with the name is already " +
+			"existed")
 	}
 	if err := getFailoverGroup(
 		ctx,
 		&d.failoverGroupsClient,
 		ppp.GetString("primaryResourceGroup"),
-		pdt.SecServerName,
+		pdt.PriServerName,
 		pp.GetString("failoverGroup"),
-	); !strings.HasPrefix(err.Error(), "can't find") {
+	); err != nil {
+		if !strings.Contains(err.Error(), "ResourceNotFound") {
+			return nil, err
+		}
+	} else {
 		return nil, fmt.Errorf("Failover group with the name is already existed")
 	}
 	return instance.Details, nil
-}
-
-func (d *databasePairFePrimaryManager) preProvision(
-	_ context.Context,
-	_ service.Instance,
-) (service.InstanceDetails, error) {
-	return &databasePairInstanceDetails{
-		PriARMDeploymentName: uuid.NewV4().String(),
-		SecARMDeploymentName: uuid.NewV4().String(),
-		FgARMDeploymentName:  uuid.NewV4().String(),
-	}, nil
 }
 
 func (d *databasePairFePrimaryManager) getPriDatabase(
@@ -91,24 +98,41 @@ func (d *databasePairFePrimaryManager) deployPriARMTemplate(
 ) (service.InstanceDetails, error) {
 	dt := instance.Details.(*databasePairInstanceDetails)
 	pdt := instance.Parent.Details.(*dbmsPairInstanceDetails)
-	tagsObj := instance.ProvisioningParameters.GetObject("tags")
+	pp := instance.ProvisioningParameters
+	ppp := instance.Parent.ProvisioningParameters
+	tagsObj := pp.GetObject("tags")
 	tags := make(map[string]string, len(tagsObj.Data))
 	for k := range tagsObj.Data {
 		tags[k] = tagsObj.GetString(k)
 	}
-	err := deployDatabaseFeARMTemplate(
+	if err := deployDatabaseFeARMTemplate(
 		&d.armDeployer,
 		dt.PriARMDeploymentName,
-		instance.Parent.ProvisioningParameters.GetString("primaryResourceGroup"),
-		instance.Parent.ProvisioningParameters.GetString("primaryLocation"),
+		ppp.GetString("primaryResourceGroup"),
+		ppp.GetString("primaryLocation"),
 		pdt.PriServerName,
-		instance.ProvisioningParameters.GetString("database"),
+		pp.GetString("database"),
 		tags,
-	)
-	if err != nil {
+	); err != nil {
 		return nil, fmt.Errorf("error deploying ARM template: %s", err)
 	}
 	return instance.Details, nil
+}
+
+func (d *databasePairFePrimaryManager) deployFgARMTemplate(
+	_ context.Context,
+	instance service.Instance,
+) (service.InstanceDetails, error) {
+	pp := instance.ProvisioningParameters
+	if err := deployFailoverGroupARMTemplate(
+		&d.armDeployer,
+		instance,
+	); err != nil {
+		return nil, fmt.Errorf("error deploying ARM template: %s", err)
+	}
+	dt := instance.Details.(*databasePairInstanceDetails)
+	dt.FailoverGroupName = pp.GetString("failoverGroup")
+	return dt, nil
 }
 
 func (d *databasePairFePrimaryManager) deploySecARMTemplate(
@@ -117,44 +141,27 @@ func (d *databasePairFePrimaryManager) deploySecARMTemplate(
 ) (service.InstanceDetails, error) {
 	dt := instance.Details.(*databasePairInstanceDetails)
 	pdt := instance.Parent.Details.(*dbmsPairInstanceDetails)
+	pp := instance.ProvisioningParameters
+	ppp := instance.Parent.ProvisioningParameters
 	pd := instance.Plan.GetProperties().Extended["tierDetails"].(planDetails)
-	tagsObj := instance.ProvisioningParameters.GetObject("tags")
+	tagsObj := pp.GetObject("tags")
 	tags := make(map[string]string, len(tagsObj.Data))
 	for k := range tagsObj.Data {
 		tags[k] = tagsObj.GetString(k)
 	}
-	err := deployDatabaseARMTemplate(
+	if err := deployDatabaseARMTemplate(
 		&d.armDeployer,
 		dt.SecARMDeploymentName,
-		instance.Parent.ProvisioningParameters.GetString("secondaryResourceGroup"),
-		instance.Parent.ProvisioningParameters.GetString("secondaryLocation"),
+		ppp.GetString("secondaryResourceGroup"),
+		ppp.GetString("secondaryLocation"),
 		pdt.SecServerName,
-		instance.ProvisioningParameters.GetString("database"),
-		*instance.ProvisioningParameters,
+		pp.GetString("database"),
+		*pp,
 		pd,
 		tags,
-	)
-	if err != nil {
+	); err != nil {
 		return nil, fmt.Errorf("error deploying ARM template: %s", err)
 	}
-	return dt, nil
-}
-
-func (d *databasePairFePrimaryManager) deployFgARMTemplate(
-	_ context.Context,
-	instance service.Instance,
-) (service.InstanceDetails, error) {
-	err := deployFailoverGroupARMTemplate(
-		&d.armDeployer,
-		instance,
-	)
-	if err != nil {
-		return nil, fmt.Errorf("error deploying ARM template: %s", err)
-	}
-	dt := instance.Details.(*databasePairInstanceDetails)
-	dt.DatabaseName =
-		instance.ProvisioningParameters.GetString("database")
-	dt.FailoverGroupName =
-		instance.Parent.ProvisioningParameters.GetString("failoverGroup")
+	dt.DatabaseName = pp.GetString("database")
 	return dt, nil
 }

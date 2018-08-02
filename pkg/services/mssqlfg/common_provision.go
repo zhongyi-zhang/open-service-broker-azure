@@ -3,6 +3,7 @@ package mssqlfg
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	sqlSDK "github.com/Azure/azure-sdk-for-go/services/sql/mgmt/2017-03-01-preview/sql" // nolint: lll
 	"github.com/Azure/open-service-broker-azure/pkg/azure/arm"
@@ -15,7 +16,8 @@ func getServer(
 	resourceGroup string,
 	serverName string,
 	expectedVersion string,
-) error {
+	expectedLocation string,
+) (string, error) {
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 	result, err := serversClient.Get(
@@ -24,24 +26,49 @@ func getServer(
 		serverName,
 	)
 	if err != nil {
-		return fmt.Errorf("error getting the sql server: %s", err)
+		return "", fmt.Errorf("error getting the sql server: %s", err)
 	}
 	if result.Name == nil {
-		return fmt.Errorf(
+		return "", fmt.Errorf(
 			"can't find sql server %s in the resource group %s",
 			serverName,
 			resourceGroup,
 		)
 	}
 	if *result.Version != expectedVersion {
-		return fmt.Errorf(
+		return "", fmt.Errorf(
 			"sql server version validation failed, "+
-				"expected version: %s, current version: %s",
+				"expected version: %s, actual version: %s",
 			expectedVersion,
 			result.Version,
 		)
 	}
-	return nil
+	expectedLocation = strings.Replace(
+		strings.ToLower(expectedLocation),
+		" ",
+		"",
+		-1,
+	)
+	actualLocation := strings.Replace(
+		strings.ToLower(*result.Location),
+		" ",
+		"",
+		-1,
+	)
+	if expectedLocation != actualLocation {
+		return "", fmt.Errorf(
+			"sql server location validation failed, "+
+				"expected location: %s, actual location: %s",
+			expectedLocation,
+			actualLocation,
+		)
+	}
+	if *result.FullyQualifiedDomainName == "" {
+		return "", fmt.Errorf(
+			"sql server details doesn't contain FQDN",
+		)
+	}
+	return *result.FullyQualifiedDomainName, nil
 }
 
 func getDatabase(
@@ -53,7 +80,7 @@ func getDatabase(
 ) error {
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
-	result, err := databasesClient.Get(
+	_, err := databasesClient.Get(
 		ctx,
 		resourceGroup,
 		serverName,
@@ -63,13 +90,7 @@ func getDatabase(
 	if err != nil {
 		return fmt.Errorf("error getting the sql database: %s", err)
 	}
-	if result.Name == nil {
-		return fmt.Errorf(
-			"can't find sql database %s on the server %s",
-			databaseName,
-			serverName,
-		)
-	}
+	// TODO: add the plan as param and validate?
 	return nil
 }
 
@@ -82,7 +103,7 @@ func getFailoverGroup(
 ) error {
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
-	result, err := failoverGroupsClient.Get(
+	_, err := failoverGroupsClient.Get(
 		ctx,
 		resourceGroup,
 		serverName,
@@ -91,13 +112,7 @@ func getFailoverGroup(
 	if err != nil {
 		return fmt.Errorf("error getting the failover group: %s", err)
 	}
-	if result.Name == nil {
-		return fmt.Errorf(
-			"can't find failover group %s on the server %s",
-			failoverGroupName,
-			serverName,
-		)
-	}
+	// TODO: check details to validate roles
 	return nil
 }
 
@@ -116,7 +131,7 @@ func testConnection(
 		return err
 	}
 	defer masterDb.Close() // nolint: errcheck
-	// Is there a better approach to verify if it is a sys admin?
+	// TODO: Is there a better approach to verify if it is a sys admin?
 	rows, err := masterDb.Query("SELECT 1 FROM fn_my_permissions (NULL, 'DATABASE') WHERE permission_name='ALTER ANY USER'") // nolint: lll
 	if err != nil {
 		return fmt.Errorf(
@@ -134,28 +149,6 @@ func testConnection(
 		return fmt.Errorf(`server error iterating rows`)
 	}
 	return nil
-}
-
-func deployDbmsFeARMTemplate(
-	armDeployer *arm.Deployer,
-	armDeploymentName string,
-	resourceGroup string,
-	location string,
-	serverName string,
-	tags map[string]string,
-) (map[string]interface{}, error) {
-	goTemplateParams := map[string]interface{}{}
-	goTemplateParams["serverName"] = serverName
-	goTemplateParams["location"] = location
-	return (*armDeployer).Deploy(
-		armDeploymentName,
-		resourceGroup,
-		location,
-		dbmsFeARMTemplateBytes,
-		goTemplateParams,
-		map[string]interface{}{},
-		tags,
-	)
 }
 
 func buildDatabaseGoTemplateParameters(
@@ -242,15 +235,11 @@ func deployFailoverGroupARMTemplate(
 	pp := instance.ProvisioningParameters
 	ppp := instance.Parent.ProvisioningParameters
 	goTemplateParams := map[string]interface{}{}
-	goTemplateParams["priServerName"] =
-		pdt.PriServerName
-	goTemplateParams["secServerName"] =
-		pdt.SecServerName
-	goTemplateParams["failoverGroupName"] =
-		pp.GetString("failoverGroup")
-	goTemplateParams["databaseName"] =
-		pp.GetString("database")
-	tagsObj := instance.ProvisioningParameters.GetObject("tags")
+	goTemplateParams["priServerName"] = pdt.PriServerName
+	goTemplateParams["secServerName"] = pdt.SecServerName
+	goTemplateParams["failoverGroupName"] = pp.GetString("failoverGroup")
+	goTemplateParams["databaseName"] = pp.GetString("database")
+	tagsObj := pp.GetObject("tags")
 	tags := make(map[string]string, len(tagsObj.Data))
 	for k := range tagsObj.Data {
 		tags[k] = tagsObj.GetString(k)

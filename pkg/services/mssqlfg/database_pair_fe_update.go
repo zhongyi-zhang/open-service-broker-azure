@@ -31,6 +31,7 @@ func (d *databasePairFeManager) updatePriARMTemplate(
 ) (service.InstanceDetails, error) {
 	dt := instance.Details.(*databasePairInstanceDetails)
 	pdt := instance.Parent.Details.(*dbmsPairInstanceDetails)
+	ppp := instance.Parent.ProvisioningParameters
 	pd := instance.Plan.GetProperties().Extended["tierDetails"].(planDetails)
 	tagsObj := instance.ProvisioningParameters.GetObject("tags")
 	tags := make(map[string]string, len(tagsObj.Data))
@@ -40,8 +41,8 @@ func (d *databasePairFeManager) updatePriARMTemplate(
 	err := updateDatabaseARMTemplate(
 		&d.armDeployer,
 		dt.PriARMDeploymentName,
-		instance.Parent.ProvisioningParameters.GetString("primaryResourceGroup"),
-		instance.Parent.ProvisioningParameters.GetString("primaryLocation"),
+		ppp.GetString("primaryResourceGroup"),
+		ppp.GetString("primaryLocation"),
 		pdt.PriServerName,
 		dt.DatabaseName,
 		*instance.UpdatingParameters,
@@ -60,6 +61,7 @@ func (d *databasePairFeManager) updateSecARMTemplate(
 ) (service.InstanceDetails, error) {
 	dt := instance.Details.(*databasePairInstanceDetails)
 	pdt := instance.Parent.Details.(*dbmsPairInstanceDetails)
+	ppp := instance.Parent.ProvisioningParameters
 	pd := instance.Plan.GetProperties().Extended["tierDetails"].(planDetails)
 	tagsObj := instance.ProvisioningParameters.GetObject("tags")
 	tags := make(map[string]string, len(tagsObj.Data))
@@ -69,8 +71,8 @@ func (d *databasePairFeManager) updateSecARMTemplate(
 	err := updateDatabaseARMTemplate(
 		&d.armDeployer,
 		dt.SecARMDeploymentName,
-		instance.Parent.ProvisioningParameters.GetString("secondaryResourceGroup"),
-		instance.Parent.ProvisioningParameters.GetString("secondaryLocation"),
+		ppp.GetString("secondaryResourceGroup"),
+		ppp.GetString("secondaryLocation"),
 		pdt.SecServerName,
 		dt.DatabaseName,
 		*instance.UpdatingParameters,

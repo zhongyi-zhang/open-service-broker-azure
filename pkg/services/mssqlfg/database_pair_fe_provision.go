@@ -96,21 +96,22 @@ func (d *databasePairFeManager) deployPriARMTemplate(
 ) (service.InstanceDetails, error) {
 	dt := instance.Details.(*databasePairInstanceDetails)
 	pdt := instance.Parent.Details.(*dbmsPairInstanceDetails)
-	tagsObj := instance.ProvisioningParameters.GetObject("tags")
+	pp := instance.ProvisioningParameters
+	ppp := instance.Parent.ProvisioningParameters
+	tagsObj := pp.GetObject("tags")
 	tags := make(map[string]string, len(tagsObj.Data))
 	for k := range tagsObj.Data {
 		tags[k] = tagsObj.GetString(k)
 	}
-	err := deployDatabaseFeARMTemplate(
+	if err := deployDatabaseFeARMTemplate(
 		&d.armDeployer,
 		dt.PriARMDeploymentName,
-		instance.Parent.ProvisioningParameters.GetString("primaryResourceGroup"),
-		instance.Parent.ProvisioningParameters.GetString("primaryLocation"),
+		ppp.GetString("primaryResourceGroup"),
+		ppp.GetString("primaryLocation"),
 		pdt.PriServerName,
-		instance.ProvisioningParameters.GetString("database"),
+		pp.GetString("database"),
 		tags,
-	)
-	if err != nil {
+	); err != nil {
 		return nil, fmt.Errorf("error deploying ARM template: %s", err)
 	}
 	return instance.Details, nil
@@ -122,21 +123,22 @@ func (d *databasePairFeManager) deploySecARMTemplate(
 ) (service.InstanceDetails, error) {
 	dt := instance.Details.(*databasePairInstanceDetails)
 	pdt := instance.Parent.Details.(*dbmsPairInstanceDetails)
-	tagsObj := instance.ProvisioningParameters.GetObject("tags")
+	pp := instance.ProvisioningParameters
+	ppp := instance.Parent.ProvisioningParameters
+	tagsObj := pp.GetObject("tags")
 	tags := make(map[string]string, len(tagsObj.Data))
 	for k := range tagsObj.Data {
 		tags[k] = tagsObj.GetString(k)
 	}
-	err := deployDatabaseFeARMTemplate(
+	if err := deployDatabaseFeARMTemplate(
 		&d.armDeployer,
 		dt.SecARMDeploymentName,
-		instance.Parent.ProvisioningParameters.GetString("secondaryResourceGroup"),
-		instance.Parent.ProvisioningParameters.GetString("secondaryLocation"),
+		ppp.GetString("secondaryResourceGroup"),
+		ppp.GetString("secondaryLocation"),
 		pdt.SecServerName,
-		instance.ProvisioningParameters.GetString("database"),
+		pp.GetString("database"),
 		tags,
-	)
-	if err != nil {
+	); err != nil {
 		return nil, fmt.Errorf("error deploying ARM template: %s", err)
 	}
 	return dt, nil
@@ -146,17 +148,15 @@ func (d *databasePairFeManager) deployFgARMTemplate(
 	_ context.Context,
 	instance service.Instance,
 ) (service.InstanceDetails, error) {
-	err := deployFailoverGroupARMTemplate(
+	pp := instance.ProvisioningParameters
+	if err := deployFailoverGroupARMTemplate(
 		&d.armDeployer,
 		instance,
-	)
-	if err != nil {
+	); err != nil {
 		return nil, fmt.Errorf("error deploying ARM template: %s", err)
 	}
 	dt := instance.Details.(*databasePairInstanceDetails)
-	dt.DatabaseName =
-		instance.ProvisioningParameters.GetString("database")
-	dt.FailoverGroupName =
-		instance.Parent.ProvisioningParameters.GetString("failoverGroup")
+	dt.DatabaseName = pp.GetString("database")
+	dt.FailoverGroupName = pp.GetString("failoverGroup")
 	return dt, nil
 }

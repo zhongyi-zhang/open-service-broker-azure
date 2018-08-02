@@ -27,15 +27,14 @@ func (d *dbmsPairRegisteredManager) updateAdministrators(
 	instance service.Instance,
 ) (service.InstanceDetails, error) {
 	dt := instance.Details.(*dbmsPairInstanceDetails)
-	dt.PriAdministratorLogin =
-		instance.ProvisioningParameters.GetString("primaryAdministratorLogin")
+	up := instance.UpdatingParameters
+	dt.PriAdministratorLogin = up.GetString("primaryAdministratorLogin")
 	dt.PriAdministratorLoginPassword = service.SecureString(
-		instance.ProvisioningParameters.GetString("primaryAdministratorLoginPassword"), // nolint: lll
+		up.GetString("primaryAdministratorLoginPassword"), // nolint: lll
 	)
-	dt.SecAdministratorLogin =
-		instance.ProvisioningParameters.GetString("secondaryAdministratorLogin")
+	dt.SecAdministratorLogin = up.GetString("secondaryAdministratorLogin")
 	dt.SecAdministratorLoginPassword = service.SecureString(
-		instance.ProvisioningParameters.GetString("secondaryAdministratorLoginPassword"), // nolint: lll
+		up.GetString("secondaryAdministratorLoginPassword"), // nolint: lll
 	)
 	return dt, nil
 }
