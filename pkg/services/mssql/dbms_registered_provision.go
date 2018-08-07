@@ -48,13 +48,6 @@ func (d *dbmsRegisteredManager) getServer(
 	if err != nil {
 		return nil, fmt.Errorf("error getting sql server: %s", err)
 	}
-	if result.Name == nil {
-		return nil, fmt.Errorf(
-			"can't find sql server %s in the resource group %s",
-			dt.ServerName,
-			resourceGroup,
-		)
-	}
 	expectedVersion :=
 		instance.Service.GetProperties().Extended["version"].(string)
 	if *result.Version != expectedVersion {

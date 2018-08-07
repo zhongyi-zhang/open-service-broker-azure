@@ -38,7 +38,7 @@ func (d *databaseFeManager) getDatabase(
 		instance.Parent.ProvisioningParameters.GetString("resourceGroup")
 	databaseName :=
 		instance.ProvisioningParameters.GetString("database")
-	result, err := d.databasesClient.Get(
+	_, err := d.databasesClient.Get(
 		ctx,
 		resourceGroup,
 		pdt.ServerName,
@@ -47,15 +47,6 @@ func (d *databaseFeManager) getDatabase(
 	)
 	if err != nil {
 		return nil, fmt.Errorf("error getting sql database: %s", err)
-	}
-	if result.Name == nil {
-		err = fmt.Errorf(
-			"can't find sql database %s in server %s in the resource group %s",
-			databaseName,
-			pdt.ServerName,
-			resourceGroup,
-		)
-		return nil, err
 	}
 	return instance.Details, nil
 }
