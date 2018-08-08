@@ -4,7 +4,6 @@
 [[projects]]
   name = "github.com/Azure/azure-sdk-for-go"
   packages = [
-    "services/containerinstance/mgmt/2017-08-01-preview/containerinstance",
     "services/cosmos-db/mgmt/2015-04-08/documentdb",
     "services/eventhub/mgmt/2017-04-01/eventhub",
     "services/keyvault/mgmt/2016-10-01/keyvault",
@@ -12,7 +11,6 @@
     "services/postgresql/mgmt/2017-04-30-preview/postgresql",
     "services/redis/mgmt/2017-10-01/redis",
     "services/resources/mgmt/2017-05-10/resources",
-    "services/search/mgmt/2015-08-19/search",
     "services/servicebus/mgmt/2017-04-01/servicebus",
     "services/sql/mgmt/2017-03-01-preview/sql",
     "services/storage/mgmt/2017-10-01/storage",
@@ -203,6 +201,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "fb2910568fa948f07348c33778ebc841aa4a0e253a535412d9fe579987d75677"
+  inputs-digest = "a9ec67dd91d386fae211e2c5d0d540a9937f345a6446188815f9568588e26ebe"
   solver-name = "gps-cdcl"
   solver-version = 1
