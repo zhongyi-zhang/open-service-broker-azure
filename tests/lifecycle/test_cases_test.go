@@ -16,6 +16,7 @@ func getTestCases() ([]serviceLifecycleTestCase, error) {
 	// testCases = append(testCases, eventhubsTestCases...)
 	// testCases = append(testCases, keyvaultTestCases...)
 	testCases = append(testCases, mssqlTestCases...)
+	testCases = append(testCases, mssqlfgTestCases...)
 	testCases = append(testCases, mysqlTestCases...)
 	// testCases = append(testCases, searchTestCases...)
 	// testCases = append(testCases, servicebusTestCases...)
