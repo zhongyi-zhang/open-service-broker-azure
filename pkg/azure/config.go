@@ -22,8 +22,8 @@ type Config struct {
 
 type tempConfig struct {
 	Config
-	EnvironmentStr		string `envconfig:"ENVIRONMENT" default:"AzurePublicCloud"` // nolint: lll
-	ResourceManagerEndpoint string `envconfig:"RESOURCE_MANAGER_ENDPOINT"` // nolint: lll
+	EnvironmentStr          string `envconfig:"ENVIRONMENT" default:"AzurePublicCloud"` // nolint: lll
+	ResourceManagerEndpoint string `envconfig:"RESOURCE_MANAGER_ENDPOINT"`              // nolint: lll
 }
 
 // NewConfigWithDefaults returns a Config object with default values already
@@ -45,16 +45,20 @@ func GetConfigFromEnvironment() (Config, error) {
 	}
 	if c.EnvironmentStr != azureStackCloud {
 		c.Environment, err = azure.EnvironmentFromName(c.EnvironmentStr)
-        } else {
+	} else {
 		properties := azure.OverrideProperty{
-			Key: azure.EnvironmentName,
+			Key:   azure.EnvironmentName,
 			Value: azureStackCloud,
 		}
-		c.Environment, err = azure.EnvironmentFromURL(c.ResourceManagerEndpoint, properties)
-        }
+		c.Environment, err = azure.EnvironmentFromURL(
+			c.ResourceManagerEndpoint,
+			properties,
+		)
+	}
 	return c.Config, err
 }
 
+// IsAzureStackCloud detects Azure Stack environment
 func IsAzureStackCloud() bool {
 	c := tempConfig{
 		Config: NewConfigWithDefaults(),

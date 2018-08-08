@@ -194,8 +194,8 @@ func (s service) GetName() string {
 	return s.Name
 }
 
-// hasTag returns whether Tags contain a specific tag
-func (s *service) HasTag(tag string) bool {
+// HasTag returns whether Tags contain a specific tag
+func (s service) HasTag(tag string) bool {
 	for _, t := range s.Tags {
 		if t == tag {
 			return true
