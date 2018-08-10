@@ -4,12 +4,12 @@
 
 ## Steps
 
-### Create azure-sql-12-0-dbms-from-existing service instance by OSBA
+### Create azure-sql-12-0-dbms-registered service instance by OSBA
 
-OSBA doesn't support to provide existing servers' credentials from manifest and create database on them. Instead, it provides **azure-sql-12-0-dbms** service to create SQL servers and you can create database on the server by **azure-sql-12-0-database** service. The service **azure-sql-12-0-dbms-from-existing** is a service using your existing Azure SQL server. It does NOT CREATE new server in provisioning and does NOT DELETE the server in deprovisioning. You can run the following CF CLI command to create a instance of it:
+OSBA doesn't support to provide existing servers' credentials from manifest and create database on them. Instead, it provides **azure-sql-12-0-dbms** service to create SQL servers and you can create database on the server by **azure-sql-12-0-database** service. The service **azure-sql-12-0-dbms-registered** is a service using your existing Azure SQL server. It does NOT CREATE new server in provisioning and does NOT DELETE the server in deprovisioning. You can run the following CF CLI command to create a instance of it:
 
 ```
-cf create-service azure-sql-12-0-dbms-from-existing dbms <instance-name> -c '{"resourceGroup":"<group-name>", "location":"<server-location>", "server":"<server-name>", "administratorLogin":"<login>", "administratorLoginPassword":"<login-password>", "alias":"<instance-name>"}'
+cf create-service azure-sql-12-0-dbms-registered dbms <instance-name> -c '{"resourceGroup":"<group-name>", "location":"<server-location>", "server":"<server-name>", "administratorLogin":"<login>", "administratorLoginPassword":"<login-password>", "alias":"<instance-name>"}'
 ```
 
 ### Create azure-sql-12-0-database-from-existing
