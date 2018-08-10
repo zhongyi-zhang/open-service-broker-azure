@@ -7,7 +7,7 @@ import (
 // Catalog is an interface to be implemented by types that represents the
 // service/plans offered by a service module or by the entire broker.
 type Catalog interface {
-	GetServices() []Service
+	GetServices(environmentName string) []Service
 	GetService(serviceID string) (Service, bool)
 }
 
@@ -49,6 +49,7 @@ type ServiceMetadata struct { // nolint: golint
 type Service interface {
 	GetID() string
 	GetName() string
+	HasTag(tag string) bool
 	IsBindable() bool
 	GetServiceManager() ServiceManager
 	GetPlans() []Plan
@@ -132,8 +133,14 @@ func (c *catalog) MarshalJSON() ([]byte, error) {
 }
 
 // GetServices returns all of the catalog's services
-func (c *catalog) GetServices() []Service {
-	return c.services
+func (c *catalog) GetServices(environmentName string) []Service {
+	svcs := []Service{}
+	for _, svc := range c.services {
+		if svc.HasTag(environmentName) {
+			svcs = append(svcs, svc)
+		}
+	}
+	return svcs
 }
 
 // GetService finds a service by serviceID in a catalog
@@ -185,6 +192,16 @@ func (s service) GetID() string {
 
 func (s service) GetName() string {
 	return s.Name
+}
+
+// HasTag returns whether Tags contain a specific tag
+func (s service) HasTag(tag string) bool {
+	for _, t := range s.Tags {
+		if t == tag {
+			return true
+		}
+	}
+	return false
 }
 
 // IsBindable returns true if a service is bindable

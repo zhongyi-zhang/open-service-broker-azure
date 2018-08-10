@@ -5,7 +5,10 @@ import (
 	"github.com/kelseyhightower/envconfig"
 )
 
-const envconfigPrefix = "AZURE"
+const (
+	envconfigPrefix = "AZURE"
+	azureStackCloud = "AzureStackCloud"
+)
 
 // Config represents details necessary for the broker to interact with
 // an Azure subscription
@@ -19,7 +22,8 @@ type Config struct {
 
 type tempConfig struct {
 	Config
-	EnvironmentStr string `envconfig:"ENVIRONMENT" default:"AzurePublicCloud"`
+	EnvironmentStr          string `envconfig:"ENVIRONMENT" default:"AzurePublicCloud"` // nolint: lll
+	ResourceManagerEndpoint string `envconfig:"RESOURCE_MANAGER_ENDPOINT"`              // nolint: lll
 }
 
 // NewConfigWithDefaults returns a Config object with default values already
@@ -39,6 +43,29 @@ func GetConfigFromEnvironment() (Config, error) {
 	if err != nil {
 		return c.Config, err
 	}
-	c.Environment, err = azure.EnvironmentFromName(c.EnvironmentStr)
+	if c.EnvironmentStr != azureStackCloud {
+		c.Environment, err = azure.EnvironmentFromName(c.EnvironmentStr)
+	} else {
+		properties := azure.OverrideProperty{
+			Key:   azure.EnvironmentName,
+			Value: azureStackCloud,
+		}
+		c.Environment, err = azure.EnvironmentFromURL(
+			c.ResourceManagerEndpoint,
+			properties,
+		)
+	}
 	return c.Config, err
+}
+
+// IsAzureStackCloud detects Azure Stack environment
+func IsAzureStackCloud() bool {
+	c := tempConfig{
+		Config: NewConfigWithDefaults(),
+	}
+	err := envconfig.Process(envconfigPrefix, &c)
+	if err != nil {
+		return false
+	}
+	return c.EnvironmentStr == azureStackCloud
 }

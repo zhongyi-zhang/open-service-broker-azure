@@ -32,7 +32,8 @@ func GetCatalog(
 				err,
 			)
 		}
-		for _, svc := range catalog.GetServices() {
+		environmentName := azureConfig.Environment.Name
+		for _, svc := range catalog.GetServices(environmentName) {
 			serviceID := svc.GetID()
 			if moduleNameForUsedServiceID, ok := usedServiceIDs[serviceID]; ok {
 				return nil, fmt.Errorf(

@@ -30,8 +30,8 @@
     "autorest/to",
     "autorest/validation"
   ]
-  revision = "5a06e9ddbe3c22262059b8e061777b9934f982bd"
-  version = "v10.1.0"
+  revision = "7909b98056dd6f6a9fc9b7745af1810c93c15939"
+  version = "v10.3.0"
 
 [[projects]]
   name = "github.com/Masterminds/semver"

@@ -4,6 +4,7 @@ applications:
   buildpack: https://github.com/cloudfoundry/go-buildpack/releases/download/v1.8.13/go-buildpack-v1.8.13.zip
   command: broker
   env:
+    AZURE_ENVIRONMENT: <YOUR ENVIRONMENT FOR CLOUD>
     AZURE_SUBSCRIPTION_ID: <YOUR SUBSCRIPTION ID>
     AZURE_TENANT_ID: <YOUR TENANT ID>
     AZURE_CLIENT_ID: <APPID FROM SERVICE PRINCIPAL>
