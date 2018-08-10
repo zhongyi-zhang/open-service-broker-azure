@@ -2,6 +2,7 @@ package service
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/kelseyhightower/envconfig"
@@ -10,14 +11,18 @@ import (
 // CatalogConfig represents details re: which modules' services should be
 // included or excluded from the catalog
 type CatalogConfig struct {
-	MinStability Stability
-	UseV2Guid    bool
+	MinStability            Stability
+	UseV2Guid               bool
+	EnableMigrationServices bool
+	EnableDRServices        bool
 }
 
 type tempCatalogConfig struct {
 	CatalogConfig
-	MinStabilityStr string `envconfig:"MIN_STABILITY" default:"STABLE"`
-	UseV2GuidStr    string `envconfig:"USE_V2_GUID" default:"false"`
+	MinStabilityStr            string `envconfig:"MIN_STABILITY" default:"STABLE"`
+	UseV2GuidStr               string `envconfig:"USE_V2_GUID" default:"false"`
+	EnableMigrationServicesStr string `envconfig:"ENABLE_MIGRATION_SERVICES" default:"false"`         // nolint: lll
+	EnableDRServicesStr        string `envconfig:"ENABLE_DISASTER_RECOVERY_SERVICES" default:"false"` // nolint: lll
 }
 
 // NewCatalogConfigWithDefaults returns a CatalogConfig object with default
@@ -25,8 +30,10 @@ type tempCatalogConfig struct {
 // remaining fields and/or override default values.
 func NewCatalogConfigWithDefaults() CatalogConfig {
 	return CatalogConfig{
-		MinStability: StabilityPreview,
-		UseV2Guid:    false,
+		MinStability:            StabilityPreview,
+		UseV2Guid:               false,
+		EnableMigrationServices: false,
+		EnableDRServices:        false,
 	}
 }
 
@@ -53,16 +60,29 @@ func GetCatalogConfigFromEnvironment() (CatalogConfig, error) {
 			minStabilityStr,
 		)
 	}
-	useV2GuidStr := strings.ToUpper(c.UseV2GuidStr)
-	switch useV2GuidStr {
-	case "TRUE":
-		c.UseV2Guid = true
-	case "FALSE":
-		c.UseV2Guid = false
-	default:
+	c.UseV2Guid, err = strconv.ParseBool(c.UseV2GuidStr)
+	if err != nil {
 		return c.CatalogConfig, fmt.Errorf(
-			`unrecognized useV2Guid boolean "%s"`,
-			useV2GuidStr,
+			`unrecognized UseV2Guid boolean "%s": %s`,
+			c.EnableMigrationServicesStr,
+			err,
+		)
+	}
+	c.EnableMigrationServices, err =
+		strconv.ParseBool(c.EnableMigrationServicesStr)
+	if err != nil {
+		return c.CatalogConfig, fmt.Errorf(
+			`unrecognized EnableMigrationServices boolean "%s": %s`,
+			c.EnableMigrationServicesStr,
+			err,
+		)
+	}
+	c.EnableDRServices, err = strconv.ParseBool(c.EnableDRServicesStr)
+	if err != nil {
+		return c.CatalogConfig, fmt.Errorf(
+			`unrecognized EnableDRServices boolean "%s": %s`,
+			c.EnableDRServicesStr,
+			err,
 		)
 	}
 	return c.CatalogConfig, nil
