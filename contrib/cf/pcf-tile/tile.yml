@@ -121,6 +121,16 @@ forms:
         label: PREVIEW
       - name: STABLE
         label: STABLE
+  - name: enable_migration_services
+    type: boolean
+    configurable: true
+    default: false
+    label: Enable Migration Services
+  - name: enable_disaster_recovery_services
+    type: boolean
+    configurable: true
+    default: false
+    label: Minimum Module Stability
   - name: storage_redis_host
     type: string
     label: Storage Redis Host

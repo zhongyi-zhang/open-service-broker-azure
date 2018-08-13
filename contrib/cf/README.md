@@ -72,13 +72,15 @@ Open contrib/cf/manifest.yml and enter the values obtained in the earlier steps:
   applications:
     - name: osba
       buildpack: https://github.com/cloudfoundry/go-buildpack/releases/download/v1.8.13/go-buildpack-v1.8.13.zip
-      command: broker 
+      command: broker
       env:
         AZURE_SUBSCRIPTION_ID: <YOUR SUBSCRIPTION ID>
         AZURE_TENANT_ID: <TENANT ID FROM SERVICE PRINCIPAL>
         AZURE_CLIENT_ID: <APPID FROM SERVICE PRINCIPAL>
         AZURE_CLIENT_SECRET: <PASSWORD FROM SERVICE PRINCIPAL>
         LOG_LEVEL: DEBUG
+        ENABLE_MIGRATION_SERVICES: false
+        ENABLE_DISASTER_RECOVERY_SERVICES: false
         STORAGE_REDIS_HOST: <HOSTNAME FROM AZURE REDIS CACHE>
         STORAGE_REDIS_PASSWORD: <PRIMARYKEY FROM AZURE REDIS CACHE>
         STORAGE_REDIS_PORT: 6380
@@ -121,7 +123,7 @@ Open contrib/cf/manifest.yml and enter the values obtained in the earlier steps:
     1. Create ASG.
 
 
-        ``` 
+        ```
         cat >> ~/my-asg.json << EOF
         [
           {
@@ -135,7 +137,7 @@ Open contrib/cf/manifest.yml and enter the values obtained in the earlier steps:
         EOF
         cf create-security-group my-asg ~/my-asg.json
         cf bind-running-security-group my-asg
-        ``` 
+        ```
 
 ## Push the broker to Cloud Foundry
 
@@ -153,7 +155,7 @@ With the broker app deployed, the final step is to register it as a service brok
 cf create-service-broker open-service-broker-azure username password https://osba.apps.example.com
 ```
 
-If you are *not* using a `--space-scoped` broker, services provided by a broker are not visible to Cloud Foundry users. To make them visible, you will also need to grant access to the services provided by Open Service Broker for Azure using the `cf enable-service-access` command. For example, to expose the `azure-postgresql-9-6` service, you will need to execute the following command. 
+If you are *not* using a `--space-scoped` broker, services provided by a broker are not visible to Cloud Foundry users. To make them visible, you will also need to grant access to the services provided by Open Service Broker for Azure using the `cf enable-service-access` command. For example, to expose the `azure-postgresql-9-6` service, you will need to execute the following command.
 
 ```console
 cf enable-service-access azure-postgresql-9-6
