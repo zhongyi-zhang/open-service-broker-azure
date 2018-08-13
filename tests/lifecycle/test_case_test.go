@@ -30,7 +30,7 @@ type serviceLifecycleTestCase struct {
 	updatingParameters     map[string]interface{}
 	parentServiceInstance  *service.Instance
 	bindingParameters      map[string]interface{}
-	testCredentials        func(credentials map[string]interface{}) error // nolint: lll
+	testCredentials        func(credentials map[string]interface{}) error
 	childTestCases         []*serviceLifecycleTestCase
 }
 
@@ -79,7 +79,7 @@ func (s serviceLifecycleTestCase) execute(
 		s.provisioningParameters["resourceGroup"] = resourceGroup
 	}
 
-	// do  preProvision scoped in the specified resourceGroup
+	// do preProvision scoped in the specified resourceGroup
 	if s.preProvision != nil {
 		if err := s.preProvision(
 			ctx,

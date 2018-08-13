@@ -130,7 +130,7 @@ forms:
     type: boolean
     configurable: true
     default: false
-    label: Minimum Module Stability
+    label: Enable Disaster Recovery Services
   - name: storage_redis_host
     type: string
     label: Storage Redis Host
