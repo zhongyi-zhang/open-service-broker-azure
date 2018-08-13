@@ -14,13 +14,13 @@ cf create-service azure-sql-12-0-dbms-registered dbms <instance-name> -c '{"reso
 
 ### Create azure-sql-12-0-database-from-existing
 
-Similar to the server, the service **azure-sql-12-0-database-from-existing** is a service using your existing Azure SQL database. It does NOT CREATE new server in provisioning but DELETE the server in deprovisioning. Not like the server, it is to take over the database. First, you can run the following command to check the service credentials delivered to you application:
+Similar to the server, the service **azure-sql-12-0-database-from-existing** is a service using your existing Azure SQL database. It does NOT CREATE new database in provisioning but DELETE the database in deprovisioning. Not like the server, it is to take over the database. First, you can run the following command to check the service credentials delivered to you application:
 
 ```
 cf env <your-app-name>
 ```
 
-Find the database name in field `VCAP_SERVICES` - `azure-sqldb` - `sqldbName`.
+Find the database name in the field `VCAP_SERVICES` - `azure-sqldb` - `sqldbName`.
 
 Then, you can run the following command to create a instance of **azure-sql-12-0-database-from-existing**:
 
@@ -28,7 +28,7 @@ Then, you can run the following command to create a instance of **azure-sql-12-0
 cf create-service azure-sql-12-0-database-from-existing <plan-name> <sqldb-instance-name> -c '{"resourceGroup":"<group-name>", "location":"<server-location>", "server":"<server-name>", "administratorLogin":"<login>", "administratorLoginPassword":"<login-password>", "alias":"<sqldb-instance-name>"}'
 ```
 
-***Note***: OSBA provides plans by tier categories. For example, compared to MASB provides plans `StandardS0` - `StandardS12`, OSBA provides only a plan `standard`. You should choose the right category. It is important. Though provisioning wouldn't change the tier, you wouldn't be able to update the tier as OSBA doesn't support changing plan for now. The plan name of existing service instances can be checked by `cf services`.
+***Note***: OSBA provides plans by tier categories. For example, compared to that MASB provides plans `StandardS0` - `StandardS12`, OSBA provides only a plan `standard`. You should choose the right category. It is important. Though provisioning wouldn't change the tier, you wouldn't be able to update the tier as OSBA doesn't support changing plan for now. The plan name of existing service instances can be checked by `cf services`.
 
 ### Duplicate your application and update to adapt the SQL credentials delivered by OSBA
 
