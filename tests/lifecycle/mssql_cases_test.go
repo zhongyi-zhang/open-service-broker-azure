@@ -213,7 +213,11 @@ func createSQLServer(
 	_ *service.Instance,
 	pp *map[string]interface{},
 ) error {
-	azureConfig, authorizer, err := getAzureConfigAndAuthorizer()
+	azureConfig, err := getAzureConfig()
+	if err != nil {
+		return err
+	}
+	authorizer, err := getBearerTokenAuthorizer(azureConfig)
 	if err != nil {
 		return err
 	}
@@ -284,7 +288,11 @@ func createSQLDatabase(
 	parent *service.Instance,
 	pp *map[string]interface{},
 ) error {
-	azureConfig, authorizer, err := getAzureConfigAndAuthorizer()
+	azureConfig, err := getAzureConfig()
+	if err != nil {
+		return err
+	}
+	authorizer, err := getBearerTokenAuthorizer(azureConfig)
 	if err != nil {
 		return err
 	}
