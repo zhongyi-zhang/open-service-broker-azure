@@ -27,9 +27,9 @@ func (d *dbmsRegisteredManager) updateAdministrator(
 ) (service.InstanceDetails, error) {
 	dt := instance.Details.(*dbmsInstanceDetails)
 	dt.AdministratorLogin =
-		instance.ProvisioningParameters.GetString("administratorLogin")
+		instance.UpdatingParameters.GetString("administratorLogin")
 	dt.AdministratorLoginPassword = service.SecureString(
-		instance.ProvisioningParameters.GetString("administratorLoginPassword"),
+		instance.UpdatingParameters.GetString("administratorLoginPassword"),
 	)
 	return dt, nil
 }
