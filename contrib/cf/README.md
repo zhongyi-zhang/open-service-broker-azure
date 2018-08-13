@@ -102,7 +102,7 @@ Open contrib/cf/manifest.yml and enter the values obtained in the earlier steps:
 
 **IMPORTANT**: The default values for `CRYPTO_AES256_KEY`, `BASIC\_AUTH\_USERNAME`, and `BASIC\_AUTH\_PASSWORD` should never be used in production environments.
 
-**NOTE**: `USE_V2_GUID` should be `false` unless you want OSBA to co-exist with [Meta Azure Service Broker (MASB)](https://github.com/Azure/meta-azure-service-broker). Once it is set `true`, a flag would be wrote to your the `STORAGE_REDIS_DB` of `STORAGE_REDIS_HOST`. It means that the broker instance would use V2 GUID set forever. If you set it `true` by mistake, you need to manually connect the redis database and update the value of the key `useV2GuidFlag` to `false`.
+**NOTE**: `USE_V2_GUID` should be `false` unless you want OSBA to co-exist with [Meta Azure Service Broker (MASB)](https://github.com/Azure/meta-azure-service-broker). Once it is set `true`, a flag would be wrote to the `STORAGE_REDIS_DB` of `STORAGE_REDIS_HOST`. It means that the broker instance would use V2 GUID set forever. If you set it `true` by mistake, you need to manually connect the redis database and update the value of the key `useV2GuidFlag` to `false`.
 
 ## (Optional) Additional Steps for Azure Stack Cloud
 
