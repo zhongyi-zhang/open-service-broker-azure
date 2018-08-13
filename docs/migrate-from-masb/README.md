@@ -10,8 +10,8 @@ All the guidance base on the scenario as below:
 
   * You installed MASB, created service instances, and bound them to your application.
 
-  * You installed OSBA.
+  * You installed OSBA with `USE_V2_GUID` set `true` in the manifest.
 
-  * You want to switch to OSBA to take over those service instances and your application still work well.
+  * You want to switch to OSBA to take over those service instances and your application still works well.
 
-***Note***: if you don't have any service instances created by MASB after migration, you can use `cf delete-service-broker <MASB-name>` to delete MASB. Also, the broker database of MASB could be deleted.
+***Note***: if you don't have any service instances created by MASB after migration, you can use `cf delete-service-broker <MASB-name>` to delete MASB. Also, the broker database of MASB could be deleted. Example Azure CLI V2 command: `az sql db delete -g <resource-group> -s <server-name> -n <database-name>`.
