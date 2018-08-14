@@ -7,7 +7,7 @@ import (
 	"github.com/Azure/open-service-broker-azure/pkg/service"
 )
 
-func (d *databaseManager) GetDeprovisioner(
+func (d *databaseFeManager) GetDeprovisioner(
 	service.Plan,
 ) (service.Deprovisioner, error) {
 	return service.NewDeprovisioner(
@@ -16,7 +16,7 @@ func (d *databaseManager) GetDeprovisioner(
 	)
 }
 
-func (d *databaseManager) deleteARMDeployment(
+func (d *databaseFeManager) deleteARMDeployment(
 	_ context.Context,
 	instance service.Instance,
 ) (service.InstanceDetails, error) {
@@ -31,7 +31,7 @@ func (d *databaseManager) deleteARMDeployment(
 	return instance.Details, nil
 }
 
-func (d *databaseManager) deleteMsSQLDatabase(
+func (d *databaseFeManager) deleteMsSQLDatabase(
 	ctx context.Context,
 	instance service.Instance,
 ) (service.InstanceDetails, error) {

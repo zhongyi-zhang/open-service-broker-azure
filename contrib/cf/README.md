@@ -72,13 +72,16 @@ Open contrib/cf/manifest.yml and enter the values obtained in the earlier steps:
   applications:
     - name: osba
       buildpack: https://github.com/cloudfoundry/go-buildpack/releases/download/v1.8.13/go-buildpack-v1.8.13.zip
-      command: broker 
+      command: broker
       env:
         AZURE_SUBSCRIPTION_ID: <YOUR SUBSCRIPTION ID>
         AZURE_TENANT_ID: <TENANT ID FROM SERVICE PRINCIPAL>
         AZURE_CLIENT_ID: <APPID FROM SERVICE PRINCIPAL>
         AZURE_CLIENT_SECRET: <PASSWORD FROM SERVICE PRINCIPAL>
         LOG_LEVEL: DEBUG
+        ENABLE_MIGRATION_SERVICES: false
+        ENABLE_DISASTER_RECOVERY_SERVICES: false
+        USE_V2_GUID: false
         STORAGE_REDIS_HOST: <HOSTNAME FROM AZURE REDIS CACHE>
         STORAGE_REDIS_PASSWORD: <PRIMARYKEY FROM AZURE REDIS CACHE>
         STORAGE_REDIS_PORT: 6380
@@ -98,6 +101,8 @@ Open contrib/cf/manifest.yml and enter the values obtained in the earlier steps:
 ```
 
 **IMPORTANT**: The default values for `CRYPTO_AES256_KEY`, `BASIC\_AUTH\_USERNAME`, and `BASIC\_AUTH\_PASSWORD` should never be used in production environments.
+
+**NOTE**: `USE_V2_GUID` should be `false` unless you want OSBA to co-exist with [Meta Azure Service Broker (MASB)](https://github.com/Azure/meta-azure-service-broker). Once it is set `true`, a flag would be wrote to the `STORAGE_REDIS_DB` of `STORAGE_REDIS_HOST`. It means that the broker instance would use V2 GUID set forever. If you set it `true` by mistake, you need to manually connect the redis database and update the value of the key `useV2GuidFlag` to `false`.
 
 ## (Optional) Additional Steps for Azure Stack Cloud
 
@@ -121,7 +126,7 @@ Open contrib/cf/manifest.yml and enter the values obtained in the earlier steps:
     1. Create ASG.
 
 
-        ``` 
+        ```
         cat >> ~/my-asg.json << EOF
         [
           {
@@ -135,7 +140,7 @@ Open contrib/cf/manifest.yml and enter the values obtained in the earlier steps:
         EOF
         cf create-security-group my-asg ~/my-asg.json
         cf bind-running-security-group my-asg
-        ``` 
+        ```
 
 ## Push the broker to Cloud Foundry
 
@@ -153,7 +158,7 @@ With the broker app deployed, the final step is to register it as a service brok
 cf create-service-broker open-service-broker-azure username password https://osba.apps.example.com
 ```
 
-If you are *not* using a `--space-scoped` broker, services provided by a broker are not visible to Cloud Foundry users. To make them visible, you will also need to grant access to the services provided by Open Service Broker for Azure using the `cf enable-service-access` command. For example, to expose the `azure-postgresql-9-6` service, you will need to execute the following command. 
+If you are *not* using a `--space-scoped` broker, services provided by a broker are not visible to Cloud Foundry users. To make them visible, you will also need to grant access to the services provided by Open Service Broker for Azure using the `cf enable-service-access` command. For example, to expose the `azure-postgresql-9-6` service, you will need to execute the following command.
 
 ```console
 cf enable-service-access azure-postgresql-9-6

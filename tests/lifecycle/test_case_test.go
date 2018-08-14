@@ -25,6 +25,7 @@ type serviceLifecycleTestCase struct {
 	name                   string
 	serviceID              string
 	planID                 string
+	preProvision           func(ctx context.Context, resourceGroup string, parent *service.Instance, pp *map[string]interface{}) error // nolint: lll
 	provisioningParameters map[string]interface{}
 	updatingParameters     map[string]interface{}
 	parentServiceInstance  *service.Instance
@@ -76,6 +77,18 @@ func (s serviceLifecycleTestCase) execute(
 		"resourceGroup",
 	) {
 		s.provisioningParameters["resourceGroup"] = resourceGroup
+	}
+
+	// do preProvision scoped in the specified resourceGroup
+	if s.preProvision != nil {
+		if err := s.preProvision(
+			ctx,
+			resourceGroup,
+			s.parentServiceInstance,
+			&s.provisioningParameters,
+		); err != nil {
+			return err
+		}
 	}
 
 	if err :=

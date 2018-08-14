@@ -3,15 +3,20 @@
 package lifecycle
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"net/url"
 
+	sqlSDK "github.com/Azure/azure-sdk-for-go/services/sql/mgmt/2017-03-01-preview/sql" // nolint: lll
+	"github.com/Azure/open-service-broker-azure/pkg/generate"
+	"github.com/Azure/open-service-broker-azure/pkg/service"
 	_ "github.com/denisenkom/go-mssqldb" // MS SQL Driver
 	uuid "github.com/satori/go.uuid"
 )
 
 var mssqlDBMSAlias = uuid.NewV4().String()
+var mssqlDBMSRegisteredAlias = uuid.NewV4().String()
 
 var mssqlTestCases = []serviceLifecycleTestCase{
 	{ // all-in-one scenario (dtu-based)
@@ -134,6 +139,195 @@ var mssqlTestCases = []serviceLifecycleTestCase{
 			},
 		},
 	},
+	{ // dbms only registered scenario
+		group:        "mssql",
+		name:         "dbms-only-registered",
+		serviceID:    "c9bd94e7-5b7d-4b20-96e6-c5678f99d997",
+		planID:       "4e95e962-0142-4117-b212-bcc7aec7f6c2",
+		preProvision: createSQLServer,
+		provisioningParameters: map[string]interface{}{
+			"location": "southcentralus",
+			"alias":    mssqlDBMSRegisteredAlias,
+		},
+		childTestCases: []*serviceLifecycleTestCase{
+			{ // dtu db only scenario
+				group:           "mssql",
+				name:            "database-only (DTU)",
+				serviceID:       "2bbc160c-e279-4757-a6b6-4c0a4822d0aa",
+				planID:          "8fa8d759-c142-45dd-ae38-b93482ddc04a",
+				testCredentials: testMsSQLCreds,
+				provisioningParameters: map[string]interface{}{
+					"parentAlias": mssqlDBMSRegisteredAlias,
+				},
+			},
+			{ // vcore db only scenario
+				group:           "mssql",
+				name:            "database-only (vCore)",
+				serviceID:       "2bbc160c-e279-4757-a6b6-4c0a4822d0aa",
+				planID:          "da591616-77a1-4df8-a493-6c119649bc6b",
+				testCredentials: testMsSQLCreds,
+				provisioningParameters: map[string]interface{}{
+					"parentAlias": mssqlDBMSRegisteredAlias,
+					"cores":       int64(2),
+					"storage":     int64(10),
+				},
+			},
+		},
+	},
+	{ // database only from existing scenario
+		group:     "mssql",
+		name:      "dbms-only",
+		serviceID: "a7454e0e-be2c-46ac-b55f-8c4278117525",
+		planID:    "24f0f42e-1ab3-474e-a5ca-b943b2c48eee",
+		provisioningParameters: map[string]interface{}{
+			"location": "southcentralus",
+			"alias":    mssqlDBMSAlias,
+			"firewallRules": []interface{}{
+				map[string]interface{}{
+					"name":           "AllowAll",
+					"startIPAddress": "0.0.0.0",
+					"endIPAddress":   "255.255.255.255",
+				},
+			},
+		},
+		childTestCases: []*serviceLifecycleTestCase{
+			{
+				// db only from existing scenario (dtu-based)
+				group:           "mssql",
+				name:            "database-only-fe (DTU)",
+				serviceID:       "b0b2a2f7-9b5e-4692-8b94-24fe2f6a9a8e",
+				planID:          "e5804586-625a-4f67-996f-ca19a14711cc",
+				testCredentials: testMsSQLCreds,
+				preProvision:    createSQLDatabase,
+				provisioningParameters: map[string]interface{}{
+					"parentAlias": mssqlDBMSAlias,
+				},
+			},
+		},
+	},
+}
+
+func createSQLServer(
+	ctx context.Context,
+	resourceGroup string,
+	_ *service.Instance,
+	pp *map[string]interface{},
+) error {
+	azureConfig, err := getAzureConfig()
+	if err != nil {
+		return err
+	}
+	authorizer, err := getBearerTokenAuthorizer(azureConfig)
+	if err != nil {
+		return err
+	}
+	serversClient := sqlSDK.NewServersClientWithBaseURI(
+		azureConfig.Environment.ResourceManagerEndpoint,
+		azureConfig.SubscriptionID,
+	)
+	serversClient.Authorizer = authorizer
+	firewallRulesClient := sqlSDK.NewFirewallRulesClientWithBaseURI(
+		azureConfig.Environment.ResourceManagerEndpoint,
+		azureConfig.SubscriptionID,
+	)
+	firewallRulesClient.Authorizer = authorizer
+
+	serverName := uuid.NewV4().String()
+	administratorLogin := generate.NewIdentifier()
+	administratorLoginPassword := generate.NewPassword()
+	version := "12.0"
+	location := (*pp)["location"].(string)
+	(*pp)["server"] = serverName
+	(*pp)["administratorLogin"] = administratorLogin
+	(*pp)["administratorLoginPassword"] = administratorLoginPassword
+
+	server := sqlSDK.Server{
+		Location: &location,
+		ServerProperties: &sqlSDK.ServerProperties{
+			AdministratorLogin:         &administratorLogin,
+			AdministratorLoginPassword: &administratorLoginPassword,
+			Version:                    &version,
+		},
+	}
+	result, err := serversClient.CreateOrUpdate(
+		ctx,
+		resourceGroup,
+		serverName,
+		server,
+	)
+	if err != nil {
+		return fmt.Errorf("error creating sql server: %s", err)
+	}
+	if err := result.WaitForCompletion(ctx, serversClient.Client); err != nil {
+		return fmt.Errorf("error creating sql server: %s", err)
+	}
+
+	startIPAddress := "0.0.0.0"
+	endIPAddress := "255.255.255.255"
+	firewallRule := sqlSDK.FirewallRule{
+		FirewallRuleProperties: &sqlSDK.FirewallRuleProperties{
+			StartIPAddress: &startIPAddress,
+			EndIPAddress:   &endIPAddress,
+		},
+	}
+	if _, err := firewallRulesClient.CreateOrUpdate(
+		ctx,
+		resourceGroup,
+		serverName,
+		"all",
+		firewallRule,
+	); err != nil {
+		return fmt.Errorf("error creating firewall rule: %s", err)
+	}
+	return nil
+}
+
+func createSQLDatabase(
+	ctx context.Context,
+	resourceGroup string,
+	parent *service.Instance,
+	pp *map[string]interface{},
+) error {
+	azureConfig, err := getAzureConfig()
+	if err != nil {
+		return err
+	}
+	authorizer, err := getBearerTokenAuthorizer(azureConfig)
+	if err != nil {
+		return err
+	}
+	databasesClient := sqlSDK.NewDatabasesClientWithBaseURI(
+		azureConfig.Environment.ResourceManagerEndpoint,
+		azureConfig.SubscriptionID,
+	)
+	databasesClient.Authorizer = authorizer
+
+	dtMap, err := service.GetMapFromStruct(parent.Details)
+	if err != nil {
+		return err
+	}
+	serverName := dtMap["server"].(string)
+	databaseName := generate.NewIdentifier()
+	location := parent.ProvisioningParameters.GetString("location")
+	database := sqlSDK.Database{
+		Location: &location,
+	}
+	(*pp)["database"] = databaseName
+
+	result, err := databasesClient.CreateOrUpdate(
+		ctx,
+		resourceGroup,
+		serverName,
+		databaseName,
+		database,
+	)
+	if err != nil {
+		return fmt.Errorf("error creating sql database: %s", err)
+	}
+	if err := result.WaitForCompletion(ctx, databasesClient.Client); err != nil {
+		return fmt.Errorf("error creating sql database: %s", err)
+	}
+	return nil
 }
 
 func testMsSQLCreds(credentials map[string]interface{}) error {

@@ -65,6 +65,12 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	useV2Guid, err := storage.GetSetV2GuidFlag(catalogConfig.UseV2Guid)
+	if err != nil {
+		log.Fatal(err)
+	}
+	catalogConfig.UseV2Guid = useV2Guid
+
 	azureConfig, err := azure.GetConfigFromEnvironment()
 	if err != nil {
 		log.Fatal(err)

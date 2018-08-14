@@ -121,6 +121,21 @@ forms:
         label: PREVIEW
       - name: STABLE
         label: STABLE
+  - name: enable_migration_services
+    type: boolean
+    configurable: true
+    default: false
+    label: Enable Migration Services
+  - name: enable_disaster_recovery_services
+    type: boolean
+    configurable: true
+    default: false
+    label: Enable Disaster Recovery Services
+  - name: use_v2_guid
+    type: boolean
+    configurable: true
+    default: false
+    label: USE V2 GUID
   - name: storage_redis_host
     type: string
     label: Storage Redis Host

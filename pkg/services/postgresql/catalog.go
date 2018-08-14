@@ -167,7 +167,7 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 				ID:             "d3f74b44-79bc-4d1e-bf7d-c247c2b851f9",
 				Name:           "azure-postgresql-9-6-dbms",
 				Description:    "Azure Database for PostgreSQL 9.6-- DBMS only",
-				ChildServiceID: "25434f16-d762-41c7-bbdd-8045d7f74ca",
+				ChildServiceID: "25434f16-d762-41c7-bbdd-8045d7f74ca6",
 				Metadata: service.ServiceMetadata{
 					DisplayName:      "Azure Database for PostgreSQL 9.6-- DBMS Only",
 					ImageURL:         "https://azure.microsoft.com/svghandler/postgresql/?width=200",
