@@ -85,7 +85,11 @@ func createSQLServerPair(
 	_ *service.Instance,
 	pp *map[string]interface{},
 ) error {
-	azureConfig, authorizer, err := getAzureConfigAndAuthorizer()
+	azureConfig, err := getAzureConfig()
+	if err != nil {
+		return err
+	}
+	authorizer, err := getBearerTokenAuthorizer(azureConfig)
 	if err != nil {
 		return err
 	}
@@ -194,7 +198,11 @@ func createSQLDatabasePair(
 	parent *service.Instance,
 	pp *map[string]interface{},
 ) error {
-	azureConfig, authorizer, err := getAzureConfigAndAuthorizer()
+	azureConfig, err := getAzureConfig()
+	if err != nil {
+		return err
+	}
+	authorizer, err := getBearerTokenAuthorizer(azureConfig)
 	if err != nil {
 		return err
 	}
@@ -268,7 +276,7 @@ func createSQLDatabasePair(
 	if err != nil {
 		return fmt.Errorf("error creating sql database: %s", err)
 	}
-	if err := priResult.WaitForCompletion(
+	if err = priResult.WaitForCompletion(
 		ctx,
 		databasesClient.Client,
 	); err != nil {
@@ -284,7 +292,7 @@ func createSQLDatabasePair(
 	if err != nil {
 		return fmt.Errorf("error creating sql failover group: %s", err)
 	}
-	if err := fgResult.WaitForCompletion(
+	if err = fgResult.WaitForCompletion(
 		ctx,
 		failoverGroupsClient.Client,
 	); err != nil {
@@ -321,7 +329,11 @@ func createPrimarySQLDatabase(
 	parent *service.Instance,
 	pp *map[string]interface{},
 ) error {
-	azureConfig, authorizer, err := getAzureConfigAndAuthorizer()
+	azureConfig, err := getAzureConfig()
+	if err != nil {
+		return err
+	}
+	authorizer, err := getBearerTokenAuthorizer(azureConfig)
 	if err != nil {
 		return err
 	}
