@@ -55,7 +55,7 @@ func (d *dbmsRegisteredManager) getServer(
 			"sql server version validation failed, "+
 				"expected version: %s, actual version: %s",
 			expectedVersion,
-			result.Version,
+			*result.Version,
 		)
 	}
 	expectedLocation := strings.Replace(
