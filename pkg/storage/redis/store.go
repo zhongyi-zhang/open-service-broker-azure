@@ -306,12 +306,12 @@ func GetSetV2GuidFlag(envFlag bool) (bool, error) {
 
 	storageFlagStr, err := client.Get(useV2GuidFlag).Result()
 	if err == redis.Nil {
-		if gettingErr := client.Set(
+		if settingErr := client.Set(
 			useV2GuidFlag,
 			strconv.FormatBool(envFlag),
 			0,
-		).Err(); gettingErr != nil {
-			return false, gettingErr
+		).Err(); settingErr != nil {
+			return false, settingErr
 		}
 		return envFlag, nil
 	} else if err != nil {
@@ -321,6 +321,16 @@ func GetSetV2GuidFlag(envFlag bool) (bool, error) {
 		if parsingErr != nil {
 			return false, parsingErr
 		}
-		return storageFlag || envFlag, nil
+		flag := storageFlag || envFlag
+		if !storageFlag && flag {
+			if settingErr := client.Set(
+				useV2GuidFlag,
+				strconv.FormatBool(flag),
+				0,
+			).Err(); settingErr != nil {
+				return false, settingErr
+			}
+		}
+		return flag, nil
 	}
 }

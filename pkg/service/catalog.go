@@ -49,6 +49,7 @@ type ServiceMetadata struct { // nolint: golint
 type Service interface {
 	GetID() string
 	GetName() string
+	GetTags() []string
 	IsBindable() bool
 	GetServiceManager() ServiceManager
 	GetPlans() []Plan
@@ -185,6 +186,11 @@ func (s service) GetID() string {
 
 func (s service) GetName() string {
 	return s.Name
+}
+
+// HasTag returns whether Tags contain a specific tag
+func (s service) GetTags() []string {
+	return s.Tags
 }
 
 // IsBindable returns true if a service is bindable

@@ -46,6 +46,7 @@ func (d dtuPlanDetails) getUpdateSchema() service.InputParametersSchema {
 		ips.PropertySchemas["dtus"] = &service.IntPropertySchema{
 			AllowedValues: d.allowedDTUs,
 			DefaultValue:  ptr.ToInt64(d.defaultDTUs),
+			Title:         "DTUs",
 			Description: "DTUs are a bundled measure of compute, " +
 				"storage, and IO resources.",
 		}
@@ -66,6 +67,7 @@ func (d dtuPlanDetails) getProvisionSchema() service.InputParametersSchema {
 		ips.PropertySchemas["dtus"] = &service.IntPropertySchema{
 			AllowedValues: d.allowedDTUs,
 			DefaultValue:  ptr.ToInt64(d.defaultDTUs),
+			Title:         "DTUs",
 			Description: "DTUs are a bundled measure of compute, " +
 				"storage, and IO resources.",
 		}
@@ -132,12 +134,14 @@ func (v vCorePlanDetails) getUpdateSchema() service.InputParametersSchema {
 	ips.PropertySchemas["cores"] = &service.IntPropertySchema{
 		AllowedValues: []int64{2, 4, 8, 16, 24, 32, 48, 80},
 		DefaultValue:  ptr.ToInt64(2),
+		Title:         "Cores",
 		Description:   "A virtual core represents the logical CPU",
 	}
 	ips.PropertySchemas["storage"] = &service.IntPropertySchema{
 		MinValue:     ptr.ToInt64(5),
 		MaxValue:     ptr.ToInt64(1024),
 		DefaultValue: ptr.ToInt64(10),
+		Title:        "Storage",
 		Description:  "The maximum data storage capacity (in GB)",
 	}
 	return ips
@@ -153,12 +157,14 @@ func (v vCorePlanDetails) getProvisionSchema() service.InputParametersSchema {
 	ips.PropertySchemas["cores"] = &service.IntPropertySchema{
 		AllowedValues: []int64{2, 4, 8, 16, 24, 32, 48, 80},
 		DefaultValue:  ptr.ToInt64(2),
+		Title:         "Cores",
 		Description:   "A virtual core represents the logical CPU",
 	}
 	ips.PropertySchemas["storage"] = &service.IntPropertySchema{
 		MinValue:     ptr.ToInt64(5),
 		MaxValue:     ptr.ToInt64(1024),
 		DefaultValue: ptr.ToInt64(10),
+		Title:        "Storage",
 		Description:  "The maximum data storage capacity (in GB)",
 	}
 	return ips
@@ -236,9 +242,11 @@ func getDBMSCommonUpdateParamSchema() service.InputParametersSchema {
 	return service.InputParametersSchema{
 		PropertySchemas: map[string]service.PropertySchema{
 			"firewallRules": &service.ArrayPropertySchema{
+				Title: "Firewall rules",
 				Description: "Firewall rules to apply to instance. " +
 					"If left unspecified, defaults to only Azure IPs",
 				ItemsSchema: &service.ObjectPropertySchema{
+					Title:       "Firewall rule",
 					Description: "Individual Firewall Rule",
 					RequiredProperties: []string{
 						"name",
@@ -247,13 +255,16 @@ func getDBMSCommonUpdateParamSchema() service.InputParametersSchema {
 					},
 					PropertySchemas: map[string]service.PropertySchema{
 						"name": &service.StringPropertySchema{
+							Title:       "Name",
 							Description: "Name of firewall rule",
 						},
 						"startIPAddress": &service.StringPropertySchema{
+							Title:                   "Start IP address",
 							Description:             "Start of firewall rule range",
 							CustomPropertyValidator: ipValidator,
 						},
 						"endIPAddress": &service.StringPropertySchema{
+							Title:                   "End IP address",
 							Description:             "End of firewall rule range",
 							CustomPropertyValidator: ipValidator,
 						},
@@ -277,18 +288,22 @@ func getDBMSCommonProvisionParamSchema() service.InputParametersSchema {
 		RequiredProperties: []string{"location", "resourceGroup"},
 		PropertySchemas: map[string]service.PropertySchema{
 			"location": &service.StringPropertySchema{
+				Title: "Location",
 				Description: "The Azure region in which to provision" +
 					" applicable resources.",
 				CustomPropertyValidator: azure.LocationValidator,
 			},
 			"resourceGroup": &service.StringPropertySchema{
+				Title: "Resource group",
 				Description: "The (new or existing) resource group with which" +
 					" to associate new resources.",
 			},
 			"firewallRules": &service.ArrayPropertySchema{
+				Title: "Firewall rules",
 				Description: "Firewall rules to apply to instance. " +
 					"If left unspecified, defaults to only Azure IPs",
 				ItemsSchema: &service.ObjectPropertySchema{
+					Title:       "Firewall rule",
 					Description: "Individual Firewall Rule",
 					RequiredProperties: []string{
 						"name",
@@ -297,13 +312,16 @@ func getDBMSCommonProvisionParamSchema() service.InputParametersSchema {
 					},
 					PropertySchemas: map[string]service.PropertySchema{
 						"name": &service.StringPropertySchema{
+							Title:       "Name",
 							Description: "Name of firewall rule",
 						},
 						"startIPAddress": &service.StringPropertySchema{
+							Title:                   "Start IP address",
 							Description:             "Start of firewall rule range",
 							CustomPropertyValidator: ipValidator,
 						},
 						"endIPAddress": &service.StringPropertySchema{
+							Title:                   "End IP address",
 							Description:             "End of firewall rule range",
 							CustomPropertyValidator: ipValidator,
 						},
@@ -319,6 +337,72 @@ func getDBMSCommonProvisionParamSchema() service.InputParametersSchema {
 				},
 			},
 			"tags": &service.ObjectPropertySchema{
+				Title: "Tags",
+				Description: "Tags to be applied to new resources," +
+					" specified as key/value pairs.",
+				Additional: &service.StringPropertySchema{},
+			},
+		},
+	}
+}
+
+func getDBMSRegisteredUpdateParamSchema() service.InputParametersSchema {
+	return service.InputParametersSchema{
+		SecureProperties: []string{
+			"administratorLoginPassword",
+		},
+		PropertySchemas: map[string]service.PropertySchema{
+			"administratorLogin": &service.StringPropertySchema{
+				Title: "Administrator Login",
+				Description: "Specifies the administrator login name" +
+					" of the existing server",
+			},
+			"administratorLoginPassword": &service.StringPropertySchema{
+				Title: "Administrator Login Password",
+				Description: "Specifies the administrator login password" +
+					" of the existing server",
+			},
+		},
+	}
+}
+
+func getDBMSRegisteredProvisionParamSchema() service.InputParametersSchema {
+	return service.InputParametersSchema{
+		RequiredProperties: []string{
+			"resourceGroup",
+			"location",
+			"server",
+			"administratorLogin",
+			"administratorLoginPassword",
+		},
+		SecureProperties: []string{
+			"administratorLoginPassword",
+		},
+		PropertySchemas: map[string]service.PropertySchema{
+			"resourceGroup": &service.StringPropertySchema{
+				Title:       "Resource Group",
+				Description: "Specifies the resource group of the existing server",
+			},
+			"location": &service.StringPropertySchema{
+				Title:       "Location",
+				Description: "Specifies the location of the existing server",
+			},
+			"server": &service.StringPropertySchema{
+				Title:       "Server Name",
+				Description: "Specifies the name of the existing server",
+			},
+			"administratorLogin": &service.StringPropertySchema{
+				Title: "Administrator Login",
+				Description: "Specifies the administrator login name" +
+					" of the existing server",
+			},
+			"administratorLoginPassword": &service.StringPropertySchema{
+				Title: "Administrator Login Password",
+				Description: "Specifies the administrator login password" +
+					" of the existing server",
+			},
+			"tags": &service.ObjectPropertySchema{
+				Title: "Tags",
 				Description: "Tags to be applied to new resources," +
 					" specified as key/value pairs.",
 				Additional: &service.StringPropertySchema{},

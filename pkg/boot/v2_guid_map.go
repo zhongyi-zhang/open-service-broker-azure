@@ -50,5 +50,24 @@ func getV2GuidMap() map[string]string {
 		"057e64ea-41b5-4ed7-bf99-4867a332cfb7": "14986696-b6ac-47ff-8000-203ae3e4ae3b",
 		"25434f16-d762-41c7-bbdd-8045d7f74ca6": "20defa86-7dfc-4c3a-aafc-9f106ac56fcb",
 		"df6f5ef1-e602-406b-ba73-09c107d1e31b": "ee762481-19e8-49e6-91dc-38f17336789a",
+		// RedisCache
+		"0346088a-d4b2-4478-aa32-f18e295ec1d9": "f315b6c0-34bb-47ca-819a-eb0ef83c3f4a",
+		"362b3d1b-5b57-4289-80ad-4a15a760c29c": "5850c4d2-9be2-4d28-a0a8-9d781f66efb7",
+		"4af8bbd1-962d-4e26-84f1-f72d1d959d87": "2ff4d411-e5fb-4a80-8bb1-446b1b0b594c",
+		"b1057a8f-9a01-423a-bc35-e168d5c04cf0": "d70b7329-1764-43a3-9df1-ff6cae6ca178",
+		// EventHubs
+		"7bade660-32f1-4fd7-b9e6-d416d975170b": "7d7e3d93-1289-46f1-abcb-dab7b9f17bfa",
+		"80756db5-a20c-495d-ae70-62cf7d196a3c": "ead11ccf-54bb-4512-a42e-6a407deec86f",
+		"264ab981-9e37-44ba-b6bb-2d0fe3e80565": "b462650c-dcfc-43b7-8db3-7367e05fdb2d",
+		// ServiceBus
+		"6dc44338-2f13-4bc5-9247-5b1b3c5462d3": "8dc7d622-51a9-4918-806a-5c83eb5db479",
+		"d06817b1-87ea-4320-8942-14b1d060206a": "ee5b8f68-7694-4291-be55-c69daae2360d",
+		"6be0d8b5-381f-4d68-bdfd-a131425d3835": "7e0c561a-5cd4-474a-acb7-8f86070395fe",
+		"cec378a7-6452-4203-beca-d34898edbadc": "9e1eca68-31ab-4108-ad43-b5ce62504eab",
+		// Storage
+		"2e2fc314-37b6-4587-8127-8f9ee8b33fea": "b28af836-a4be-4173-ae14-6d05badee9a1",
+		"6ddf6b41-fb60-4b70-af99-8ecc4896b3cf": "0f259271-214d-45c6-a343-e0c35be64025",
+		"800a17e1-f20a-463d-a290-20516052f647": "5fa39a7e-c0bb-4cfb-a4ec-40e79d54f078",
+		"189d3b8f-8307-4b3f-8c74-03d069237f70": "8fd48959-4690-4bda-9561-22274b04c46a",
 	}
 }

@@ -28,7 +28,7 @@ func GetBearerTokenAuthorizer(
 		*oauthConfig,
 		clientID,
 		clientSecret,
-		azureEnvironment.ResourceManagerEndpoint,
+		azureEnvironment.TokenAudience,
 	)
 	if err != nil {
 		return nil, fmt.Errorf("error getting service principal token: %s", err)

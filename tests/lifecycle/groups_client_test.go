@@ -37,7 +37,11 @@ func deleteResourceGroup(
 }
 
 func getGroupsClient() (*resourcesSDK.GroupsClient, error) {
-	azureConfig, authorizer, err := getAzureConfigAndAuthorizer()
+	azureConfig, err := getAzureConfig()
+	if err != nil {
+		return nil, err
+	}
+	authorizer, err := getBearerTokenAuthorizer(azureConfig)
 	if err != nil {
 		return nil, err
 	}

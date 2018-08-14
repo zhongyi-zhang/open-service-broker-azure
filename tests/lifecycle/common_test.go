@@ -7,15 +7,21 @@ import (
 	"github.com/Azure/open-service-broker-azure/pkg/azure"
 )
 
-func getAzureConfigAndAuthorizer() (
+func getAzureConfig() (
 	*azure.Config,
-	*autorest.BearerAuthorizer,
 	error,
 ) {
 	azureConfig, err := azure.GetConfigFromEnvironment()
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
+	return &azureConfig, nil
+}
+
+func getBearerTokenAuthorizer(azureConfig *azure.Config) (
+	*autorest.BearerAuthorizer,
+	error,
+) {
 	authorizer, err := azure.GetBearerTokenAuthorizer(
 		azureConfig.Environment,
 		azureConfig.TenantID,
@@ -23,8 +29,8 @@ func getAzureConfigAndAuthorizer() (
 		azureConfig.ClientSecret,
 	)
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 
-	return &azureConfig, authorizer, nil
+	return authorizer, nil
 }

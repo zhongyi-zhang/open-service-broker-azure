@@ -33,7 +33,29 @@ func GetCatalog(
 				err,
 			)
 		}
+
+		environmentName := azureConfig.Environment.Name
+		enableDRServices := catalogConfig.EnableDRServices
+		enableMigrationServices := catalogConfig.EnableMigrationServices
 		for _, svc := range catalog.GetServices() {
+			serviceTags := svc.GetTags()
+			tagsMap := map[string]bool{}
+			for _, t := range serviceTags {
+				tagsMap[t] = true
+			}
+			// Skip services which the cloud doesn't support
+			if !tagsMap[environmentName] {
+				continue
+			}
+			// Skip migration services if disabled
+			if !enableMigrationServices && tagsMap[service.MigrationTag] {
+				continue
+			}
+			// Skip DR services if disabled
+			if !enableDRServices && tagsMap[service.DRTag] {
+				continue
+			}
+
 			serviceID := svc.GetID()
 			if moduleNameForUsedServiceID, ok := usedServiceIDs[serviceID]; ok {
 				return nil, fmt.Errorf(
@@ -49,6 +71,7 @@ func GetCatalog(
 				if plan.GetStability() >= catalogConfig.MinStability {
 					pProp := plan.GetProperties()
 					pProp.Schemas.AddCommonSchema(svc.GetProperties())
+					// use V2 version plan IDs if enabled
 					if catalogConfig.UseV2Guid {
 						if mappedID := v2GuidMap[pProp.ID]; mappedID != "" {
 							pProp.ID = mappedID
@@ -59,6 +82,7 @@ func GetCatalog(
 			}
 			if len(filteredPlans) > 0 {
 				sProp := svc.GetProperties()
+				// use V2 version service IDs if enabled
 				if catalogConfig.UseV2Guid {
 					if mappedID := v2GuidMap[sProp.ID]; mappedID != "" {
 						sProp.ID = mappedID
