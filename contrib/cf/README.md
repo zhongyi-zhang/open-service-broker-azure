@@ -74,6 +74,7 @@ Open contrib/cf/manifest.yml and enter the values obtained in the earlier steps:
       buildpack: https://github.com/cloudfoundry/go-buildpack/releases/download/v1.8.13/go-buildpack-v1.8.13.zip
       command: broker
       env:
+        AZURE_ENVIRONMENT: AzurePublicCloud
         AZURE_SUBSCRIPTION_ID: <YOUR SUBSCRIPTION ID>
         AZURE_TENANT_ID: <TENANT ID FROM SERVICE PRINCIPAL>
         AZURE_CLIENT_ID: <APPID FROM SERVICE PRINCIPAL>
