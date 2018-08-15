@@ -2,6 +2,7 @@ package mssqlfg
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/Azure/open-service-broker-azure/pkg/service"
 )
@@ -23,11 +24,23 @@ func (d *dbmsPairRegisteredManager) preProvision(
 	instance service.Instance,
 ) (service.InstanceDetails, error) {
 	pp := instance.ProvisioningParameters
+	priServerName := pp.GetString("primaryServer")
+	secServerName := pp.GetString("secondaryServer")
+	if priServerName == secServerName {
+		return nil, fmt.Errorf("The primary server and the secondary server " +
+			"should be different servers")
+	}
+	priLocation := pp.GetString("primaryLocation")
+	secLocation := pp.GetString("secondaryLocation")
+	if priLocation == secLocation {
+		return nil, fmt.Errorf("The primary server and the secondary server " +
+			"should be in different locations")
+	}
 	return &dbmsPairInstanceDetails{
-		PriServerName:                 pp.GetString("primaryServer"),
+		PriServerName:                 priServerName,
 		PriAdministratorLogin:         pp.GetString("primaryAdministratorLogin"),
 		PriAdministratorLoginPassword: service.SecureString(pp.GetString("primaryAdministratorLoginPassword")), // nolint: lll
-		SecServerName:                 pp.GetString("secondaryServer"),
+		SecServerName:                 secServerName,
 		SecAdministratorLogin:         pp.GetString("secondaryAdministratorLogin"),
 		SecAdministratorLoginPassword: service.SecureString(pp.GetString("secondaryAdministratorLoginPassword")), // nolint: lll
 	}, nil
