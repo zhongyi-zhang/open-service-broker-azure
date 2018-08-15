@@ -74,6 +74,12 @@ forms:
     options:
       - name: AzurePublicCloud
         label: Azure Public Cloud
+      - name: AzureChinaCloud
+        label: Azure China Cloud
+      - name: AzureGermanCloud
+        label: Azure German Cloud
+      - name: AzureUSGovernmentCloud
+        label: Azure US Government Cloud
   - name: azure_subscription_id
     type: string
     label: Subscription Id
