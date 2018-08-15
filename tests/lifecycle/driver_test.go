@@ -55,7 +55,7 @@ func TestServices(t *testing.T) {
 
 func TestMain(m *testing.M) {
 	if err := crypto.InitializeGlobalCodec(noop.NewCodec()); err != nil {
-		panic(err)
+		os.Exit(-1)
 	}
 	if err := setup(); err != nil {
 		os.Exit(-1)
