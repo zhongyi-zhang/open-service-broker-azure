@@ -1,4 +1,4 @@
-# Migrate [Azure SQL Database](https://azure.microsoft.com/en-us/services/sql-database/) Service Instances From MASB To OSBA
+# Migrate [Azure SQL Database Service](https://github.com/Azure/meta-azure-service-broker/blob/master/docs/azure-sql-db.md) Instances From MASB To OSBA
 
 ***Note***: this guidance is specially for existing server scenario. Straighter, the SQL Databases created by MASB must be on a server whose credentials are provided from MASB manifest.
 
@@ -9,10 +9,17 @@
 OSBA doesn't support to provide existing servers' credentials from manifest and create database on them. Instead, it provides **azure-sql-12-0-dbms** service to create SQL servers and you can create database on the server by **azure-sql-12-0-database** service. The service **azure-sql-12-0-dbms-registered** is a service using your existing Azure SQL server. It does NOT CREATE new server in provisioning and does NOT DELETE the server in deprovisioning. You can run the following CF CLI command to create a instance of it:
 
 ```
-cf create-service azure-sql-12-0-dbms-registered dbms <instance-name> -c '{"resourceGroup":"<group-name>", "location":"<server-location>", "server":"<server-name>", "administratorLogin":"<login>", "administratorLoginPassword":"<login-password>", "alias":"<instance-name>"}'
+cf create-service azure-sql-12-0-dbms-registered dbms <sql-server-instance-name> -c '{
+  "resourceGroup":"<group-name>",
+  "server":"<server-name>",
+  "location":"<server-location>",
+  "administratorLogin":"<login>",
+  "administratorLoginPassword":"<login-password>",
+  "alias":"<sql-server-instance-name>"
+}'
 ```
 
-### Create azure-sql-12-0-database-from-existing
+### Create azure-sql-12-0-database-from-existing service instance by OSBA
 
 Similar to the server, the service **azure-sql-12-0-database-from-existing** is a service using your existing Azure SQL database. It does NOT CREATE new database in provisioning but DELETE the database in deprovisioning. Not like the server, it is to take over the database. First, you can run the following command to check the service credentials delivered to you application:
 
@@ -25,10 +32,13 @@ Find the database name in the field `VCAP_SERVICES` - `azure-sqldb` - `sqldbName
 Then, you can run the following command to create a instance of **azure-sql-12-0-database-from-existing**:
 
 ```
-cf create-service azure-sql-12-0-database-from-existing <plan-name> <sqldb-instance-name> -c '{"resourceGroup":"<group-name>", "location":"<server-location>", "server":"<server-name>", "administratorLogin":"<login>", "administratorLoginPassword":"<login-password>", "alias":"<sqldb-instance-name>"}'
+cf create-service azure-sql-12-0-database-from-existing <plan-name> <sqldb-instance-name> -c '{
+  "parentAlias":"<the-alias-above>",
+  "database":"<sqldb-name>"
+}'
 ```
 
-***Note***: OSBA provides plans by tier categories. For example, compared to that MASB provides plans `StandardS0` - `StandardS12`, OSBA provides only a plan `standard`. You should choose the right category. It is important. Though provisioning wouldn't change the tier, you wouldn't be able to update the tier as OSBA doesn't support changing plan for now. The plan name of existing service instances can be checked by `cf services`.
+***Note***: OSBA provides plans by tier categories. For example, compared to that MASB provides plans `StandardS0` - `StandardS12`, OSBA provides only a plan `standard` for all the standard tiers. You should choose the right category. It is important. Though provisioning wouldn't change the tier, you wouldn't be able to update the tier as OSBA doesn't support changing plan for now. The plan name of existing service instances can be checked by `cf services`.
 
 ### Duplicate your application and update to adapt the SQL credentials delivered by OSBA
 
@@ -39,13 +49,13 @@ You should check the SQL credential differences between [OSBA](../modules/mssql.
 After successfully creating the service instance, bind it to your application:
 
 ```
-cf bind-service <your-app-new-name> <instance-name> <sqldb-instance-name>
+cf bind-service <your-app-new-name> <sqldb-instance-name>
 ```
 
-Restart the application:
+Restage the application:
 
 ```
-cf restart <your-app-new-name>
+cf restage <your-app-new-name>
 ```
 
 After you test the application and it works well, you can switch your application domain to the new route in your DNS.
@@ -55,13 +65,13 @@ After you test the application and it works well, you can switch your applicatio
 Unbind the old SQL database instance:
 
 ```
-cf unbind-service <your-app-name> <old-sqldb-instance-name>
+cf unbind-service <your-app-name> <masb-sqldb-instance-name>
 ```
 
 Purge the service instance (**IMPORTANT**):
 
 ```
-cf purge-service-instance <old-sqldb-instance-name>
+cf purge-service-instance <masb-sqldb-instance-name>
 ```
 
 Don't use `cf delete-service` here. Or, your database would be deleted in Azure!

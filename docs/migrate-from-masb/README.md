@@ -4,13 +4,15 @@ Now services supported migration, click to read the corresponding guidance:
 
   * [Azure SQL Database](./mssql.md)
 
+  * [Azure SQL Database Failover Group](./mssqlfg.md)
+
 All the guidance base on the scenario as below:
 
   * You have a Cloud Foundry cluster and installed CF CLI.
 
   * You installed MASB, created service instances, and bound them to your application.
 
-  * You installed OSBA with `USE_V2_GUID` set `true` in the manifest.
+  * You installed OSBA with `USE_V2_GUID` and `ENABLE_MIGRATION_SERVICES` set `true` in the manifest. (For Azure SQL Database Failover Group service, `ENABLE_DISASTER_RECOVERY_SERVICES` should be also set `true`)
 
   * You want to switch to OSBA to take over those service instances and your application still works well.
 

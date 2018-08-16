@@ -2,15 +2,17 @@
 
 _Note: this module is PREVIEW. It is under moderate development, but future releases may still break the API._
 
-Open Service Broker for Azure (OSBA) contains three Azure SQL Database services. These services enable you to select the most appropriate provisioning scenario for your needs. These services are:
+Open Service Broker for Azure (OSBA) contains five Azure SQL Database services. These services enable you to select the most appropriate provisioning scenario for your needs. These services are:
 
 | Service Name | Description |
 |--------------|-------------|
 | `azure-sql` | Provision both a SQL Server DBMS and a database. |
 | `azure-sql-dbms` | Provision only a SQL Server Database Management System (DBMS). This can be used to provision multiple databases at a later time. |
 | `azure-sql-database` | Provision a new database only upon a previously provisioned DBMS. |
+| `azure-sql-dbms-registered` | Register an existing server as a DBMS service instance. |
+| `azure-sql-database-from-existing` | Taking over an existing database upon a previous DBMS as a database service instance. The service requires `ENABLE_MIGRATION_SERVICES` to be `true` in OSBA environment variables. |
 
-The `azure-sql` service allows you to provision both a DBMS and a database. When the provision operation is successful, the database will be ready to use. You can not provision additional databases onto an instance provisioned through this service. The `azure-sql-dbms` and `azure-sql-database` services, on the other hand, can be combined to provision multiple databases on a single DBMS.  For more information on each service, refer to the descriptions below.
+The `azure-sql` service allows you to provision both a DBMS and a database. When the provision operation is successful, the database will be ready to use. You can not provision additional databases onto an instance provisioned through this service. The `azure-sql-dbms` and `azure-sql-database` services, on the other hand, can be combined to provision multiple databases on a single DBMS. The `azure-sql-dbms-registered` is in the same position with `azure-sql-dbms`. And `azure-sql-database-from-existing` is in the same position with `azure-sql-database`. For more information on each service, refer to the descriptions below.
 
 ## Services & Plans
 
@@ -483,7 +485,7 @@ curl -X PUT \
 
 ### Service: azure-sql-dbms-registered
 
-It is the service to *register* an existing Azure SQL Server as an [azure-sql-dbms service](#service-azure-sql-dbms) instance. With extra required provisioning parameters: `server`, `administratorLogin`, and `administratorLoginPassword`, the service validates the SQL Server in provisioning and doesn't delete the server in deprovisioning. Except this, all the behaviors can be referred to azure-sql-dbms service. Both **azure-sql-database** service and **azure-sql-database-from-existing** service can be its child service.
+It is the service to *register* an existing Azure SQL Server as an [**azure-sql-dbms** service](#service-azure-sql-dbms) instance. With extra required provisioning parameters: `server`, `administratorLogin`, and `administratorLoginPassword`, the service validates the SQL Server in provisioning and doesn't delete the server in deprovisioning. Except this, all the behaviors can be referred to azure-sql-dbms service. Both **azure-sql-database** service and **azure-sql-database-from-existing** service can be its child service.
 
 #### Behaviors
 
@@ -500,4 +502,4 @@ Update the `administratorLogin` and/or `administratorLoginPassword` as they may 
 
 ### Service: azure-sql-database-from-existing
 
-It is the service to create [azure-sql-database service](#service-azure-sql-database) instance from existing Azure SQL Database *for taking over the database*. With extra required provisioning parameters: `database`, the service validates the SQL datbase in provisioning and also delete the database in deprovisioning. Except this, all the behaviors can be referred to azure-sql-database service. Both **azure-sql-dbms** service and **azure-sql-dbms-registered** service can be its parent service.
+It is the service to create [**azure-sql-database** service](#service-azure-sql-database) instance from existing Azure SQL Database *for taking over the database*. With extra required provisioning parameters: `database`, the service validates the SQL datbase in provisioning and also delete the database in deprovisioning. Except this, all the behaviors can be referred to **azure-sql-database** service. Both **azure-sql-dbms** service and **azure-sql-dbms-registered** service can be its parent service.
