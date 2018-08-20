@@ -12,7 +12,7 @@ Open Service Broker for Azure (OSBA) contains five Azure SQL Database Failover G
 | `azure-sql-12-0-dr-database-pair-from-existing` | Taking over an existing failover group (included the databases) upon a previous DBMS pair as a service instance. |
 | `azure-sql-12-0-dr-database-pair-from-existing-primary` | Taking over an existing database upon the primary server of a previous DBMS pair, and extend it to a failover group deployment. |
 
-All the services in this module require `ENABLE_DISASTER_RECOVERY_SERVICES` to be `true` in OSBA environment variables. Besides, `azure-sql-12-0-dr-database-pair-from-existing` and `azure-sql-12-0-dr-database-pair-from-existing-primary` require `ENABLE_MIGRATION_SERVICES` to be `true`. The `azure-sql-12-0-dr-dbms-pair-registered` service allows you to provide an existing primary server and an existing secondary server for the DR deployment. For more information on each service, refer to the descriptions below.
+All the services in this module require `ENABLE_DISASTER_RECOVERY_SERVICES` to be `true` in OSBA environment variables. Besides, `azure-sql-12-0-dr-database-pair-from-existing` and `azure-sql-12-0-dr-database-pair-from-existing-primary` require `ENABLE_MIGRATION_SERVICES` to be `true`. For more information on each service, refer to the descriptions below.
 
 ## Services & Plans
 
@@ -160,7 +160,7 @@ Additional Provision Parameters for : premium plan
 
 | Parameter Name | Type | Description | Required | Default Value |
 |----------------|------|-------------|----------|---------------|
-| `dtus` | `integer` | Specifies Database transaction units, which represent a bundled measure of compute, storage, and IO resources. Valid values are 125, 250, 500, 1000, 1750, 1000 | N | 125 |
+| `dtus` | `integer` | Specifies Database transaction units, which represent a bundled measure of compute, storage, and IO resources. Valid values are 125, 250, 500, 1000, 1750, 4000 | N | 125 |
 
 Additional Provision Parameters for: general-purpose
 
@@ -212,13 +212,13 @@ Additional Provision Parameters for : standard plan
 
 | Parameter Name | Type | Description | Required | Default Value |
 |----------------|------|-------------|----------|---------------|
-| `dtu` | `integer` | Specifies Database transaction units, which represent a bundled measure of compute, storage, and IO resources. Valid values are 10, 20, 50, 100, 200, 400, 800, 1600, 3000 | N | 10 |
+| `dtus` | `integer` | Specifies Database transaction units, which represent a bundled measure of compute, storage, and IO resources. Valid values are 10, 20, 50, 100, 200, 400, 800, 1600, 3000 | N | 10 |
 
 Additional Provision Parameters for : premium plan
 
 | Parameter Name | Type | Description | Required | Default Value |
 |----------------|------|-------------|----------|---------------|
-| `dtu` | `integer` | Specifies Database transaction units, which represent a bundled measure of compute, storage, and IO resources. Valid values are 125, 250, 500, 1000, 1750, 1000 | N | 125 |
+| `dtus` | `integer` | Specifies Database transaction units, which represent a bundled measure of compute, storage, and IO resources. Valid values are 125, 250, 500, 1000, 1750, 4000 | N | 125 |
 
 Additional Provision Parameters for: general-purpose
 

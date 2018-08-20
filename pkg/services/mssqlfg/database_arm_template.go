@@ -13,7 +13,7 @@ var databaseARMTemplateBytes = []byte(`
 	"resources": [
 		{
 			"type": "Microsoft.Sql/servers/databases",
-			"name": "{{ .serverName}}/{{ .databaseName }}",
+			"name": "{{ .serverName }}/{{ .databaseName }}",
 			"apiVersion": "2017-10-01-preview",
 			"location": "{{.location}}",
 			"properties": {
