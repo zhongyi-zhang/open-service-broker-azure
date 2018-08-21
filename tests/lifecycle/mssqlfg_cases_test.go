@@ -40,6 +40,9 @@ var mssqlfgTestCases = []serviceLifecycleTestCase{
 					"failoverGroup": uuid.NewV4().String(),
 					"database":      uuid.NewV4().String(),
 				},
+				updatingParameters: map[string]interface{}{
+					"dtus": 50,
+				},
 			},
 			{
 				group:           "mssqlfg",
@@ -62,6 +65,9 @@ var mssqlfgTestCases = []serviceLifecycleTestCase{
 				provisioningParameters: map[string]interface{}{
 					"parentAlias": mssqlDBMSPairAlias,
 				},
+				updatingParameters: map[string]interface{}{
+					"dtus": 50,
+				},
 			},
 			{
 				group:           "mssqlfg",
@@ -73,6 +79,9 @@ var mssqlfgTestCases = []serviceLifecycleTestCase{
 				provisioningParameters: map[string]interface{}{
 					"parentAlias":   mssqlDBMSPairAlias,
 					"failoverGroup": uuid.NewV4().String(),
+				},
+				updatingParameters: map[string]interface{}{
+					"dtus": 50,
 				},
 			},
 		},
