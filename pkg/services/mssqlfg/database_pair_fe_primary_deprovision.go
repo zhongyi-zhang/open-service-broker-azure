@@ -16,16 +16,12 @@ func (d *databasePairFePrimaryManager) GetDeprovisioner(
 			d.deletePriARMDeployment,
 		),
 		service.NewDeprovisioningStep(
-			"deleteFgARMDeployment",
-			d.deleteFgARMDeployment,
-		),
-		service.NewDeprovisioningStep(
-			"deletePriARMDeployment",
-			d.deletePriARMDeployment,
-		),
-		service.NewDeprovisioningStep(
 			"deleteSecARMDeployment",
 			d.deleteSecARMDeployment,
+		),
+		service.NewDeprovisioningStep(
+			"deleteFgARMDeployment",
+			d.deleteFgARMDeployment,
 		),
 		service.NewDeprovisioningStep(
 			"deletePriDatabase",
