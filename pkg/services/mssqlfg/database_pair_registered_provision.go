@@ -11,8 +11,8 @@ func (d *databasePairRegisteredManager) GetProvisioner(
 ) (service.Provisioner, error) {
 	return service.NewProvisioner(
 		service.NewProvisioningStep("preProvision", d.preProvision),
-		service.NewProvisioningStep("getPriDatabase", d.getPriDatabase),
-		service.NewProvisioningStep("getSecDatabase", d.getSecDatabase),
+		service.NewProvisioningStep("validatePriDatabase", d.validatePriDatabase),
+		service.NewProvisioningStep("validateSecDatabase", d.validateSecDatabase),
 		service.NewProvisioningStep("validateFailoverGroup", d.validateFailoverGroup),
 	)
 }
@@ -28,7 +28,7 @@ func (d *databasePairRegisteredManager) preProvision(
 	}, nil
 }
 
-func (d *databasePairRegisteredManager) getPriDatabase(
+func (d *databasePairRegisteredManager) validatePriDatabase(
 	ctx context.Context,
 	instance service.Instance,
 ) (service.InstanceDetails, error) {
@@ -47,7 +47,7 @@ func (d *databasePairRegisteredManager) getPriDatabase(
 	return instance.Details, nil
 }
 
-func (d *databasePairRegisteredManager) getSecDatabase(
+func (d *databasePairRegisteredManager) validateSecDatabase(
 	ctx context.Context,
 	instance service.Instance,
 ) (service.InstanceDetails, error) {

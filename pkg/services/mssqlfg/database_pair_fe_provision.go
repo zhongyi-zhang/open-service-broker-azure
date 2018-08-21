@@ -13,8 +13,8 @@ func (d *databasePairFeManager) GetProvisioner(
 ) (service.Provisioner, error) {
 	return service.NewProvisioner(
 		service.NewProvisioningStep("preProvision", d.preProvision),
-		service.NewProvisioningStep("getPriDatabase", d.getPriDatabase),
-		service.NewProvisioningStep("getSecDatabase", d.getSecDatabase),
+		service.NewProvisioningStep("validatePriDatabase", d.validatePriDatabase),
+		service.NewProvisioningStep("validateSecDatabase", d.validateSecDatabase),
 		service.NewProvisioningStep("validateFailoverGroup", d.validateFailoverGroup),
 		service.NewProvisioningStep("deployPriARMTemplate", d.deployPriARMTemplate),
 		service.NewProvisioningStep("deploySecARMTemplate", d.deploySecARMTemplate),
@@ -33,7 +33,7 @@ func (d *databasePairFeManager) preProvision(
 	}, nil
 }
 
-func (d *databasePairFeManager) getPriDatabase(
+func (d *databasePairFeManager) validatePriDatabase(
 	ctx context.Context,
 	instance service.Instance,
 ) (service.InstanceDetails, error) {
@@ -52,7 +52,7 @@ func (d *databasePairFeManager) getPriDatabase(
 	return instance.Details, nil
 }
 
-func (d *databasePairFeManager) getSecDatabase(
+func (d *databasePairFeManager) validateSecDatabase(
 	ctx context.Context,
 	instance service.Instance,
 ) (service.InstanceDetails, error) {

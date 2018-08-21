@@ -18,7 +18,7 @@ func (d *databasePairFePrimaryManager) GetProvisioner(
 			"checkNameAvailability",
 			d.checkNameAvailability,
 		),
-		service.NewProvisioningStep("getPriDatabase", d.getPriDatabase),
+		service.NewProvisioningStep("validatePriDatabase", d.validatePriDatabase),
 		service.NewProvisioningStep("deployPriARMTemplate", d.deployPriARMTemplate),
 		service.NewProvisioningStep("deployFgARMTemplate", d.deployFgARMTemplate),
 		service.NewProvisioningStep("deploySecARMTemplate", d.deploySecARMTemplate),
@@ -73,7 +73,7 @@ func (d *databasePairFePrimaryManager) checkNameAvailability(
 	return instance.Details, nil
 }
 
-func (d *databasePairFePrimaryManager) getPriDatabase(
+func (d *databasePairFePrimaryManager) validatePriDatabase(
 	ctx context.Context,
 	instance service.Instance,
 ) (service.InstanceDetails, error) {
