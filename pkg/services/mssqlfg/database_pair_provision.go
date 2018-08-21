@@ -20,6 +20,8 @@ func (d *databasePairManager) GetProvisioner(
 		),
 		service.NewProvisioningStep("deployPriARMTemplate", d.deployPriARMTemplate),
 		service.NewProvisioningStep("deployFgARMTemplate", d.deployFgARMTemplate),
+		// The secondary database must be created by the creation of failover group.
+		// This deployment is for update api to update the secondary database.
 		service.NewProvisioningStep("deploySecARMTemplate", d.deploySecARMTemplate),
 	)
 }
