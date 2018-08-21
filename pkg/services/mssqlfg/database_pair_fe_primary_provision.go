@@ -143,21 +143,18 @@ func (d *databasePairFePrimaryManager) deploySecARMTemplate(
 	pdt := instance.Parent.Details.(*dbmsPairInstanceDetails)
 	pp := instance.ProvisioningParameters
 	ppp := instance.Parent.ProvisioningParameters
-	pd := instance.Plan.GetProperties().Extended["tierDetails"].(planDetails)
 	tagsObj := pp.GetObject("tags")
 	tags := make(map[string]string, len(tagsObj.Data))
 	for k := range tagsObj.Data {
 		tags[k] = tagsObj.GetString(k)
 	}
-	if err := deployDatabaseARMTemplate(
+	if err := deployDatabaseFeARMTemplate(
 		&d.armDeployer,
 		dt.SecARMDeploymentName,
 		ppp.GetString("secondaryResourceGroup"),
 		ppp.GetString("secondaryLocation"),
 		pdt.SecServerName,
 		pp.GetString("database"),
-		*pp,
-		pd,
 		tags,
 	); err != nil {
 		return nil, fmt.Errorf("error deploying ARM template: %s", err)
