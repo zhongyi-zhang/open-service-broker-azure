@@ -52,7 +52,7 @@ func (d *dbmsPairRegisteredManager) getPriServer(
 ) (service.InstanceDetails, error) {
 	pp := instance.ProvisioningParameters
 	dt := instance.Details.(*dbmsPairInstanceDetails)
-	fqdn, err := getServer(
+	fqdn, err := validateServer(
 		ctx,
 		&d.serversClient,
 		pp.GetString("primaryResourceGroup"),
@@ -73,7 +73,7 @@ func (d *dbmsPairRegisteredManager) getSecServer(
 ) (service.InstanceDetails, error) {
 	pp := instance.ProvisioningParameters
 	dt := instance.Details.(*dbmsPairInstanceDetails)
-	fqdn, err := getServer(
+	fqdn, err := validateServer(
 		ctx,
 		&d.serversClient,
 		pp.GetString("secondaryResourceGroup"),

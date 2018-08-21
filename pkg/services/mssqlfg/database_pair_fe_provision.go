@@ -15,7 +15,7 @@ func (d *databasePairFeManager) GetProvisioner(
 		service.NewProvisioningStep("preProvision", d.preProvision),
 		service.NewProvisioningStep("getPriDatabase", d.getPriDatabase),
 		service.NewProvisioningStep("getSecDatabase", d.getSecDatabase),
-		service.NewProvisioningStep("getFailoverGroup", d.getFailoverGroup),
+		service.NewProvisioningStep("validateFailoverGroup", d.validateFailoverGroup),
 		service.NewProvisioningStep("deployPriARMTemplate", d.deployPriARMTemplate),
 		service.NewProvisioningStep("deploySecARMTemplate", d.deploySecARMTemplate),
 		service.NewProvisioningStep("deployFgARMTemplate", d.deployFgARMTemplate),
@@ -40,7 +40,7 @@ func (d *databasePairFeManager) getPriDatabase(
 	pp := instance.ProvisioningParameters
 	ppp := instance.Parent.ProvisioningParameters
 	pdt := instance.Parent.Details.(*dbmsPairInstanceDetails)
-	if err := getDatabase(
+	if err := validateDatabase(
 		ctx,
 		&d.databasesClient,
 		ppp.GetString("primaryResourceGroup"),
@@ -59,7 +59,7 @@ func (d *databasePairFeManager) getSecDatabase(
 	pp := instance.ProvisioningParameters
 	ppp := instance.Parent.ProvisioningParameters
 	pdt := instance.Parent.Details.(*dbmsPairInstanceDetails)
-	if err := getDatabase(
+	if err := validateDatabase(
 		ctx,
 		&d.databasesClient,
 		ppp.GetString("secondaryResourceGroup"),
@@ -71,14 +71,14 @@ func (d *databasePairFeManager) getSecDatabase(
 	return instance.Details, nil
 }
 
-func (d *databasePairFeManager) getFailoverGroup(
+func (d *databasePairFeManager) validateFailoverGroup(
 	ctx context.Context,
 	instance service.Instance,
 ) (service.InstanceDetails, error) {
 	pp := instance.ProvisioningParameters
 	ppp := instance.Parent.ProvisioningParameters
 	pdt := instance.Parent.Details.(*dbmsPairInstanceDetails)
-	if err := getFailoverGroup(
+	if err := validateFailoverGroup(
 		ctx,
 		&d.failoverGroupsClient,
 		ppp.GetString("primaryResourceGroup"),

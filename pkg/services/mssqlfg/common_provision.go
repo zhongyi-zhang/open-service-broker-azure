@@ -10,7 +10,7 @@ import (
 	"github.com/Azure/open-service-broker-azure/pkg/service"
 )
 
-func getServer(
+func validateServer(
 	ctx context.Context,
 	serversClient *sqlSDK.ServersClient,
 	resourceGroup string,
@@ -71,7 +71,7 @@ func getServer(
 	return *result.FullyQualifiedDomainName, nil
 }
 
-func getDatabase(
+func validateDatabase(
 	ctx context.Context,
 	databasesClient *sqlSDK.DatabasesClient,
 	resourceGroup string,
@@ -94,7 +94,7 @@ func getDatabase(
 	return nil
 }
 
-func getFailoverGroup(
+func validateFailoverGroup(
 	ctx context.Context,
 	failoverGroupsClient *sqlSDK.FailoverGroupsClient,
 	resourceGroup string,

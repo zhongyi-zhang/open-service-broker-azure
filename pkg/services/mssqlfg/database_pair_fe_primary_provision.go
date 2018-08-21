@@ -43,7 +43,7 @@ func (d *databasePairFePrimaryManager) checkNameAvailability(
 	pp := instance.ProvisioningParameters
 	ppp := instance.Parent.ProvisioningParameters
 	pdt := instance.Parent.Details.(*dbmsPairInstanceDetails)
-	if err := getDatabase(
+	if err := validateDatabase(
 		ctx,
 		&d.databasesClient,
 		ppp.GetString("secondaryResourceGroup"),
@@ -57,7 +57,7 @@ func (d *databasePairFePrimaryManager) checkNameAvailability(
 		return nil, fmt.Errorf("Secondary database with the name is already " +
 			"existed")
 	}
-	if err := getFailoverGroup(
+	if err := validateFailoverGroup(
 		ctx,
 		&d.failoverGroupsClient,
 		ppp.GetString("primaryResourceGroup"),
@@ -80,7 +80,7 @@ func (d *databasePairFePrimaryManager) getPriDatabase(
 	pp := instance.ProvisioningParameters
 	ppp := instance.Parent.ProvisioningParameters
 	pdt := instance.Parent.Details.(*dbmsPairInstanceDetails)
-	if err := getDatabase(
+	if err := validateDatabase(
 		ctx,
 		&d.databasesClient,
 		ppp.GetString("primaryResourceGroup"),
