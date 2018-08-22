@@ -12,8 +12,8 @@ func (d *dbmsPairRegisteredManager) GetProvisioner(
 ) (service.Provisioner, error) {
 	return service.NewProvisioner(
 		service.NewProvisioningStep("preProvision", d.preProvision),
-		service.NewProvisioningStep("getPriServer", d.getPriServer),
-		service.NewProvisioningStep("getSecServer", d.getSecServer),
+		service.NewProvisioningStep("validatePriServer", d.validatePriServer),
+		service.NewProvisioningStep("validateSecServer", d.validateSecServer),
 		service.NewProvisioningStep("testPriConnection", d.testPriConnection),
 		service.NewProvisioningStep("testSecConnection", d.testSecConnection),
 	)
@@ -46,7 +46,7 @@ func (d *dbmsPairRegisteredManager) preProvision(
 	}, nil
 }
 
-func (d *dbmsPairRegisteredManager) getPriServer(
+func (d *dbmsPairRegisteredManager) validatePriServer(
 	ctx context.Context,
 	instance service.Instance,
 ) (service.InstanceDetails, error) {
@@ -67,7 +67,7 @@ func (d *dbmsPairRegisteredManager) getPriServer(
 	return dt, nil
 }
 
-func (d *dbmsPairRegisteredManager) getSecServer(
+func (d *dbmsPairRegisteredManager) validateSecServer(
 	ctx context.Context,
 	instance service.Instance,
 ) (service.InstanceDetails, error) {
