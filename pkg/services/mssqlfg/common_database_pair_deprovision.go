@@ -7,7 +7,7 @@ import (
 	"github.com/Azure/open-service-broker-azure/pkg/service"
 )
 
-func (d *databasePairManager) GetDeprovisioner(
+func (d *commonDatabasePairManager) GetDeprovisioner(
 	service.Plan,
 ) (service.Deprovisioner, error) {
 	return service.NewDeprovisioner(
@@ -38,7 +38,7 @@ func (d *databasePairManager) GetDeprovisioner(
 	)
 }
 
-func (d *databasePairManager) deletePriARMDeployment(
+func (d *commonDatabasePairManager) deletePriARMDeployment(
 	_ context.Context,
 	instance service.Instance,
 ) (service.InstanceDetails, error) {
@@ -53,7 +53,7 @@ func (d *databasePairManager) deletePriARMDeployment(
 	return instance.Details, nil
 }
 
-func (d *databasePairManager) deleteSecARMDeployment(
+func (d *commonDatabasePairManager) deleteSecARMDeployment(
 	_ context.Context,
 	instance service.Instance,
 ) (service.InstanceDetails, error) {
@@ -68,7 +68,7 @@ func (d *databasePairManager) deleteSecARMDeployment(
 	return instance.Details, nil
 }
 
-func (d *databasePairManager) deleteFgARMDeployment(
+func (d *commonDatabasePairManager) deleteFgARMDeployment(
 	_ context.Context,
 	instance service.Instance,
 ) (service.InstanceDetails, error) {
@@ -83,7 +83,7 @@ func (d *databasePairManager) deleteFgARMDeployment(
 	return instance.Details, nil
 }
 
-func (d *databasePairManager) deletePriDatabase(
+func (d *commonDatabasePairManager) deletePriDatabase(
 	ctx context.Context,
 	instance service.Instance,
 ) (service.InstanceDetails, error) {
@@ -105,7 +105,7 @@ func (d *databasePairManager) deletePriDatabase(
 	return instance.Details, nil
 }
 
-func (d *databasePairManager) deleteSecDatabase(
+func (d *commonDatabasePairManager) deleteSecDatabase(
 	ctx context.Context,
 	instance service.Instance,
 ) (service.InstanceDetails, error) {
@@ -127,7 +127,7 @@ func (d *databasePairManager) deleteSecDatabase(
 	return instance.Details, nil
 }
 
-func (d *databasePairManager) deleteFailoverGroup(
+func (d *commonDatabasePairManager) deleteFailoverGroup(
 	ctx context.Context,
 	instance service.Instance,
 ) (service.InstanceDetails, error) {

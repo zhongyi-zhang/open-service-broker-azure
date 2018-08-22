@@ -10,10 +10,10 @@ type databasePairInstanceDetails struct {
 	DatabaseName         string `json:"database"`
 }
 
-func (d *databasePairManager) GetEmptyInstanceDetails() service.InstanceDetails { // nolint: lll
+func (d *commonDatabasePairManager) GetEmptyInstanceDetails() service.InstanceDetails { // nolint: lll
 	return &databasePairInstanceDetails{}
 }
 
-func (d *databasePairManager) GetEmptyBindingDetails() service.BindingDetails { // nolint: lll
+func (d *commonDatabasePairManager) GetEmptyBindingDetails() service.BindingDetails { // nolint: lll
 	return &bindingDetails{}
 }

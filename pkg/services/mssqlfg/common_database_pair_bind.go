@@ -4,7 +4,7 @@ import (
 	"github.com/Azure/open-service-broker-azure/pkg/service"
 )
 
-func (d *databasePairFeManager) Bind(
+func (d *commonDatabasePairManager) Bind(
 	instance service.Instance,
 	_ service.BindingParameters,
 ) (service.BindingDetails, error) {
@@ -20,7 +20,7 @@ func (d *databasePairFeManager) Bind(
 	)
 }
 
-func (d *databasePairFeManager) GetCredentials(
+func (d *commonDatabasePairManager) GetCredentials(
 	instance service.Instance,
 	binding service.Binding,
 ) (service.Credentials, error) {

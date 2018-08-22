@@ -3,6 +3,7 @@ package mssqlfg
 import (
 	"context"
 	"fmt"
+	"regexp"
 	"strings"
 
 	sqlSDK "github.com/Azure/azure-sdk-for-go/services/sql/mgmt/2017-03-01-preview/sql" // nolint: lll
@@ -98,21 +99,53 @@ func validateFailoverGroup(
 	ctx context.Context,
 	failoverGroupsClient *sqlSDK.FailoverGroupsClient,
 	resourceGroup string,
-	serverName string,
+	priServerName string,
+	secServerName string,
+	databaseName string,
 	failoverGroupName string,
 ) error {
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
-	_, err := failoverGroupsClient.Get(
+	result, err := failoverGroupsClient.Get(
 		ctx,
 		resourceGroup,
-		serverName,
+		priServerName,
 		failoverGroupName,
 	)
 	if err != nil {
 		return fmt.Errorf("error getting the failover group: %s", err)
 	}
-	// TODO: check details to validate roles
+	if len(*result.PartnerServers) > 1 {
+		return fmt.Errorf("error unexpected more than one partner server")
+	}
+	partnerServerRole := (*result.PartnerServers)[0].ReplicationRole
+	if partnerServerRole != sqlSDK.Secondary {
+		return fmt.Errorf("error partner server is not " +
+			"the secondary role in the failover group")
+	}
+	partnerServerID := *(*result.PartnerServers)[0].ID
+	serverNameReStr := regexp.MustCompile("^.*servers/([-a-zA-Z0-9]+)$")
+	partnerServerName := serverNameReStr.ReplaceAllString(
+		partnerServerID,
+		"$1",
+	)
+	if partnerServerName != secServerName {
+		return fmt.Errorf("error partner server is not the one specified")
+	}
+
+	if len(*result.Databases) > 1 {
+		return fmt.Errorf("error unexpected more than one database " +
+			"in the failover group")
+	}
+	actualDatabaseID := (*result.Databases)[0]
+	databaseNameReStr := regexp.MustCompile("^.*databases/([-a-zA-Z0-9]+)$")
+	actualDatabaseName := databaseNameReStr.ReplaceAllString(
+		actualDatabaseID,
+		"$1",
+	)
+	if actualDatabaseName != databaseName {
+		return fmt.Errorf("error unexpected database in the failover group")
+	}
 	return nil
 }
 
@@ -201,31 +234,6 @@ func deployDatabaseARMTemplate(
 	return err
 }
 
-func deployDatabaseFeARMTemplate(
-	armDeployer *arm.Deployer,
-	armDeploymentName string,
-	resourceGroup string,
-	location string,
-	serverName string,
-	databaseName string,
-	tags map[string]string,
-) error {
-	goTemplateParams := map[string]interface{}{}
-	goTemplateParams["location"] = location
-	goTemplateParams["serverName"] = serverName
-	goTemplateParams["databaseName"] = databaseName
-	_, err := (*armDeployer).Deploy(
-		armDeploymentName,
-		resourceGroup,
-		location,
-		databaseFeARMTemplateBytes,
-		goTemplateParams,
-		map[string]interface{}{}, // empty arm params
-		tags,
-	)
-	return err
-}
-
 func deployFailoverGroupARMTemplate(
 	armDeployer *arm.Deployer,
 	instance service.Instance,
@@ -249,6 +257,31 @@ func deployFailoverGroupARMTemplate(
 		ppp.GetString("primaryResourceGroup"),
 		ppp.GetString("primaryLocation"),
 		failoverGroupARMTemplateBytes,
+		goTemplateParams,
+		map[string]interface{}{}, // empty arm params
+		tags,
+	)
+	return err
+}
+
+func deployDatabaseFeARMTemplate(
+	armDeployer *arm.Deployer,
+	armDeploymentName string,
+	resourceGroup string,
+	location string,
+	serverName string,
+	databaseName string,
+	tags map[string]string,
+) error {
+	goTemplateParams := map[string]interface{}{}
+	goTemplateParams["location"] = location
+	goTemplateParams["serverName"] = serverName
+	goTemplateParams["databaseName"] = databaseName
+	_, err := (*armDeployer).Deploy(
+		armDeploymentName,
+		resourceGroup,
+		location,
+		databaseFeARMTemplateBytes,
 		goTemplateParams,
 		map[string]interface{}{}, // empty arm params
 		tags,

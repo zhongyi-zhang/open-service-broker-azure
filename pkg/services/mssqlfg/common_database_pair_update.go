@@ -7,7 +7,7 @@ import (
 	"github.com/Azure/open-service-broker-azure/pkg/service"
 )
 
-func (d *databasePairFePrimaryManager) ValidateUpdatingParameters(
+func (d *commonDatabasePairManager) ValidateUpdatingParameters(
 	instance service.Instance,
 ) error {
 	td := instance.Plan.GetProperties().Extended["tierDetails"]
@@ -15,7 +15,7 @@ func (d *databasePairFePrimaryManager) ValidateUpdatingParameters(
 	return details.validateUpdateParameters(instance)
 }
 
-func (d *databasePairFePrimaryManager) GetUpdater(
+func (d *commonDatabasePairManager) GetUpdater(
 	service.Plan,
 ) (service.Updater, error) {
 	// There isn't a need to do any "pre-provision here. just the update step"
@@ -25,7 +25,7 @@ func (d *databasePairFePrimaryManager) GetUpdater(
 	)
 }
 
-func (d *databasePairFePrimaryManager) updatePriARMTemplate(
+func (d *commonDatabasePairManager) updatePriARMTemplate(
 	_ context.Context,
 	instance service.Instance,
 ) (service.InstanceDetails, error) {
@@ -55,7 +55,7 @@ func (d *databasePairFePrimaryManager) updatePriARMTemplate(
 	return instance.Details, nil
 }
 
-func (d *databasePairFePrimaryManager) updateSecARMTemplate(
+func (d *commonDatabasePairManager) updateSecARMTemplate(
 	_ context.Context,
 	instance service.Instance,
 ) (service.InstanceDetails, error) {

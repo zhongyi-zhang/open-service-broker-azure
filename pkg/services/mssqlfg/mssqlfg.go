@@ -21,10 +21,14 @@ type dbmsPairRegisteredManager struct {
 	serversClient        sqlSDK.ServersClient
 }
 
-type databasePairManager struct {
+type commonDatabasePairManager struct {
 	armDeployer          arm.Deployer
 	databasesClient      sqlSDK.DatabasesClient
 	failoverGroupsClient sqlSDK.FailoverGroupsClient
+}
+
+type databasePairManager struct {
+	commonDatabasePairManager
 }
 
 type databasePairRegisteredManager struct {
@@ -34,15 +38,11 @@ type databasePairRegisteredManager struct {
 }
 
 type databasePairFePrimaryManager struct {
-	armDeployer          arm.Deployer
-	databasesClient      sqlSDK.DatabasesClient
-	failoverGroupsClient sqlSDK.FailoverGroupsClient
+	commonDatabasePairManager
 }
 
 type databasePairFeManager struct {
-	armDeployer          arm.Deployer
-	databasesClient      sqlSDK.DatabasesClient
-	failoverGroupsClient sqlSDK.FailoverGroupsClient
+	commonDatabasePairManager
 }
 
 // New returns a new instance of a type that fulfills the service.Module
@@ -55,6 +55,11 @@ func New(
 	databasesClient sqlSDK.DatabasesClient,
 	failoverGroupsClient sqlSDK.FailoverGroupsClient,
 ) service.Module {
+	commonManager := commonDatabasePairManager{
+		armDeployer:          armDeployer,
+		databasesClient:      databasesClient,
+		failoverGroupsClient: failoverGroupsClient,
+	}
 	return &module{
 		dbmsPairRegisteredManager: &dbmsPairRegisteredManager{
 			sqlDatabaseDNSSuffix: azureEnvironment.SQLDatabaseDNSSuffix,
@@ -62,9 +67,7 @@ func New(
 			serversClient:        serversClient,
 		},
 		databasePairManager: &databasePairManager{
-			armDeployer:          armDeployer,
-			databasesClient:      databasesClient,
-			failoverGroupsClient: failoverGroupsClient,
+			commonManager,
 		},
 		databasePairRegisteredManager: &databasePairRegisteredManager{
 			armDeployer:          armDeployer,
@@ -72,14 +75,10 @@ func New(
 			failoverGroupsClient: failoverGroupsClient,
 		},
 		databasePairFePrimaryManager: &databasePairFePrimaryManager{
-			armDeployer:          armDeployer,
-			databasesClient:      databasesClient,
-			failoverGroupsClient: failoverGroupsClient,
+			commonManager,
 		},
 		databasePairFeManager: &databasePairFeManager{
-			armDeployer:          armDeployer,
-			databasesClient:      databasesClient,
-			failoverGroupsClient: failoverGroupsClient,
+			commonManager,
 		},
 	}
 }

@@ -4,7 +4,7 @@ import (
 	"github.com/Azure/open-service-broker-azure/pkg/service"
 )
 
-func (d *databasePairManager) Unbind(
+func (d *commonDatabasePairManager) Unbind(
 	instance service.Instance,
 	binding service.Binding,
 ) error {

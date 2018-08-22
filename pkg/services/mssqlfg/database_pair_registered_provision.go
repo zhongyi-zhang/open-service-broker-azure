@@ -78,6 +78,8 @@ func (d *databasePairRegisteredManager) validateFailoverGroup(
 		&d.failoverGroupsClient,
 		ppp.GetString("primaryResourceGroup"),
 		pdt.PriServerName,
+		pdt.SecServerName,
+		pp.GetString("database"),
 		pp.GetString("failoverGroup"),
 	); err != nil {
 		return nil, err
