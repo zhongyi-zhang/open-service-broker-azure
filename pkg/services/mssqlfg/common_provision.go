@@ -41,7 +41,7 @@ func validateServer(
 			"sql server version validation failed, "+
 				"expected version: %s, actual version: %s",
 			expectedVersion,
-			result.Version,
+			*result.Version,
 		)
 	}
 	expectedLocation = strings.Replace(
