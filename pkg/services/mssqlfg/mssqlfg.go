@@ -32,9 +32,7 @@ type databasePairManager struct {
 }
 
 type databasePairRegisteredManager struct {
-	armDeployer          arm.Deployer
-	databasesClient      sqlSDK.DatabasesClient
-	failoverGroupsClient sqlSDK.FailoverGroupsClient
+	commonDatabasePairManager
 }
 
 type databasePairFePrimaryManager struct {
@@ -70,9 +68,7 @@ func New(
 			commonManager,
 		},
 		databasePairRegisteredManager: &databasePairRegisteredManager{
-			armDeployer:          armDeployer,
-			databasesClient:      databasesClient,
-			failoverGroupsClient: failoverGroupsClient,
+			commonManager,
 		},
 		databasePairFePrimaryManager: &databasePairFePrimaryManager{
 			commonManager,
