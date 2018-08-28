@@ -2,11 +2,17 @@
 
 ***Note***: this guidance is specially for existing server scenario. Straighter, the SQL Databases created by MASB must be on a server whose credentials are provided from MASB manifest.
 
+## Overview
+
+The migration involves two services from MSSQL module: [azure-sql-12-0-dbms-registered service](../modules/mssql.md#service-azure-sql-dbms-registered) and [azure-sql-12-0-database-from-existing service](../modules/mssql.md#service-azure-sql-from-existing). The former is a "parent" service to carry the latter -- a "child" service, which is the service instance management model in OSBA to expose two-layers Azure services.
+
+In the application side, You will need to duplicate the application for smooth migration.
+
 ## Steps
 
 ### Create azure-sql-12-0-dbms-registered service instance by OSBA
 
-OSBA doesn't support to provide existing servers' credentials from manifest and create database on them. Instead, it provides **azure-sql-12-0-dbms** service to create SQL servers and you can create database on the server by **azure-sql-12-0-database** service. The service **azure-sql-12-0-dbms-registered** is a service using your existing Azure SQL server. It does NOT CREATE new server in provisioning and does NOT DELETE the server in deprovisioning. You can run the following CF CLI command to create a instance of it:
+OSBA doesn't support providing existing servers' credentials from manifest and create database on them. Instead, it provides **azure-sql-12-0-dbms** service to create SQL servers and you can create database on the server by **azure-sql-12-0-database** service. The service **azure-sql-12-0-dbms-registered** is a service using your existing Azure SQL server. It does NOT CREATE new server in provisioning and does NOT DELETE the server in deprovisioning. You can run the following CF CLI command to create a instance of it:
 
 ```
 cf create-service azure-sql-12-0-dbms-registered dbms <sql-server-instance-name> -c '{
@@ -40,9 +46,9 @@ cf create-service azure-sql-12-0-database-from-existing <plan-name> <sqldb-insta
 
 ***Note***: OSBA provides plans by tier categories. For example, compared to that MASB provides plans `StandardS0` - `StandardS12`, OSBA provides only a plan `standard` for all the standard tiers. You should choose the right category. It is important. Though provisioning wouldn't change the tier, you wouldn't be able to update the tier as OSBA doesn't support changing plan for now. The plan name of existing service instances can be checked by `cf services`.
 
-### Duplicate your application and update to adapt the SQL credentials delivered by OSBA
+### Update your application source code to adapt the SQL credentials delivered by OSBA and duplicate the application
 
-You should check the SQL credential differences between [OSBA](../modules/mssql.md#credentials-1) and [MASB](https://github.com/Azure/meta-azure-service-broker/blob/master/docs/azure-sql-db.md#format-of-credentials). Update how your application utilizes the credentials. Then `cf push` your updated application with another name and another route.
+You should check the SQL credential differences between [OSBA](../modules/mssql.md#credentials-1) and [MASB](https://github.com/Azure/meta-azure-service-broker/blob/master/docs/azure-sql-db.md#format-of-credentials). Update how your application utilizes the credentials. (For applications which use Spring Cloud connector, don't need to concern about this because the SQL services in both MASB and OSBA are compatible with Spring Cloud connector.) Then `cf push` your updated application with another name and another route.
 
 ### Bind azure-sql-12-0-database-from-existing to your application
 

@@ -1,5 +1,11 @@
 # Migrate [Azure SQL Database Failover Group Service](https://github.com/Azure/meta-azure-service-broker/blob/master/docs/azure-sql-db-failover-group.md) Instances From MASB To OSBA
 
+## Overview
+
+The migration involves two services from MSSQL module: [azure-sql-12-0-dr-dbms-pair-registered service](../modules/mssqlfg.md#service-azure-sql-12-0-dr-dbms-pair-registered) and [azure-sql-12-0-dr-database-pair-from-existing service](../modules/mssqlfg.md#service-azure-sql-12-0-dr-database-pair-from-existing). The former is a "parent" service to carry the latter -- a "child" service, which is the service instance management model in OSBA to expose two-layers Azure services.
+
+In the application side, You will need to duplicate the application for smooth migration.
+
 ## Steps
 
 ### Create azure-sql-12-0-dr-dbms-pair-registered service instance by OSBA
@@ -46,7 +52,7 @@ cf create-service azure-sql-12-0-dr-database-pair-from-existing <plan-name> <sql
 
 ### Update your application source code to adapt the SQL credentials delivered by OSBA and duplicate the application
 
-You should check the SQL credential differences between [OSBA](../modules/mssqlfg.md#credentials-1) and [MASB](https://github.com/Azure/meta-azure-service-broker/blob/master/docs/azure-sql-db-failover-group.md#format-of-credentials). Update how your application utilizes the credentials. Then `cf push` your updated application with another name and another route.
+You should check the SQL credential differences between [OSBA](../modules/mssqlfg.md#credentials-1) and [MASB](https://github.com/Azure/meta-azure-service-broker/blob/master/docs/azure-sql-db-failover-group.md#format-of-credentials). Update how your application utilizes the credentials. (For applications which use Spring Cloud connector, don't need to concern about this because the SQL services in both MASB and OSBA are compatible with Spring Cloud connector.) Then `cf push` your updated application with another name and another route.
 
 ### Bind azure-sql-12-0-dr-database-pair-from-existing to your application
 
