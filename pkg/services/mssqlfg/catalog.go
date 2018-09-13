@@ -20,7 +20,7 @@ func buildBasicPlan(
 		Name:        "basic",
 		Description: "Basic Tier, 5 DTUs, 2GB Storage, 7 days point-in-time restore",
 		Free:        false,
-		Stability:   service.StabilityStable,
+		Stability:   service.StabilityExperimental,
 		Extended: map[string]interface{}{
 			"tierDetails": planDetails,
 		},
@@ -72,7 +72,7 @@ func buildStandardPlan(
 		Description: "Standard Tier, Up to 3000 DTUs, 250GB Storage, " +
 			"35 days point-in-time restore",
 		Free:      false,
-		Stability: service.StabilityStable,
+		Stability: service.StabilityExperimental,
 		Extended: map[string]interface{}{
 			"tierDetails": planDetails,
 		},
@@ -121,7 +121,7 @@ func buildPremiumPlan(
 		Description: "Premium Tier, Up to 4000 DTUs, 500GB Storage, " +
 			"35 days point-in-time restore",
 		Free:      false,
-		Stability: service.StabilityStable,
+		Stability: service.StabilityExperimental,
 		Extended: map[string]interface{}{
 			"tierDetails": planDetails,
 		},
@@ -156,7 +156,7 @@ func buildGeneralPurposePlan(
 		Name:        "general-purpose",
 		Description: "Up to 80 vCores, 440 GB memory and 1 TB of storage (preview)",
 		Free:        false,
-		Stability:   service.StabilityPreview,
+		Stability:   service.StabilityExperimental,
 		Extended: map[string]interface{}{
 			"tierDetails": planDetails,
 		},
@@ -195,7 +195,7 @@ func buildBusinessCriticalPlan(
 		Description: "Up to 80 vCores, 440 GB memory and 1 TB of storage. " +
 			"Local SSD, highest resilience to failures. (preview)",
 		Free:      false,
-		Stability: service.StabilityPreview,
+		Stability: service.StabilityExperimental,
 		Extended: map[string]interface{}{
 			"tierDetails": planDetails,
 		},
@@ -260,7 +260,7 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 				Name:        "dbms",
 				Description: "Azure SQL Server-- DBMS",
 				Free:        false,
-				Stability:   service.StabilityPreview,
+				Stability:   service.StabilityExperimental,
 				Metadata: service.ServicePlanMetadata{
 					DisplayName: "Azure SQL Server-- DBMS",
 				},
@@ -363,7 +363,7 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 				Name:        "database",
 				Description: "Azure SQL Server-- database",
 				Free:        false,
-				Stability:   service.StabilityPreview,
+				Stability:   service.StabilityExperimental,
 				Metadata: service.ServicePlanMetadata{
 					DisplayName: "Azure SQL Server-- database",
 				},
