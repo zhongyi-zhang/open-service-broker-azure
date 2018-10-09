@@ -1,6 +1,6 @@
 # [Azure SQL Database](https://azure.microsoft.com/en-us/services/sql-database/)
 
-Open Service Broker for Azure (OSBA) contains five Azure SQL Database services. These services enable you to select the most appropriate provisioning scenario for your needs. These services are:
+Open Service Broker for Azure (OSBA) contains a number of Azure SQL Database services. These services enable you to select the most appropriate provisioning scenario for your needs. These services are:
 
 | Service Name | Description |
 |--------------|-------------|
@@ -520,7 +520,8 @@ Do nothing. The SQL server would not be deleted in Azure.
 
 ### Service: azure-sql-12-0-database-from-existing
 
-It is to create SQL database service instance from existing Azure SQL Database *for taking over the database*. Both **azure-sql-12-0-dbms** service and **azure-sql-12-0-dbms-registered** service can be its parent service.
+Takes an existing database upon an existing server. The new database will be named randomly. If the DBMS does not yet exist, provision of the database will be deferred until the DBMS has been provisioned.
+It is to create SQL database service instance from existing Azure SQL Database *for taking over the database*. Either **azure-sql-12-0-dbms** service or **azure-sql-12-0-dbms-registered** service can be its parent service.
 
 ##### Provision
 
