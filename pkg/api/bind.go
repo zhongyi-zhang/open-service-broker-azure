@@ -130,7 +130,7 @@ func (s *server) bind(w http.ResponseWriter, r *http.Request) {
 	bps := instance.Plan.GetSchemas().ServiceBindings.BindingParametersSchema
 	bindingParameters := &service.BindingParameters{
 		Parameters: service.Parameters{
-			Schema: &bps,
+			Schema: bps,
 			Data:   bindingRequest.Parameters,
 		},
 	}

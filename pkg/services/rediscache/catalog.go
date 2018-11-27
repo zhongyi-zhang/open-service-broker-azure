@@ -55,7 +55,7 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 					Bullets:     []string{"250MB Cache"},
 				},
 				Schemas: service.PlanSchemas{
-					ServiceInstances: service.InstanceSchemas{
+					ServiceInstances: &service.InstanceSchemas{
 						ProvisioningParametersSchema: bpd.getProvisioningParamsSchema(),
 						UpdatingParametersSchema:     bpd.getUpdatingParamsSchema(),
 					},
@@ -76,7 +76,7 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 					Bullets:     []string{"1GB Cache"},
 				},
 				Schemas: service.PlanSchemas{
-					ServiceInstances: service.InstanceSchemas{
+					ServiceInstances: &service.InstanceSchemas{
 						ProvisioningParametersSchema: spd.getProvisioningParamsSchema(),
 						UpdatingParametersSchema:     spd.getUpdatingParamsSchema(),
 					},
@@ -97,7 +97,7 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 					Bullets:     []string{"6GB Cache"},
 				},
 				Schemas: service.PlanSchemas{
-					ServiceInstances: service.InstanceSchemas{
+					ServiceInstances: &service.InstanceSchemas{
 						ProvisioningParametersSchema: ppd.getProvisioningParamsSchema(),
 						UpdatingParametersSchema:     ppd.getUpdatingParamsSchema(),
 					},

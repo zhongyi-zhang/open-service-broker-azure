@@ -33,7 +33,7 @@ func buildBasicPlan(
 			},
 		},
 		Schemas: service.PlanSchemas{
-			ServiceInstances: service.InstanceSchemas{
+			ServiceInstances: &service.InstanceSchemas{
 				ProvisioningParametersSchema: planDetails.getProvisionSchema(),
 				UpdatingParametersSchema:     planDetails.getUpdateSchema(),
 			},
@@ -85,7 +85,7 @@ func buildStandardPlan(
 			},
 		},
 		Schemas: service.PlanSchemas{
-			ServiceInstances: service.InstanceSchemas{
+			ServiceInstances: &service.InstanceSchemas{
 				ProvisioningParametersSchema: planDetails.getProvisionSchema(),
 				UpdatingParametersSchema:     planDetails.getUpdateSchema(),
 			},
@@ -134,7 +134,7 @@ func buildPremiumPlan(
 			},
 		},
 		Schemas: service.PlanSchemas{
-			ServiceInstances: service.InstanceSchemas{
+			ServiceInstances: &service.InstanceSchemas{
 				ProvisioningParametersSchema: planDetails.getProvisionSchema(),
 				UpdatingParametersSchema:     planDetails.getUpdateSchema(),
 			},
@@ -172,7 +172,7 @@ func buildGeneralPurposePlan(
 			},
 		},
 		Schemas: service.PlanSchemas{
-			ServiceInstances: service.InstanceSchemas{
+			ServiceInstances: &service.InstanceSchemas{
 				ProvisioningParametersSchema: planDetails.getProvisionSchema(),
 				UpdatingParametersSchema:     planDetails.getUpdateSchema(),
 			},
@@ -210,7 +210,7 @@ func buildBusinessCriticalPlan(
 			},
 		},
 		Schemas: service.PlanSchemas{
-			ServiceInstances: service.InstanceSchemas{
+			ServiceInstances: &service.InstanceSchemas{
 				ProvisioningParametersSchema: planDetails.getProvisionSchema(),
 				UpdatingParametersSchema:     planDetails.getUpdateSchema(),
 			},
@@ -262,7 +262,7 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 					DisplayName: "Azure SQL Server-- DBMS",
 				},
 				Schemas: service.PlanSchemas{
-					ServiceInstances: service.InstanceSchemas{
+					ServiceInstances: &service.InstanceSchemas{
 						ProvisioningParametersSchema: m.dbmsPairRegisteredManager.getProvisionParametersSchema(),
 						UpdatingParametersSchema:     m.dbmsPairRegisteredManager.getUpdatingParametersSchema(),
 					},
@@ -359,7 +359,7 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 					DisplayName: "Azure SQL Server-- database",
 				},
 				Schemas: service.PlanSchemas{
-					ServiceInstances: service.InstanceSchemas{
+					ServiceInstances: &service.InstanceSchemas{
 						ProvisioningParametersSchema: m.databasePairRegisteredManager.getProvisionParametersSchema(),
 					},
 				},

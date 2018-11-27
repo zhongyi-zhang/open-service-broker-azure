@@ -181,7 +181,7 @@ func (s serviceLifecycleTestCase) execute(
 		pps := plan.GetSchemas().ServiceInstances.ProvisioningParametersSchema // nolint: lll
 		up := &service.ProvisioningParameters{
 			Parameters: service.Parameters{
-				Schema: &pps,
+				Schema: pps,
 				Data:   s.updatingParameters,
 			},
 		}
@@ -227,7 +227,7 @@ func (s serviceLifecycleTestCase) execute(
 		bps := instance.Plan.GetSchemas().ServiceBindings.BindingParametersSchema
 		bp := service.BindingParameters{
 			Parameters: service.Parameters{
-				Schema: &bps,
+				Schema: bps,
 				Data:   s.bindingParameters,
 			},
 		}

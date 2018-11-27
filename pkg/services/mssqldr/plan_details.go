@@ -9,11 +9,11 @@ import (
 )
 
 type planDetails interface {
-	getProvisionSchema() service.InputParametersSchema
+	getProvisionSchema() *service.InputParametersSchema
 	getTierProvisionParameters(
 		pp service.ProvisioningParameters,
 	) (map[string]interface{}, error)
-	getUpdateSchema() service.InputParametersSchema
+	getUpdateSchema() *service.InputParametersSchema
 	validateUpdateParameters(service.Instance) error
 }
 
@@ -29,7 +29,7 @@ func (d dtuPlanDetails) validateUpdateParameters(service.Instance) error {
 	return nil // no op
 }
 
-func (d dtuPlanDetails) getUpdateSchema() service.InputParametersSchema {
+func (d dtuPlanDetails) getUpdateSchema() *service.InputParametersSchema {
 	ips := service.InputParametersSchema{
 		PropertySchemas: map[string]service.PropertySchema{},
 	}
@@ -44,10 +44,10 @@ func (d dtuPlanDetails) getUpdateSchema() service.InputParametersSchema {
 				"storage, and IO resources.",
 		}
 	}
-	return ips
+	return &ips
 }
 
-func (d dtuPlanDetails) getProvisionSchema() service.InputParametersSchema {
+func (d dtuPlanDetails) getProvisionSchema() *service.InputParametersSchema {
 	ips := service.InputParametersSchema{
 		RequiredProperties: []string{
 			"failoverGroup",
@@ -75,7 +75,7 @@ func (d dtuPlanDetails) getProvisionSchema() service.InputParametersSchema {
 				"storage, and IO resources.",
 		}
 	}
-	return ips
+	return &ips
 }
 
 func (d dtuPlanDetails) getTierProvisionParameters(
@@ -113,7 +113,7 @@ func (v vCorePlanDetails) validateUpdateParameters(
 	)
 }
 
-func (v vCorePlanDetails) getUpdateSchema() service.InputParametersSchema {
+func (v vCorePlanDetails) getUpdateSchema() *service.InputParametersSchema {
 	ips := service.InputParametersSchema{
 		PropertySchemas: map[string]service.PropertySchema{},
 	}
@@ -130,10 +130,10 @@ func (v vCorePlanDetails) getUpdateSchema() service.InputParametersSchema {
 		DefaultValue: ptr.ToInt64(10),
 		Description:  "The maximum data storage capacity (in GB)",
 	}
-	return ips
+	return &ips
 }
 
-func (v vCorePlanDetails) getProvisionSchema() service.InputParametersSchema {
+func (v vCorePlanDetails) getProvisionSchema() *service.InputParametersSchema {
 	ips := service.InputParametersSchema{
 		RequiredProperties: []string{
 			"failoverGroup",
@@ -163,7 +163,7 @@ func (v vCorePlanDetails) getProvisionSchema() service.InputParametersSchema {
 			},
 		},
 	}
-	return ips
+	return &ips
 }
 
 func (v vCorePlanDetails) getTierProvisionParameters(
@@ -185,8 +185,8 @@ func (v vCorePlanDetails) getSKU(pp service.ProvisioningParameters) string {
 	)
 }
 
-func getDBMSPairRegisteredUpdateParamSchema() service.InputParametersSchema {
-	return service.InputParametersSchema{
+func getDBMSPairRegisteredUpdateParamSchema() *service.InputParametersSchema {
+	return &service.InputParametersSchema{
 		SecureProperties: []string{
 			"primaryAdministratorLoginPassword",
 			"secondaryAdministratorLoginPassword",
@@ -216,8 +216,8 @@ func getDBMSPairRegisteredUpdateParamSchema() service.InputParametersSchema {
 	}
 }
 
-func getDBMSPairRegisteredProvisionParamSchema() service.InputParametersSchema {
-	return service.InputParametersSchema{
+func getDBMSPairRegisteredProvisionParamSchema() *service.InputParametersSchema { // nolint: lll
+	return &service.InputParametersSchema{
 		RequiredProperties: []string{
 			"primaryResourceGroup",
 			"primaryLocation",
@@ -295,8 +295,8 @@ func getDBMSPairRegisteredProvisionParamSchema() service.InputParametersSchema {
 	}
 }
 
-func getDatabasePairRegisteredProvisionParamSchema() service.InputParametersSchema { // nolint: lll
-	return service.InputParametersSchema{
+func getDatabasePairRegisteredProvisionParamSchema() *service.InputParametersSchema { // nolint: lll
+	return &service.InputParametersSchema{
 		RequiredProperties: []string{
 			"failoverGroup",
 			"database",

@@ -31,7 +31,7 @@ func createBasicPlan(
 			Bullets:     []string{"Up to 2 vCores", "Variable I/O performance"},
 		},
 		Schemas: service.PlanSchemas{
-			ServiceInstances: service.InstanceSchemas{
+			ServiceInstances: &service.InstanceSchemas{
 				ProvisioningParametersSchema: generateProvisioningParamsSchema(td),
 				UpdatingParametersSchema:     generateUpdatingParamsSchema(td),
 			},
@@ -72,7 +72,7 @@ func createGPPlan(
 			},
 		},
 		Schemas: service.PlanSchemas{
-			ServiceInstances: service.InstanceSchemas{
+			ServiceInstances: &service.InstanceSchemas{
 				ProvisioningParametersSchema: generateProvisioningParamsSchema(td),
 				UpdatingParametersSchema:     generateUpdatingParamsSchema(td),
 			},
@@ -114,7 +114,7 @@ func createMemoryOptimizedPlan(
 			},
 		},
 		Schemas: service.PlanSchemas{
-			ServiceInstances: service.InstanceSchemas{
+			ServiceInstances: &service.InstanceSchemas{
 				ProvisioningParametersSchema: generateProvisioningParamsSchema(td),
 				UpdatingParametersSchema:     generateUpdatingParamsSchema(td),
 			},

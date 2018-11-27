@@ -9,12 +9,12 @@ import (
 	"github.com/Azure/open-service-broker-azure/pkg/service"
 )
 
-func generateUpdatingParamsSchema() service.InputParametersSchema {
+func generateUpdatingParamsSchema() *service.InputParametersSchema {
 	const maxStalenessPrefixMin = 1
 	const maxStalenessPrefixMax = 2147483647
 	const maxIntervalInSecondsMin = 5
 	const maxIntervalInSecondsMax = 86400
-	return service.InputParametersSchema{
+	return &service.InputParametersSchema{
 		PropertySchemas: map[string]service.PropertySchema{
 			"tags": &service.ObjectPropertySchema{
 				Title: "Tags",
@@ -128,7 +128,7 @@ func generateUpdatingParamsSchema() service.InputParametersSchema {
 	}
 }
 
-func generateProvisioningParamsSchema() service.InputParametersSchema {
+func generateProvisioningParamsSchema() *service.InputParametersSchema {
 	propertySchemas := map[string]service.PropertySchema{
 		"location": &service.StringPropertySchema{
 			Title: "Location",
@@ -153,7 +153,7 @@ func generateProvisioningParamsSchema() service.InputParametersSchema {
 	for k, v := range sharedSchema.PropertySchemas {
 		propertySchemas[k] = v
 	}
-	return service.InputParametersSchema{
+	return &service.InputParametersSchema{
 		RequiredProperties: []string{"location", "resourceGroup"},
 		PropertySchemas:    propertySchemas,
 	}

@@ -36,7 +36,7 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 					Bullets:     []string{"Shared Capacity"},
 				},
 				Schemas: service.PlanSchemas{
-					ServiceInstances: service.InstanceSchemas{
+					ServiceInstances: &service.InstanceSchemas{
 						ProvisioningParametersSchema: generateProvisioningParamsSchema(),
 					},
 				},
@@ -61,7 +61,7 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 					},
 				},
 				Schemas: service.PlanSchemas{
-					ServiceInstances: service.InstanceSchemas{
+					ServiceInstances: &service.InstanceSchemas{
 						ProvisioningParametersSchema: generateProvisioningParamsSchema(),
 					},
 				},
@@ -85,7 +85,7 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 					},
 				},
 				Schemas: service.PlanSchemas{
-					ServiceInstances: service.InstanceSchemas{
+					ServiceInstances: &service.InstanceSchemas{
 						ProvisioningParametersSchema: generateProvisioningParamsSchema(),
 					},
 				},

@@ -4,13 +4,13 @@ import "github.com/Azure/open-service-broker-azure/pkg/service"
 
 func (
 	d *dbmsPairRegisteredManager,
-) getProvisionParametersSchema() service.InputParametersSchema {
+) getProvisionParametersSchema() *service.InputParametersSchema {
 	return getDBMSPairRegisteredProvisionParamSchema()
 }
 
 func (
 	d *dbmsPairRegisteredManager,
-) getUpdatingParametersSchema() service.InputParametersSchema {
+) getUpdatingParametersSchema() *service.InputParametersSchema {
 	return getDBMSPairRegisteredUpdateParamSchema()
 }
 

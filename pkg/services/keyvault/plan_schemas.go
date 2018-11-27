@@ -7,8 +7,8 @@ import (
 
 func (
 	s *serviceManager,
-) getProvisionParametersSchema() service.InputParametersSchema {
-	return service.InputParametersSchema{
+) getProvisionParametersSchema() *service.InputParametersSchema {
+	return &service.InputParametersSchema{
 		RequiredProperties: []string{
 			"location",
 			"resourceGroup",

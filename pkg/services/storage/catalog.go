@@ -46,7 +46,7 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 					},
 				},
 				Schemas: service.PlanSchemas{
-					ServiceInstances: service.InstanceSchemas{
+					ServiceInstances: &service.InstanceSchemas{
 						ProvisioningParametersSchema: generateProvisioningParamsSchema(serviceGeneralPurposeV2),
 						UpdatingParametersSchema:     generateUpdatingParamsSchema(serviceGeneralPurposeV2),
 					},
@@ -87,7 +87,7 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 					},
 				},
 				Schemas: service.PlanSchemas{
-					ServiceInstances: service.InstanceSchemas{
+					ServiceInstances: &service.InstanceSchemas{
 						ProvisioningParametersSchema: generateProvisioningParamsSchema(serviceGeneralPurposeV1),
 						UpdatingParametersSchema:     generateUpdatingParamsSchema(serviceGeneralPurposeV1),
 					},
@@ -130,7 +130,7 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 					},
 				},
 				Schemas: service.PlanSchemas{
-					ServiceInstances: service.InstanceSchemas{
+					ServiceInstances: &service.InstanceSchemas{
 						ProvisioningParametersSchema: generateProvisioningParamsSchema(serviceBlobAccount),
 						UpdatingParametersSchema:     generateUpdatingParamsSchema(serviceBlobAccount),
 					},
@@ -174,7 +174,7 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 					},
 				},
 				Schemas: service.PlanSchemas{
-					ServiceInstances: service.InstanceSchemas{
+					ServiceInstances: &service.InstanceSchemas{
 						ProvisioningParametersSchema: generateProvisioningParamsSchema(serviceBlobAllInOne),
 						UpdatingParametersSchema:     generateUpdatingParamsSchema(serviceBlobAllInOne),
 					},
@@ -211,7 +211,7 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 					Bullets:     []string{"A blob container inside an existing blob storage account"},
 				},
 				Schemas: service.PlanSchemas{
-					ServiceInstances: service.InstanceSchemas{
+					ServiceInstances: &service.InstanceSchemas{
 						ProvisioningParametersSchema: generateBlobContainerProvisioningParamsSchema(),
 					},
 				},

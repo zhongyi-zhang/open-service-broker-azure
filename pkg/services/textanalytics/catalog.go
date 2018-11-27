@@ -38,7 +38,7 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 					DisplayName: "Free Tier",
 				},
 				Schemas: service.PlanSchemas{
-					ServiceInstances: service.InstanceSchemas{
+					ServiceInstances: &service.InstanceSchemas{
 						ProvisioningParametersSchema: generateProvisioningParamsSchema(),
 					},
 				},
@@ -56,7 +56,7 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 					DisplayName: "Standard 0 Tier",
 				},
 				Schemas: service.PlanSchemas{
-					ServiceInstances: service.InstanceSchemas{
+					ServiceInstances: &service.InstanceSchemas{
 						ProvisioningParametersSchema: generateProvisioningParamsSchema(),
 					},
 				},
@@ -74,7 +74,7 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 					DisplayName: "Standard 1 Tier",
 				},
 				Schemas: service.PlanSchemas{
-					ServiceInstances: service.InstanceSchemas{
+					ServiceInstances: &service.InstanceSchemas{
 						ProvisioningParametersSchema: generateProvisioningParamsSchema(),
 					},
 				},
@@ -92,7 +92,7 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 					DisplayName: "Standard 2 Tier",
 				},
 				Schemas: service.PlanSchemas{
-					ServiceInstances: service.InstanceSchemas{
+					ServiceInstances: &service.InstanceSchemas{
 						ProvisioningParametersSchema: generateProvisioningParamsSchema(),
 					},
 				},
@@ -110,7 +110,7 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 					DisplayName: "Standard 3 Tier",
 				},
 				Schemas: service.PlanSchemas{
-					ServiceInstances: service.InstanceSchemas{
+					ServiceInstances: &service.InstanceSchemas{
 						ProvisioningParametersSchema: generateProvisioningParamsSchema(),
 					},
 				},
@@ -128,7 +128,7 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 					DisplayName: "Standard 4 Tier",
 				},
 				Schemas: service.PlanSchemas{
-					ServiceInstances: service.InstanceSchemas{
+					ServiceInstances: &service.InstanceSchemas{
 						ProvisioningParametersSchema: generateProvisioningParamsSchema(),
 					},
 				},

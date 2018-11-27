@@ -11,12 +11,12 @@ import (
 )
 
 type planDetails interface {
-	getProvisionSchema() service.InputParametersSchema
-	getProvisionSchemaForExistingIntance() service.InputParametersSchema
+	getProvisionSchema() *service.InputParametersSchema
+	getProvisionSchemaForExistingIntance() *service.InputParametersSchema
 	getTierProvisionParameters(
 		pp service.ProvisioningParameters,
 	) (map[string]interface{}, error)
-	getUpdateSchema() service.InputParametersSchema
+	getUpdateSchema() *service.InputParametersSchema
 	validateUpdateParameters(service.Instance) error
 }
 
@@ -33,8 +33,8 @@ func (d dtuPlanDetails) validateUpdateParameters(service.Instance) error {
 	return nil // no op
 }
 
-func (d dtuPlanDetails) getUpdateSchema() service.InputParametersSchema {
-	ips := service.InputParametersSchema{
+func (d dtuPlanDetails) getUpdateSchema() *service.InputParametersSchema {
+	ips := &service.InputParametersSchema{
 		PropertySchemas: map[string]service.PropertySchema{},
 	}
 	if d.includeDBMS {
@@ -54,8 +54,8 @@ func (d dtuPlanDetails) getUpdateSchema() service.InputParametersSchema {
 	return ips
 }
 
-func (d dtuPlanDetails) getProvisionSchema() service.InputParametersSchema {
-	ips := service.InputParametersSchema{
+func (d dtuPlanDetails) getProvisionSchema() *service.InputParametersSchema {
+	ips := &service.InputParametersSchema{
 		PropertySchemas: map[string]service.PropertySchema{},
 	}
 	if d.includeDBMS {
@@ -75,8 +75,8 @@ func (d dtuPlanDetails) getProvisionSchema() service.InputParametersSchema {
 	return ips
 }
 
-func (d dtuPlanDetails) getProvisionSchemaForExistingIntance() service.InputParametersSchema { // nolint: lll
-	ips := service.InputParametersSchema{
+func (d dtuPlanDetails) getProvisionSchemaForExistingIntance() *service.InputParametersSchema { // nolint: lll
+	ips := &service.InputParametersSchema{
 		PropertySchemas: map[string]service.PropertySchema{},
 	}
 	if d.includeDBMS {
@@ -125,8 +125,8 @@ func (v vCorePlanDetails) validateUpdateParameters(
 	)
 }
 
-func (v vCorePlanDetails) getUpdateSchema() service.InputParametersSchema {
-	ips := service.InputParametersSchema{
+func (v vCorePlanDetails) getUpdateSchema() *service.InputParametersSchema {
+	ips := &service.InputParametersSchema{
 		PropertySchemas: map[string]service.PropertySchema{},
 	}
 	if v.includeDBMS {
@@ -148,8 +148,8 @@ func (v vCorePlanDetails) getUpdateSchema() service.InputParametersSchema {
 	return ips
 }
 
-func (v vCorePlanDetails) getProvisionSchema() service.InputParametersSchema {
-	ips := service.InputParametersSchema{
+func (v vCorePlanDetails) getProvisionSchema() *service.InputParametersSchema {
+	ips := &service.InputParametersSchema{
 		PropertySchemas: map[string]service.PropertySchema{},
 	}
 	if v.includeDBMS {
@@ -171,8 +171,8 @@ func (v vCorePlanDetails) getProvisionSchema() service.InputParametersSchema {
 	return ips
 }
 
-func (v vCorePlanDetails) getProvisionSchemaForExistingIntance() service.InputParametersSchema { // nolint: lll
-	ips := service.InputParametersSchema{
+func (v vCorePlanDetails) getProvisionSchemaForExistingIntance() *service.InputParametersSchema { // nolint: lll
+	ips := &service.InputParametersSchema{
 		PropertySchemas: map[string]service.PropertySchema{},
 	}
 	if v.includeDBMS {
@@ -240,8 +240,8 @@ func firewallRuleValidator(
 	return nil
 }
 
-func getDBMSCommonUpdateParamSchema() service.InputParametersSchema {
-	return service.InputParametersSchema{
+func getDBMSCommonUpdateParamSchema() *service.InputParametersSchema {
+	return &service.InputParametersSchema{
 		PropertySchemas: map[string]service.PropertySchema{
 			"firewallRules": &service.ArrayPropertySchema{
 				Title: "Firewall rules",
@@ -285,8 +285,8 @@ func getDBMSCommonUpdateParamSchema() service.InputParametersSchema {
 	}
 }
 
-func getDBMSCommonProvisionParamSchema() service.InputParametersSchema {
-	return service.InputParametersSchema{
+func getDBMSCommonProvisionParamSchema() *service.InputParametersSchema {
+	return &service.InputParametersSchema{
 		RequiredProperties: []string{"location", "resourceGroup"},
 		PropertySchemas: map[string]service.PropertySchema{
 			"location": &service.StringPropertySchema{
@@ -348,8 +348,8 @@ func getDBMSCommonProvisionParamSchema() service.InputParametersSchema {
 	}
 }
 
-func getDBMSRegisteredUpdateParamSchema() service.InputParametersSchema {
-	return service.InputParametersSchema{
+func getDBMSRegisteredUpdateParamSchema() *service.InputParametersSchema {
+	return &service.InputParametersSchema{
 		SecureProperties: []string{
 			"administratorLoginPassword",
 		},
@@ -368,8 +368,8 @@ func getDBMSRegisteredUpdateParamSchema() service.InputParametersSchema {
 	}
 }
 
-func getDBMSRegisteredProvisionParamSchema() service.InputParametersSchema {
-	return service.InputParametersSchema{
+func getDBMSRegisteredProvisionParamSchema() *service.InputParametersSchema {
+	return &service.InputParametersSchema{
 		RequiredProperties: []string{
 			"resourceGroup",
 			"location",

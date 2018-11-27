@@ -12,21 +12,21 @@ const jsonSchemaVersion = "http://json-schema.org/draft-04/schema#"
 // for validating input parameters to all service instance and service binding
 // operations.
 type PlanSchemas struct {
-	ServiceInstances InstanceSchemas `json:"service_instance,omitempty"`
-	ServiceBindings  BindingSchemas  `json:"service_binding,omitempty"`
+	ServiceInstances *InstanceSchemas `json:"service_instance,omitempty"`
+	ServiceBindings  *BindingSchemas  `json:"service_binding,omitempty"`
 }
 
 // InstanceSchemas encapsulates all plan-related schemas for validating input
 // parameters to all service instance operations.
 type InstanceSchemas struct {
-	ProvisioningParametersSchema InputParametersSchema `json:"create,omitempty"`
-	UpdatingParametersSchema     InputParametersSchema `json:"update,omitempty"`
+	ProvisioningParametersSchema *InputParametersSchema `json:"create,omitempty"`
+	UpdatingParametersSchema     *InputParametersSchema `json:"update,omitempty"`
 }
 
 // BindingSchemas encapsulates all plan-related schemas for validating input
 // parameters to all service binding operations.
 type BindingSchemas struct {
-	BindingParametersSchema InputParametersSchema `json:"create,omitempty"`
+	BindingParametersSchema *InputParametersSchema `json:"create,omitempty"`
 }
 
 // InputParametersSchema encapsulates schema for validating input parameters

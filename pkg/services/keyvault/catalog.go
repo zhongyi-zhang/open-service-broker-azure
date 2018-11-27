@@ -35,7 +35,7 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 					DisplayName: "Standard Tier",
 				},
 				Schemas: service.PlanSchemas{
-					ServiceInstances: service.InstanceSchemas{
+					ServiceInstances: &service.InstanceSchemas{
 						ProvisioningParametersSchema: m.serviceManager.getProvisionParametersSchema(), // nolint: lll
 					},
 				},
@@ -53,7 +53,7 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 					DisplayName: "Premium Tier",
 				},
 				Schemas: service.PlanSchemas{
-					ServiceInstances: service.InstanceSchemas{
+					ServiceInstances: &service.InstanceSchemas{
 						ProvisioningParametersSchema: m.serviceManager.getProvisionParametersSchema(), // nolint: lll
 					},
 				},

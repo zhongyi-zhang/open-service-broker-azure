@@ -149,7 +149,7 @@ func (s *server) provision(w http.ResponseWriter, r *http.Request) {
 	pps := plan.GetSchemas().ServiceInstances.ProvisioningParametersSchema
 	provisioningParameters := &service.ProvisioningParameters{
 		Parameters: service.Parameters{
-			Schema: &pps,
+			Schema: pps,
 			Data:   provisioningRequest.Parameters,
 		},
 	}

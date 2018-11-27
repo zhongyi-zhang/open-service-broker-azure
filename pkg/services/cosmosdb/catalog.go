@@ -36,7 +36,7 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 						DisplayName: "Azure CosmosDB (SQL API Database Account and Database)",
 					},
 					Schemas: service.PlanSchemas{
-						ServiceInstances: service.InstanceSchemas{
+						ServiceInstances: &service.InstanceSchemas{
 							ProvisioningParametersSchema: generateProvisioningParamsSchema(), // nolint: lll
 							UpdatingParametersSchema:     generateUpdatingParamsSchema(),     // nolint: lll
 						},
@@ -76,7 +76,7 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 						DisplayName: "Azure CosmosDB (SQL API - Database Account Only)",
 					},
 					Schemas: service.PlanSchemas{
-						ServiceInstances: service.InstanceSchemas{
+						ServiceInstances: &service.InstanceSchemas{
 							ProvisioningParametersSchema: generateProvisioningParamsSchema(), // nolint: lll
 							UpdatingParametersSchema:     generateUpdatingParamsSchema(),     // nolint: lll
 						},
@@ -149,7 +149,7 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 						DisplayName: "Azure Cosmos DB (MongoDB API)",
 					},
 					Schemas: service.PlanSchemas{
-						ServiceInstances: service.InstanceSchemas{
+						ServiceInstances: &service.InstanceSchemas{
 							ProvisioningParametersSchema: generateProvisioningParamsSchema(), // nolint: lll
 							UpdatingParametersSchema:     generateUpdatingParamsSchema(),     // nolint: lll
 						},
@@ -189,7 +189,7 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 						DisplayName: "Azure Cosmos DB (Graph API)",
 					},
 					Schemas: service.PlanSchemas{
-						ServiceInstances: service.InstanceSchemas{
+						ServiceInstances: &service.InstanceSchemas{
 							ProvisioningParametersSchema: generateProvisioningParamsSchema(), // nolint: lll
 							UpdatingParametersSchema:     generateUpdatingParamsSchema(),     // nolint: lll
 						},
@@ -228,7 +228,7 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 						DisplayName: "Azure Cosmos DB (Table API)",
 					},
 					Schemas: service.PlanSchemas{
-						ServiceInstances: service.InstanceSchemas{
+						ServiceInstances: &service.InstanceSchemas{
 							ProvisioningParametersSchema: generateProvisioningParamsSchema(), // nolint: lll
 							UpdatingParametersSchema:     generateUpdatingParamsSchema(),     // nolint: lll
 						},

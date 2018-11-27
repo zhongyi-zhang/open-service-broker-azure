@@ -6,8 +6,8 @@ import (
 
 func (
 	d *databaseManager,
-) getProvisionParametersSchema() service.InputParametersSchema {
-	return service.InputParametersSchema{
+) getProvisionParametersSchema() *service.InputParametersSchema {
+	return &service.InputParametersSchema{
 		PropertySchemas: map[string]service.PropertySchema{
 			"extensions": dbExtensionsSchema,
 		},

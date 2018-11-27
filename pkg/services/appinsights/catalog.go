@@ -31,7 +31,7 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 					DisplayName: "ASP.NET web",
 				},
 				Schemas: service.PlanSchemas{
-					ServiceInstances: service.InstanceSchemas{
+					ServiceInstances: &service.InstanceSchemas{
 						ProvisioningParametersSchema: generateProvisioningParamsSchema(),
 					},
 				},
@@ -49,7 +49,7 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 					DisplayName: "Java web",
 				},
 				Schemas: service.PlanSchemas{
-					ServiceInstances: service.InstanceSchemas{
+					ServiceInstances: &service.InstanceSchemas{
 						ProvisioningParametersSchema: generateProvisioningParamsSchema(),
 					},
 				},
@@ -67,7 +67,7 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 					DisplayName: "Node.JS",
 				},
 				Schemas: service.PlanSchemas{
-					ServiceInstances: service.InstanceSchemas{
+					ServiceInstances: &service.InstanceSchemas{
 						ProvisioningParametersSchema: generateProvisioningParamsSchema(),
 					},
 				},
@@ -85,7 +85,7 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 					DisplayName: "Default",
 				},
 				Schemas: service.PlanSchemas{
-					ServiceInstances: service.InstanceSchemas{
+					ServiceInstances: &service.InstanceSchemas{
 						ProvisioningParametersSchema: generateProvisioningParamsSchema(),
 					},
 				},
@@ -103,7 +103,7 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 					DisplayName: "App Center",
 				},
 				Schemas: service.PlanSchemas{
-					ServiceInstances: service.InstanceSchemas{
+					ServiceInstances: &service.InstanceSchemas{
 						ProvisioningParametersSchema: generateProvisioningParamsSchema(),
 					},
 				},

@@ -33,7 +33,7 @@ func (t *tierDetails) getSku(pp service.ProvisioningParameters) string {
 func generateProvisioningParamsSchema(
 	td tierDetails,
 	includeDBParams bool,
-) service.InputParametersSchema {
+) *service.InputParametersSchema {
 	ips := generateUpdatingParamsSchema(td)
 	ips.RequiredProperties = append(ips.RequiredProperties, "location")
 	ips.PropertySchemas["location"] = &service.StringPropertySchema{
@@ -68,8 +68,8 @@ func generateProvisioningParamsSchema(
 
 func generateUpdatingParamsSchema(
 	td tierDetails,
-) service.InputParametersSchema {
-	return service.InputParametersSchema{
+) *service.InputParametersSchema {
+	return &service.InputParametersSchema{
 		PropertySchemas: map[string]service.PropertySchema{
 			"cores": &service.IntPropertySchema{
 				Title: "Cores",

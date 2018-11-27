@@ -25,7 +25,7 @@ var accountTypeMap = map[string][]string{
 }
 
 // nolint: lll
-func generateProvisioningParamsSchema(serviceName string) service.InputParametersSchema {
+func generateProvisioningParamsSchema(serviceName string) *service.InputParametersSchema {
 	ips := service.InputParametersSchema{
 		RequiredProperties: []string{"location", "resourceGroup"},
 		PropertySchemas: map[string]service.PropertySchema{
@@ -83,11 +83,11 @@ func generateProvisioningParamsSchema(serviceName string) service.InputParameter
 		}
 	}
 
-	return ips
+	return &ips
 }
 
 // nolint: lll
-func generateUpdatingParamsSchema(serviceName string) service.InputParametersSchema {
+func generateUpdatingParamsSchema(serviceName string) *service.InputParametersSchema {
 	ips := service.InputParametersSchema{
 		PropertySchemas: map[string]service.PropertySchema{
 			"enableNonHttpsTraffic": &service.StringPropertySchema{
@@ -120,12 +120,12 @@ func generateUpdatingParamsSchema(serviceName string) service.InputParametersSch
 		}
 	}
 
-	return ips
+	return &ips
 }
 
 // nolint: lll
-func generateBlobContainerProvisioningParamsSchema() service.InputParametersSchema {
-	return service.InputParametersSchema{
+func generateBlobContainerProvisioningParamsSchema() *service.InputParametersSchema {
+	return &service.InputParametersSchema{
 		PropertySchemas: map[string]service.PropertySchema{
 			"containerName": &service.StringPropertySchema{
 				Title: "Container Name",

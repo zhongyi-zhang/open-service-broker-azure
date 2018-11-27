@@ -40,8 +40,8 @@ func init() {
 				Description: description,
 				Free:        free,
 				Schemas: PlanSchemas{
-					ServiceInstances: InstanceSchemas{
-						ProvisioningParametersSchema: InputParametersSchema{
+					ServiceInstances: &InstanceSchemas{
+						ProvisioningParametersSchema: &InputParametersSchema{
 							PropertySchemas: map[string]PropertySchema{
 								"someParameter": &StringPropertySchema{
 									Title:       "Some parameter",
@@ -49,7 +49,7 @@ func init() {
 								},
 							},
 						},
-						UpdatingParametersSchema: InputParametersSchema{
+						UpdatingParametersSchema: &InputParametersSchema{
 							PropertySchemas: map[string]PropertySchema{
 								"someParameter": &StringPropertySchema{
 									Title:       "Some parameter",
@@ -58,8 +58,8 @@ func init() {
 							},
 						},
 					},
-					ServiceBindings: BindingSchemas{
-						BindingParametersSchema: InputParametersSchema{
+					ServiceBindings: &BindingSchemas{
+						BindingParametersSchema: &InputParametersSchema{
 							PropertySchemas: map[string]PropertySchema{
 								"someParameter": &StringPropertySchema{
 									Title:       "Some parameter",

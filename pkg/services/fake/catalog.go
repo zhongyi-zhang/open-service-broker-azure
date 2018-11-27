@@ -42,20 +42,20 @@ func (m *Module) GetCatalog() (service.Catalog, error) {
 					},
 				},
 				Schemas: service.PlanSchemas{
-					ServiceInstances: service.InstanceSchemas{
-						ProvisioningParametersSchema: service.InputParametersSchema{
+					ServiceInstances: &service.InstanceSchemas{
+						ProvisioningParametersSchema: &service.InputParametersSchema{
 							PropertySchemas: map[string]service.PropertySchema{
 								"someParameter": &service.StringPropertySchema{},
 							},
 						},
-						UpdatingParametersSchema: service.InputParametersSchema{
+						UpdatingParametersSchema: &service.InputParametersSchema{
 							PropertySchemas: map[string]service.PropertySchema{
 								"someParameter": &service.StringPropertySchema{},
 							},
 						},
 					},
-					ServiceBindings: service.BindingSchemas{
-						BindingParametersSchema: service.InputParametersSchema{
+					ServiceBindings: &service.BindingSchemas{
+						BindingParametersSchema: &service.InputParametersSchema{
 							PropertySchemas: map[string]service.PropertySchema{
 								"someParameter": &service.StringPropertySchema{},
 							},

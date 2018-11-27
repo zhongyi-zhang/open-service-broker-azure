@@ -31,7 +31,7 @@ func createBasicPlan(
 			Bullets:     []string{"Up to 2 vCores", "Variable I/O performance"},
 		},
 		Schemas: service.PlanSchemas{
-			ServiceInstances: service.InstanceSchemas{
+			ServiceInstances: &service.InstanceSchemas{
 				ProvisioningParametersSchema: generateProvisioningParamsSchema(
 					td,
 					includeDBParams,
@@ -78,7 +78,7 @@ func createGPPlan(
 			},
 		},
 		Schemas: service.PlanSchemas{
-			ServiceInstances: service.InstanceSchemas{
+			ServiceInstances: &service.InstanceSchemas{
 				ProvisioningParametersSchema: generateProvisioningParamsSchema(
 					td,
 					includeDBParams,
@@ -126,7 +126,7 @@ func createMemoryOptimizedPlan(
 			},
 		},
 		Schemas: service.PlanSchemas{
-			ServiceInstances: service.InstanceSchemas{
+			ServiceInstances: &service.InstanceSchemas{
 				ProvisioningParametersSchema: generateProvisioningParamsSchema(
 					td,
 					includeDBParams,
@@ -220,7 +220,7 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 					DisplayName: "Azure Database for PostgreSQL-- Database Only",
 				},
 				Schemas: service.PlanSchemas{
-					ServiceInstances: service.InstanceSchemas{
+					ServiceInstances: &service.InstanceSchemas{
 						ProvisioningParametersSchema: m.databaseManager.getProvisionParametersSchema(),
 					},
 				},
@@ -306,7 +306,7 @@ func (m *module) GetCatalog() (service.Catalog, error) {
 					DisplayName: "Azure Database for PostgreSQL-- Database Only",
 				},
 				Schemas: service.PlanSchemas{
-					ServiceInstances: service.InstanceSchemas{
+					ServiceInstances: &service.InstanceSchemas{
 						ProvisioningParametersSchema: m.databaseManager.getProvisionParametersSchema(),
 					},
 				},

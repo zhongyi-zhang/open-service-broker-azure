@@ -15,7 +15,7 @@ type planDetail struct {
 }
 
 // nolint: lll
-func (pd planDetail) getProvisioningParamsSchema() service.InputParametersSchema {
+func (pd planDetail) getProvisioningParamsSchema() *service.InputParametersSchema {
 	ips := service.InputParametersSchema{
 		RequiredProperties: []string{"location", "resourceGroup"},
 		PropertySchemas: map[string]service.PropertySchema{
@@ -102,11 +102,11 @@ func (pd planDetail) getProvisioningParamsSchema() service.InputParametersSchema
 			CustomPropertyValidator: subnetSettingsValidator,
 		}
 	}
-	return ips
+	return &ips
 }
 
 // nolint: lll
-func (pd planDetail) getUpdatingParamsSchema() service.InputParametersSchema {
+func (pd planDetail) getUpdatingParamsSchema() *service.InputParametersSchema {
 	ips := service.InputParametersSchema{
 		PropertySchemas: map[string]service.PropertySchema{
 			"enableNonSslPort": &service.StringPropertySchema{
@@ -156,7 +156,7 @@ func (pd planDetail) getUpdatingParamsSchema() service.InputParametersSchema {
 			},
 		}
 	}
-	return ips
+	return &ips
 }
 
 func ipValidator(context, value string) error {

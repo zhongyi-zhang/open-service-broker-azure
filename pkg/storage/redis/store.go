@@ -110,7 +110,7 @@ func (s *store) GetInstance(instanceID string) (service.Instance, bool, error) {
 	instance, err = service.NewInstanceFromJSON(
 		bytes,
 		svc.GetServiceManager().GetEmptyInstanceDetails(),
-		&pps,
+		pps,
 	)
 	instance.Service = svc
 	instance.Plan = plan
@@ -243,7 +243,7 @@ func (s *store) GetBinding(bindingID string) (service.Binding, bool, error) {
 		binding, err = service.NewBindingFromJSON(
 			bytes,
 			instance.Service.GetServiceManager().GetEmptyBindingDetails(),
-			&bps,
+			bps,
 		)
 	}
 	return binding, err == nil, err

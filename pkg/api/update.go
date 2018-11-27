@@ -238,7 +238,7 @@ func (s *server) update(w http.ResponseWriter, r *http.Request) {
 	pps := plan.GetSchemas().ServiceInstances.ProvisioningParametersSchema
 	updatingParameters := &service.ProvisioningParameters{
 		Parameters: service.Parameters{
-			Schema: &pps,
+			Schema: pps,
 			Data:   rawUpdatingParameters,
 		},
 	}
